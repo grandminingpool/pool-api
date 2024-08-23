@@ -1,0 +1,208 @@
+openapi: "3.0.0"
+info:
+  version: 0.0.1
+  title: Grand Pool API
+  description: Grand Pool mining pool API
+paths:
+  /pools/blockchains:
+    get:
+      summary: Get available pools blockchains list
+      operationId: pools
+      responses:
+        '200':
+          description: Pools blockchains list response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PoolBlockchain'
+  /pools/{blockchain}:
+    get:
+      summary: Get full pool data on blockchain
+      operationId: getBlockchainPool
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+      responses:
+        '200':
+          description: 'Pool data response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pool'
+  /pools/{blockchain}/info:
+    get:
+      summary: Get pool info on blockchain
+      operationId: getBlockchainPoolInfo
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+      responses:
+        '200':
+          description: 'Pool info response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolInfo'
+  /pools/{blockchain}/stats:
+    get:
+      summary: Get pool statistics on blockchain
+      operationId: getBlockchainPoolStats
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+      responses:
+        '200':
+          description: 'Pool statistics response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolStats'
+  /pools/{blockchain}/slaves:
+    get:
+      summary: Get pool locations on blockchain
+      operationId: getBlockchainPoolSlaves
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+      responses:
+        '200':
+          description: 'Pool location response'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PoolSlave'
+components:
+  parameters:
+    Blockchain:
+      name: blockchain
+      in: path
+      description: Pool blockchain
+      required: true
+      schema:
+        type: string
+  schemas:
+    PoolBlockchain:
+      type: object
+      required:
+        - coin
+        - name
+        - ticker
+        - atomic_unit
+      properties:
+        coin:
+          type: string
+        name:
+          type: string
+        ticker:
+          type: string
+        atomic_unit:
+          type: integer
+    PayoutMode:
+      type: string
+      enum:
+        - pplns
+        - prop
+    PoolFee:
+      type: object
+      required:
+        - fee
+      properties:
+        fee:
+          type: number
+          format: double
+        solo_fee:
+          type: number
+          format: double
+    PayoutsInfo:
+      type: object
+      required:
+        - interval
+      properties:
+        interval:
+          type: integer
+        min_payout:
+          type: integer
+        max_payout:
+          type: integer
+    PoolInfo:
+      type: object
+      properties:
+        blockchain:
+          type: string
+        host:
+          type: string
+        algos:
+          type: array
+          items:
+            type: string
+        payout_mode:
+          $ref: '#/components/schemas/PayoutMode'
+        solo:
+          type: boolean
+        fee: 
+          $ref: '#/components/schemas/PoolFee'
+        payouts_info:
+          $ref: '#/components/schemas/PayoutsInfo'
+        agents:
+          type: array
+          items:
+            type: string
+    PoolStats:
+      required:
+        - miners_count
+        - hashrate
+        - avg_hashrate
+        - share_difficulty
+      properties:
+        miners_count:
+          type: integer
+        solo_miners_count:
+          type: integer
+        hashrate:
+          type: string
+        avg_hashrate:
+          type: string
+        solo_hashrate:
+          type: string
+        solo_avg_hashrate:
+          type: string
+        share_difficulty:
+          type: integer
+        solo_share_difficulty:
+          type: integer
+    PoolSlave:
+      required:
+        - region
+        - host
+        - tcp_port
+        - ssl_port
+        - connected_at
+      properties:
+        region:
+          type: string
+        host:
+          type: string
+        tcp_port:
+          type: integer
+        ssl_port:
+          type: integer
+        solo_port:
+          type: integer
+        connected_at:
+          type: string
+    Pool:
+      type: object
+      required:
+        - info
+        - stats
+        - slaves
+      properties:
+        info: 
+          $ref: '#/components/schemas/PoolInfo'
+        stats:
+          $ref: '#/components/schemas/PoolStats'
+        slaves:
+          type: array
+          items:
+            $ref: '#/components/schemas/PoolSlave'
+
