@@ -278,3 +278,69 @@ func decodeGetBlockchainPoolStatsParams(args [1]string, argsEscaped bool, r *htt
 	}
 	return params, nil
 }
+
+// GetBlockchainPriceParams is parameters of getBlockchainPrice operation.
+type GetBlockchainPriceParams struct {
+	// Pool blockchain.
+	Blockchain string
+}
+
+func unpackGetBlockchainPriceParams(packed middleware.Parameters) (params GetBlockchainPriceParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	return params
+}
+
+func decodeGetBlockchainPriceParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainPriceParams, _ error) {
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}

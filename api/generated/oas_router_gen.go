@@ -49,9 +49,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/pools/"
+		case '/': // Prefix: "/"
 			origElem := elem
-			if l := len("/pools/"); len(elem) >= l && elem[0:l] == "/pools/" {
+			if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
 				elem = elem[l:]
 			} else {
 				break
@@ -73,7 +73,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					// Leaf node.
 					switch r.Method {
 					case "GET":
-						s.handlePoolsRequest([0]string{}, elemIsEscaped, w, r)
+						s.handleGetBlockchainsRequest([0]string{}, elemIsEscaped, w, r)
 					default:
 						s.notAllowed(w, r, "GET")
 					}
@@ -82,32 +82,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 				}
 
 				elem = origElem
-			}
-			// Param: "blockchain"
-			// Match until "/"
-			idx := strings.IndexByte(elem, '/')
-			if idx < 0 {
-				idx = len(elem)
-			}
-			args[0] = elem[:idx]
-			elem = elem[idx:]
-
-			if len(elem) == 0 {
-				switch r.Method {
-				case "GET":
-					s.handleGetBlockchainPoolRequest([1]string{
-						args[0],
-					}, elemIsEscaped, w, r)
-				default:
-					s.notAllowed(w, r, "GET")
-				}
-
-				return
-			}
-			switch elem[0] {
-			case '/': // Prefix: "/"
+			case 'p': // Prefix: "p"
 				origElem := elem
-				if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+				if l := len("p"); len(elem) >= l && elem[0:l] == "p" {
 					elem = elem[l:]
 				} else {
 					break
@@ -117,19 +94,27 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 					break
 				}
 				switch elem[0] {
-				case 'i': // Prefix: "info"
+				case 'o': // Prefix: "ools/"
 					origElem := elem
-					if l := len("info"); len(elem) >= l && elem[0:l] == "info" {
+					if l := len("ools/"); len(elem) >= l && elem[0:l] == "ools/" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
+					// Param: "blockchain"
+					// Match until "/"
+					idx := strings.IndexByte(elem, '/')
+					if idx < 0 {
+						idx = len(elem)
+					}
+					args[0] = elem[:idx]
+					elem = elem[idx:]
+
 					if len(elem) == 0 {
-						// Leaf node.
 						switch r.Method {
 						case "GET":
-							s.handleGetBlockchainPoolInfoRequest([1]string{
+							s.handleGetBlockchainPoolRequest([1]string{
 								args[0],
 							}, elemIsEscaped, w, r)
 						default:
@@ -138,56 +123,146 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 						return
 					}
+					switch elem[0] {
+					case '/': // Prefix: "/"
+						origElem := elem
+						if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							break
+						}
+						switch elem[0] {
+						case 'i': // Prefix: "info"
+							origElem := elem
+							if l := len("info"); len(elem) >= l && elem[0:l] == "info" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch r.Method {
+								case "GET":
+									s.handleGetBlockchainPoolInfoRequest([1]string{
+										args[0],
+									}, elemIsEscaped, w, r)
+								default:
+									s.notAllowed(w, r, "GET")
+								}
+
+								return
+							}
+
+							elem = origElem
+						case 's': // Prefix: "s"
+							origElem := elem
+							if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								break
+							}
+							switch elem[0] {
+							case 'l': // Prefix: "laves"
+								origElem := elem
+								if l := len("laves"); len(elem) >= l && elem[0:l] == "laves" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "GET":
+										s.handleGetBlockchainPoolSlavesRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET")
+									}
+
+									return
+								}
+
+								elem = origElem
+							case 't': // Prefix: "tats"
+								origElem := elem
+								if l := len("tats"); len(elem) >= l && elem[0:l] == "tats" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "GET":
+										s.handleGetBlockchainPoolStatsRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET")
+									}
+
+									return
+								}
+
+								elem = origElem
+							}
+
+							elem = origElem
+						}
+
+						elem = origElem
+					}
 
 					elem = origElem
-				case 's': // Prefix: "s"
+				case 'r': // Prefix: "rices"
 					origElem := elem
-					if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+					if l := len("rices"); len(elem) >= l && elem[0:l] == "rices" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						break
+						switch r.Method {
+						case "GET":
+							s.handleGetPricesRequest([0]string{}, elemIsEscaped, w, r)
+						default:
+							s.notAllowed(w, r, "GET")
+						}
+
+						return
 					}
 					switch elem[0] {
-					case 'l': // Prefix: "laves"
+					case '/': // Prefix: "/"
 						origElem := elem
-						if l := len("laves"); len(elem) >= l && elem[0:l] == "laves" {
+						if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
 							elem = elem[l:]
 						} else {
 							break
 						}
 
-						if len(elem) == 0 {
-							// Leaf node.
-							switch r.Method {
-							case "GET":
-								s.handleGetBlockchainPoolSlavesRequest([1]string{
-									args[0],
-								}, elemIsEscaped, w, r)
-							default:
-								s.notAllowed(w, r, "GET")
-							}
-
-							return
-						}
-
-						elem = origElem
-					case 't': // Prefix: "tats"
-						origElem := elem
-						if l := len("tats"); len(elem) >= l && elem[0:l] == "tats" {
-							elem = elem[l:]
-						} else {
-							break
-						}
+						// Param: "blockchain"
+						// Leaf parameter
+						args[0] = elem
+						elem = ""
 
 						if len(elem) == 0 {
 							// Leaf node.
 							switch r.Method {
 							case "GET":
-								s.handleGetBlockchainPoolStatsRequest([1]string{
+								s.handleGetBlockchainPriceRequest([1]string{
 									args[0],
 								}, elemIsEscaped, w, r)
 							default:
@@ -287,9 +362,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 			break
 		}
 		switch elem[0] {
-		case '/': // Prefix: "/pools/"
+		case '/': // Prefix: "/"
 			origElem := elem
-			if l := len("/pools/"); len(elem) >= l && elem[0:l] == "/pools/" {
+			if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
 				elem = elem[l:]
 			} else {
 				break
@@ -311,10 +386,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					// Leaf node.
 					switch method {
 					case "GET":
-						r.name = "Pools"
-						r.summary = "Get available pools blockchains list"
-						r.operationID = "pools"
-						r.pathPattern = "/pools/blockchains"
+						r.name = "GetBlockchains"
+						r.summary = "Get available blockchains list"
+						r.operationID = "getBlockchains"
+						r.pathPattern = "/blockchains"
 						r.args = args
 						r.count = 0
 						return r, true
@@ -324,34 +399,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				}
 
 				elem = origElem
-			}
-			// Param: "blockchain"
-			// Match until "/"
-			idx := strings.IndexByte(elem, '/')
-			if idx < 0 {
-				idx = len(elem)
-			}
-			args[0] = elem[:idx]
-			elem = elem[idx:]
-
-			if len(elem) == 0 {
-				switch method {
-				case "GET":
-					r.name = "GetBlockchainPool"
-					r.summary = "Get full pool data on blockchain"
-					r.operationID = "getBlockchainPool"
-					r.pathPattern = "/pools/{blockchain}"
-					r.args = args
-					r.count = 1
-					return r, true
-				default:
-					return
-				}
-			}
-			switch elem[0] {
-			case '/': // Prefix: "/"
+			case 'p': // Prefix: "p"
 				origElem := elem
-				if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+				if l := len("p"); len(elem) >= l && elem[0:l] == "p" {
 					elem = elem[l:]
 				} else {
 					break
@@ -361,22 +411,30 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					break
 				}
 				switch elem[0] {
-				case 'i': // Prefix: "info"
+				case 'o': // Prefix: "ools/"
 					origElem := elem
-					if l := len("info"); len(elem) >= l && elem[0:l] == "info" {
+					if l := len("ools/"); len(elem) >= l && elem[0:l] == "ools/" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
+					// Param: "blockchain"
+					// Match until "/"
+					idx := strings.IndexByte(elem, '/')
+					if idx < 0 {
+						idx = len(elem)
+					}
+					args[0] = elem[:idx]
+					elem = elem[idx:]
+
 					if len(elem) == 0 {
-						// Leaf node.
 						switch method {
 						case "GET":
-							r.name = "GetBlockchainPoolInfo"
-							r.summary = "Get pool info on blockchain"
-							r.operationID = "getBlockchainPoolInfo"
-							r.pathPattern = "/pools/{blockchain}/info"
+							r.name = "GetBlockchainPool"
+							r.summary = "Get full pool data on blockchain"
+							r.operationID = "getBlockchainPool"
+							r.pathPattern = "/pools/{blockchain}"
 							r.args = args
 							r.count = 1
 							return r, true
@@ -384,61 +442,159 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							return
 						}
 					}
+					switch elem[0] {
+					case '/': // Prefix: "/"
+						origElem := elem
+						if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							break
+						}
+						switch elem[0] {
+						case 'i': // Prefix: "info"
+							origElem := elem
+							if l := len("info"); len(elem) >= l && elem[0:l] == "info" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch method {
+								case "GET":
+									r.name = "GetBlockchainPoolInfo"
+									r.summary = "Get pool info on blockchain"
+									r.operationID = "getBlockchainPoolInfo"
+									r.pathPattern = "/pools/{blockchain}/info"
+									r.args = args
+									r.count = 1
+									return r, true
+								default:
+									return
+								}
+							}
+
+							elem = origElem
+						case 's': // Prefix: "s"
+							origElem := elem
+							if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								break
+							}
+							switch elem[0] {
+							case 'l': // Prefix: "laves"
+								origElem := elem
+								if l := len("laves"); len(elem) >= l && elem[0:l] == "laves" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "GET":
+										r.name = "GetBlockchainPoolSlaves"
+										r.summary = "Get pool locations on blockchain"
+										r.operationID = "getBlockchainPoolSlaves"
+										r.pathPattern = "/pools/{blockchain}/slaves"
+										r.args = args
+										r.count = 1
+										return r, true
+									default:
+										return
+									}
+								}
+
+								elem = origElem
+							case 't': // Prefix: "tats"
+								origElem := elem
+								if l := len("tats"); len(elem) >= l && elem[0:l] == "tats" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "GET":
+										r.name = "GetBlockchainPoolStats"
+										r.summary = "Get pool statistics on blockchain"
+										r.operationID = "getBlockchainPoolStats"
+										r.pathPattern = "/pools/{blockchain}/stats"
+										r.args = args
+										r.count = 1
+										return r, true
+									default:
+										return
+									}
+								}
+
+								elem = origElem
+							}
+
+							elem = origElem
+						}
+
+						elem = origElem
+					}
 
 					elem = origElem
-				case 's': // Prefix: "s"
+				case 'r': // Prefix: "rices"
 					origElem := elem
-					if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
+					if l := len("rices"); len(elem) >= l && elem[0:l] == "rices" {
 						elem = elem[l:]
 					} else {
 						break
 					}
 
 					if len(elem) == 0 {
-						break
+						switch method {
+						case "GET":
+							r.name = "GetPrices"
+							r.summary = "Get pool blockchain coin price list"
+							r.operationID = "getPrices"
+							r.pathPattern = "/prices"
+							r.args = args
+							r.count = 0
+							return r, true
+						default:
+							return
+						}
 					}
 					switch elem[0] {
-					case 'l': // Prefix: "laves"
+					case '/': // Prefix: "/"
 						origElem := elem
-						if l := len("laves"); len(elem) >= l && elem[0:l] == "laves" {
+						if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
 							elem = elem[l:]
 						} else {
 							break
 						}
 
-						if len(elem) == 0 {
-							// Leaf node.
-							switch method {
-							case "GET":
-								r.name = "GetBlockchainPoolSlaves"
-								r.summary = "Get pool locations on blockchain"
-								r.operationID = "getBlockchainPoolSlaves"
-								r.pathPattern = "/pools/{blockchain}/slaves"
-								r.args = args
-								r.count = 1
-								return r, true
-							default:
-								return
-							}
-						}
-
-						elem = origElem
-					case 't': // Prefix: "tats"
-						origElem := elem
-						if l := len("tats"); len(elem) >= l && elem[0:l] == "tats" {
-							elem = elem[l:]
-						} else {
-							break
-						}
+						// Param: "blockchain"
+						// Leaf parameter
+						args[0] = elem
+						elem = ""
 
 						if len(elem) == 0 {
 							// Leaf node.
 							switch method {
 							case "GET":
-								r.name = "GetBlockchainPoolStats"
-								r.summary = "Get pool statistics on blockchain"
-								r.operationID = "getBlockchainPoolStats"
-								r.pathPattern = "/pools/{blockchain}/stats"
+								r.name = "GetBlockchainPrice"
+								r.summary = "Get blockchain coin price and markets"
+								r.operationID = "getBlockchainPrice"
+								r.pathPattern = "/prices/{blockchain}"
 								r.args = args
 								r.count = 1
 								return r, true

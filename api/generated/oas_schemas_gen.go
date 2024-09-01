@@ -7,6 +7,168 @@ import (
 	"github.com/go-faster/jx"
 )
 
+// Ref: #/components/schemas/Blockchain
+type Blockchain struct {
+	Coin       string `json:"coin"`
+	Name       string `json:"name"`
+	Ticker     string `json:"ticker"`
+	AtomicUnit int    `json:"atomic_unit"`
+}
+
+// GetCoin returns the value of Coin.
+func (s *Blockchain) GetCoin() string {
+	return s.Coin
+}
+
+// GetName returns the value of Name.
+func (s *Blockchain) GetName() string {
+	return s.Name
+}
+
+// GetTicker returns the value of Ticker.
+func (s *Blockchain) GetTicker() string {
+	return s.Ticker
+}
+
+// GetAtomicUnit returns the value of AtomicUnit.
+func (s *Blockchain) GetAtomicUnit() int {
+	return s.AtomicUnit
+}
+
+// SetCoin sets the value of Coin.
+func (s *Blockchain) SetCoin(val string) {
+	s.Coin = val
+}
+
+// SetName sets the value of Name.
+func (s *Blockchain) SetName(val string) {
+	s.Name = val
+}
+
+// SetTicker sets the value of Ticker.
+func (s *Blockchain) SetTicker(val string) {
+	s.Ticker = val
+}
+
+// SetAtomicUnit sets the value of AtomicUnit.
+func (s *Blockchain) SetAtomicUnit(val int) {
+	s.AtomicUnit = val
+}
+
+// Merged schema.
+// Ref: #/components/schemas/BlockchainCoinPrice
+type BlockchainCoinPrice struct {
+	Price                    float64       `json:"price"`
+	PriceChange24hPercentage float64       `json:"price_change_24h_percentage"`
+	Markets                  []MarketPrice `json:"markets"`
+}
+
+// GetPrice returns the value of Price.
+func (s *BlockchainCoinPrice) GetPrice() float64 {
+	return s.Price
+}
+
+// GetPriceChange24hPercentage returns the value of PriceChange24hPercentage.
+func (s *BlockchainCoinPrice) GetPriceChange24hPercentage() float64 {
+	return s.PriceChange24hPercentage
+}
+
+// GetMarkets returns the value of Markets.
+func (s *BlockchainCoinPrice) GetMarkets() []MarketPrice {
+	return s.Markets
+}
+
+// SetPrice sets the value of Price.
+func (s *BlockchainCoinPrice) SetPrice(val float64) {
+	s.Price = val
+}
+
+// SetPriceChange24hPercentage sets the value of PriceChange24hPercentage.
+func (s *BlockchainCoinPrice) SetPriceChange24hPercentage(val float64) {
+	s.PriceChange24hPercentage = val
+}
+
+// SetMarkets sets the value of Markets.
+func (s *BlockchainCoinPrice) SetMarkets(val []MarketPrice) {
+	s.Markets = val
+}
+
+// Merged schema.
+// Ref: #/components/schemas/CoinPrice
+type CoinPrice struct {
+	Price                    float64 `json:"price"`
+	PriceChange24hPercentage float64 `json:"price_change_24h_percentage"`
+	Coin                     string  `json:"coin"`
+}
+
+// GetPrice returns the value of Price.
+func (s *CoinPrice) GetPrice() float64 {
+	return s.Price
+}
+
+// GetPriceChange24hPercentage returns the value of PriceChange24hPercentage.
+func (s *CoinPrice) GetPriceChange24hPercentage() float64 {
+	return s.PriceChange24hPercentage
+}
+
+// GetCoin returns the value of Coin.
+func (s *CoinPrice) GetCoin() string {
+	return s.Coin
+}
+
+// SetPrice sets the value of Price.
+func (s *CoinPrice) SetPrice(val float64) {
+	s.Price = val
+}
+
+// SetPriceChange24hPercentage sets the value of PriceChange24hPercentage.
+func (s *CoinPrice) SetPriceChange24hPercentage(val float64) {
+	s.PriceChange24hPercentage = val
+}
+
+// SetCoin sets the value of Coin.
+func (s *CoinPrice) SetCoin(val string) {
+	s.Coin = val
+}
+
+// Merged schema.
+// Ref: #/components/schemas/MarketPrice
+type MarketPrice struct {
+	Price                    float64 `json:"price"`
+	PriceChange24hPercentage float64 `json:"price_change_24h_percentage"`
+	Ticker                   string  `json:"ticker"`
+}
+
+// GetPrice returns the value of Price.
+func (s *MarketPrice) GetPrice() float64 {
+	return s.Price
+}
+
+// GetPriceChange24hPercentage returns the value of PriceChange24hPercentage.
+func (s *MarketPrice) GetPriceChange24hPercentage() float64 {
+	return s.PriceChange24hPercentage
+}
+
+// GetTicker returns the value of Ticker.
+func (s *MarketPrice) GetTicker() string {
+	return s.Ticker
+}
+
+// SetPrice sets the value of Price.
+func (s *MarketPrice) SetPrice(val float64) {
+	s.Price = val
+}
+
+// SetPriceChange24hPercentage sets the value of PriceChange24hPercentage.
+func (s *MarketPrice) SetPriceChange24hPercentage(val float64) {
+	s.PriceChange24hPercentage = val
+}
+
+// SetTicker sets the value of Ticker.
+func (s *MarketPrice) SetTicker(val string) {
+	s.Ticker = val
+}
+
 // NewOptBool returns new OptBool with value set to v.
 func NewOptBool(v bool) OptBool {
 	return OptBool{
@@ -443,54 +605,6 @@ func (s *Pool) SetStats(val PoolStats) {
 // SetSlaves sets the value of Slaves.
 func (s *Pool) SetSlaves(val []PoolSlave) {
 	s.Slaves = val
-}
-
-// Ref: #/components/schemas/PoolBlockchain
-type PoolBlockchain struct {
-	Coin       string `json:"coin"`
-	Name       string `json:"name"`
-	Ticker     string `json:"ticker"`
-	AtomicUnit int    `json:"atomic_unit"`
-}
-
-// GetCoin returns the value of Coin.
-func (s *PoolBlockchain) GetCoin() string {
-	return s.Coin
-}
-
-// GetName returns the value of Name.
-func (s *PoolBlockchain) GetName() string {
-	return s.Name
-}
-
-// GetTicker returns the value of Ticker.
-func (s *PoolBlockchain) GetTicker() string {
-	return s.Ticker
-}
-
-// GetAtomicUnit returns the value of AtomicUnit.
-func (s *PoolBlockchain) GetAtomicUnit() int {
-	return s.AtomicUnit
-}
-
-// SetCoin sets the value of Coin.
-func (s *PoolBlockchain) SetCoin(val string) {
-	s.Coin = val
-}
-
-// SetName sets the value of Name.
-func (s *PoolBlockchain) SetName(val string) {
-	s.Name = val
-}
-
-// SetTicker sets the value of Ticker.
-func (s *PoolBlockchain) SetTicker(val string) {
-	s.Ticker = val
-}
-
-// SetAtomicUnit sets the value of AtomicUnit.
-func (s *PoolBlockchain) SetAtomicUnit(val int) {
-	s.AtomicUnit = val
 }
 
 // Ref: #/components/schemas/PoolFee

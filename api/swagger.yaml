@@ -4,19 +4,45 @@ info:
   title: Grand Pool API
   description: Grand Pool mining pool API
 paths:
-  /pools/blockchains:
+  /blockchains:
     get:
-      summary: Get available pools blockchains list
-      operationId: pools
+      summary: Get available blockchains list
+      operationId: getBlockchains
       responses:
         '200':
-          description: Pools blockchains list response
+          description: Blockchains list response
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PoolBlockchain'
+                  $ref: '#/components/schemas/Blockchain'
+  /prices:
+    get:
+      summary: Get pool blockchain coin price list
+      operationId: getPrices
+      responses:
+        '200':
+          description: Price list response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CoinPrice'
+  /prices/{blockchain}:
+    get:
+      summary: Get blockchain coin price and markets
+      operationId: getBlockchainPrice
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+      responses:
+        '200':
+          description: Blockchain coin price response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlockchainCoinPrice'
   /pools/{blockchain}:
     get:
       summary: Get full pool data on blockchain
@@ -81,7 +107,7 @@ components:
       schema:
         type: string
   schemas:
-    PoolBlockchain:
+    Blockchain:
       type: object
       required:
         - coin
@@ -97,6 +123,47 @@ components:
           type: string
         atomic_unit:
           type: integer
+    Price:
+      type: object
+      required:
+        - price
+        - price_change_24h_percentage
+      properties:
+        price:
+          type: number
+          format: double
+        price_change_24h_percentage:
+          type: number
+          format: double
+    MarketPrice:
+      allOf:
+        - $ref: '#/components/schemas/Price'
+        - type: object
+          required:
+            - ticker
+          properties:
+            ticker:
+              type: string
+    CoinPrice:
+      allOf:
+        - $ref: '#/components/schemas/Price'
+        - type: object
+          required:
+            - coin
+          properties:
+            coin:
+              type: string
+    BlockchainCoinPrice:
+      allOf:
+        - $ref: '#/components/schemas/Price'
+        - type: object
+          required:
+            - markets
+          properties:
+            markets:
+              type: array
+              items:
+                $ref: '#/components/schemas/MarketPrice'
     PayoutMode:
       type: string
       enum:

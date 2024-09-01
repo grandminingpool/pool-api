@@ -32,12 +32,24 @@ type Handler interface {
 	//
 	// GET /pools/{blockchain}/stats
 	GetBlockchainPoolStats(ctx context.Context, params GetBlockchainPoolStatsParams) (PoolStats, error)
-	// Pools implements pools operation.
+	// GetBlockchainPrice implements getBlockchainPrice operation.
 	//
-	// Get available pools blockchains list.
+	// Get blockchain coin price and markets.
 	//
-	// GET /pools/blockchains
-	Pools(ctx context.Context) ([]PoolBlockchain, error)
+	// GET /prices/{blockchain}
+	GetBlockchainPrice(ctx context.Context, params GetBlockchainPriceParams) (*BlockchainCoinPrice, error)
+	// GetBlockchains implements getBlockchains operation.
+	//
+	// Get available blockchains list.
+	//
+	// GET /blockchains
+	GetBlockchains(ctx context.Context) ([]Blockchain, error)
+	// GetPrices implements getPrices operation.
+	//
+	// Get pool blockchain coin price list.
+	//
+	// GET /prices
+	GetPrices(ctx context.Context) ([]CoinPrice, error)
 }
 
 // Server implements http server based on OpenAPI v3 specification and

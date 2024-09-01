@@ -49,11 +49,29 @@ func (UnimplementedHandler) GetBlockchainPoolStats(ctx context.Context, params G
 	return r, ht.ErrNotImplemented
 }
 
-// Pools implements pools operation.
+// GetBlockchainPrice implements getBlockchainPrice operation.
 //
-// Get available pools blockchains list.
+// Get blockchain coin price and markets.
 //
-// GET /pools/blockchains
-func (UnimplementedHandler) Pools(ctx context.Context) (r []PoolBlockchain, _ error) {
+// GET /prices/{blockchain}
+func (UnimplementedHandler) GetBlockchainPrice(ctx context.Context, params GetBlockchainPriceParams) (r *BlockchainCoinPrice, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchains implements getBlockchains operation.
+//
+// Get available blockchains list.
+//
+// GET /blockchains
+func (UnimplementedHandler) GetBlockchains(ctx context.Context) (r []Blockchain, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetPrices implements getPrices operation.
+//
+// Get pool blockchain coin price list.
+//
+// GET /prices
+func (UnimplementedHandler) GetPrices(ctx context.Context) (r []CoinPrice, _ error) {
 	return r, ht.ErrNotImplemented
 }
