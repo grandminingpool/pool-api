@@ -193,6 +193,13 @@ components:
           type: integer
     PoolInfo:
       type: object
+      required:
+        - blockchain
+        - host
+        - payout_mode
+        - solo
+        - fee
+        - payouts_info
       properties:
         blockchain:
           type: string
@@ -215,6 +222,7 @@ components:
           items:
             type: string
     PoolStats:
+      type: object
       required:
         - miners_count
         - hashrate
@@ -238,6 +246,7 @@ components:
         solo_share_difficulty:
           type: integer
     PoolSlave:
+      type: object
       required:
         - region
         - host

@@ -52,7 +52,7 @@ func encodeGetBlockchainPoolSlavesResponse(response []PoolSlave, w http.Response
 	return nil
 }
 
-func encodeGetBlockchainPoolStatsResponse(response PoolStats, w http.ResponseWriter) error {
+func encodeGetBlockchainPoolStatsResponse(response *PoolStats, w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
 

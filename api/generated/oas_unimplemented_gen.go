@@ -45,7 +45,7 @@ func (UnimplementedHandler) GetBlockchainPoolSlaves(ctx context.Context, params 
 // Get pool statistics on blockchain.
 //
 // GET /pools/{blockchain}/stats
-func (UnimplementedHandler) GetBlockchainPoolStats(ctx context.Context, params GetBlockchainPoolStatsParams) (r PoolStats, _ error) {
+func (UnimplementedHandler) GetBlockchainPoolStats(ctx context.Context, params GetBlockchainPoolStatsParams) (r *PoolStats, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

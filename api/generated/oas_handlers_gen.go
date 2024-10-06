@@ -278,7 +278,7 @@ func (s *Server) handleGetBlockchainPoolStatsRequest(args [1]string, argsEscaped
 		return
 	}
 
-	var response PoolStats
+	var response *PoolStats
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -298,7 +298,7 @@ func (s *Server) handleGetBlockchainPoolStatsRequest(args [1]string, argsEscaped
 		type (
 			Request  = struct{}
 			Params   = GetBlockchainPoolStatsParams
-			Response = PoolStats
+			Response = *PoolStats
 		)
 		response, err = middleware.HookMiddleware[
 			Request,

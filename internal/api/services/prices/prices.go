@@ -47,8 +47,11 @@ func (s *PricesService) GetCoinPrices(ctx context.Context) ([]CoinPriceDB, error
 
 func (s *PricesService) GetBlockchainCoinPrice(ctx context.Context, coin string) (*BlockchainCoinPrice, error) {
 	marketPrices := []MarketPriceDB{}
-	if err := s.pgConn.SelectContext(ctx, &marketPrices, `SELECT market_ticker, price, price_usd_24h_ago
-		FROM coin_prices WHERE blockchain_coin = $1 ORDER BY usdt DESC`); err != nil {
+	err := s.pgConn.SelectContext(ctx, &marketPrices, `SELECT market_ticker, price, price_usd_24h_ago
+		FROM coin_prices WHERE blockchain_coin = $1 ORDER BY usdt DESC`)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	} else if err != nil {
 		return nil, fmt.Errorf("failed to get blockchain (coin: %s) price: %w", coin, err)
 	}
 

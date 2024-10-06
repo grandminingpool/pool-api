@@ -4,7 +4,6 @@ package apiModels
 
 import (
 	"github.com/go-faster/errors"
-	"github.com/go-faster/jx"
 )
 
 // Ref: #/components/schemas/Blockchain
@@ -169,52 +168,6 @@ func (s *MarketPrice) SetTicker(val string) {
 	s.Ticker = val
 }
 
-// NewOptBool returns new OptBool with value set to v.
-func NewOptBool(v bool) OptBool {
-	return OptBool{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptBool is optional bool.
-type OptBool struct {
-	Value bool
-	Set   bool
-}
-
-// IsSet returns true if OptBool was set.
-func (o OptBool) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptBool) Reset() {
-	var v bool
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptBool) SetTo(v bool) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptBool) Get() (v bool, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptBool) Or(d bool) bool {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
 // NewOptFloat64 returns new OptFloat64 with value set to v.
 func NewOptFloat64(v float64) OptFloat64 {
 	return OptFloat64{
@@ -301,144 +254,6 @@ func (o OptInt) Get() (v int, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptInt) Or(d int) int {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
-// NewOptPayoutMode returns new OptPayoutMode with value set to v.
-func NewOptPayoutMode(v PayoutMode) OptPayoutMode {
-	return OptPayoutMode{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptPayoutMode is optional PayoutMode.
-type OptPayoutMode struct {
-	Value PayoutMode
-	Set   bool
-}
-
-// IsSet returns true if OptPayoutMode was set.
-func (o OptPayoutMode) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptPayoutMode) Reset() {
-	var v PayoutMode
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptPayoutMode) SetTo(v PayoutMode) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptPayoutMode) Get() (v PayoutMode, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptPayoutMode) Or(d PayoutMode) PayoutMode {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
-// NewOptPayoutsInfo returns new OptPayoutsInfo with value set to v.
-func NewOptPayoutsInfo(v PayoutsInfo) OptPayoutsInfo {
-	return OptPayoutsInfo{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptPayoutsInfo is optional PayoutsInfo.
-type OptPayoutsInfo struct {
-	Value PayoutsInfo
-	Set   bool
-}
-
-// IsSet returns true if OptPayoutsInfo was set.
-func (o OptPayoutsInfo) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptPayoutsInfo) Reset() {
-	var v PayoutsInfo
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptPayoutsInfo) SetTo(v PayoutsInfo) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptPayoutsInfo) Get() (v PayoutsInfo, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptPayoutsInfo) Or(d PayoutsInfo) PayoutsInfo {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
-// NewOptPoolFee returns new OptPoolFee with value set to v.
-func NewOptPoolFee(v PoolFee) OptPoolFee {
-	return OptPoolFee{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptPoolFee is optional PoolFee.
-type OptPoolFee struct {
-	Value PoolFee
-	Set   bool
-}
-
-// IsSet returns true if OptPoolFee was set.
-func (o OptPoolFee) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptPoolFee) Reset() {
-	var v PoolFee
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptPoolFee) SetTo(v PoolFee) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptPoolFee) Get() (v PoolFee, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptPoolFee) Or(d PoolFee) PoolFee {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -635,23 +450,23 @@ func (s *PoolFee) SetSoloFee(val OptFloat64) {
 
 // Ref: #/components/schemas/PoolInfo
 type PoolInfo struct {
-	Blockchain  OptString      `json:"blockchain"`
-	Host        OptString      `json:"host"`
-	Algos       []string       `json:"algos"`
-	PayoutMode  OptPayoutMode  `json:"payout_mode"`
-	Solo        OptBool        `json:"solo"`
-	Fee         OptPoolFee     `json:"fee"`
-	PayoutsInfo OptPayoutsInfo `json:"payouts_info"`
-	Agents      []string       `json:"agents"`
+	Blockchain  string      `json:"blockchain"`
+	Host        string      `json:"host"`
+	Algos       []string    `json:"algos"`
+	PayoutMode  PayoutMode  `json:"payout_mode"`
+	Solo        bool        `json:"solo"`
+	Fee         PoolFee     `json:"fee"`
+	PayoutsInfo PayoutsInfo `json:"payouts_info"`
+	Agents      []string    `json:"agents"`
 }
 
 // GetBlockchain returns the value of Blockchain.
-func (s *PoolInfo) GetBlockchain() OptString {
+func (s *PoolInfo) GetBlockchain() string {
 	return s.Blockchain
 }
 
 // GetHost returns the value of Host.
-func (s *PoolInfo) GetHost() OptString {
+func (s *PoolInfo) GetHost() string {
 	return s.Host
 }
 
@@ -661,22 +476,22 @@ func (s *PoolInfo) GetAlgos() []string {
 }
 
 // GetPayoutMode returns the value of PayoutMode.
-func (s *PoolInfo) GetPayoutMode() OptPayoutMode {
+func (s *PoolInfo) GetPayoutMode() PayoutMode {
 	return s.PayoutMode
 }
 
 // GetSolo returns the value of Solo.
-func (s *PoolInfo) GetSolo() OptBool {
+func (s *PoolInfo) GetSolo() bool {
 	return s.Solo
 }
 
 // GetFee returns the value of Fee.
-func (s *PoolInfo) GetFee() OptPoolFee {
+func (s *PoolInfo) GetFee() PoolFee {
 	return s.Fee
 }
 
 // GetPayoutsInfo returns the value of PayoutsInfo.
-func (s *PoolInfo) GetPayoutsInfo() OptPayoutsInfo {
+func (s *PoolInfo) GetPayoutsInfo() PayoutsInfo {
 	return s.PayoutsInfo
 }
 
@@ -686,12 +501,12 @@ func (s *PoolInfo) GetAgents() []string {
 }
 
 // SetBlockchain sets the value of Blockchain.
-func (s *PoolInfo) SetBlockchain(val OptString) {
+func (s *PoolInfo) SetBlockchain(val string) {
 	s.Blockchain = val
 }
 
 // SetHost sets the value of Host.
-func (s *PoolInfo) SetHost(val OptString) {
+func (s *PoolInfo) SetHost(val string) {
 	s.Host = val
 }
 
@@ -701,22 +516,22 @@ func (s *PoolInfo) SetAlgos(val []string) {
 }
 
 // SetPayoutMode sets the value of PayoutMode.
-func (s *PoolInfo) SetPayoutMode(val OptPayoutMode) {
+func (s *PoolInfo) SetPayoutMode(val PayoutMode) {
 	s.PayoutMode = val
 }
 
 // SetSolo sets the value of Solo.
-func (s *PoolInfo) SetSolo(val OptBool) {
+func (s *PoolInfo) SetSolo(val bool) {
 	s.Solo = val
 }
 
 // SetFee sets the value of Fee.
-func (s *PoolInfo) SetFee(val OptPoolFee) {
+func (s *PoolInfo) SetFee(val PoolFee) {
 	s.Fee = val
 }
 
 // SetPayoutsInfo sets the value of PayoutsInfo.
-func (s *PoolInfo) SetPayoutsInfo(val OptPayoutsInfo) {
+func (s *PoolInfo) SetPayoutsInfo(val PayoutsInfo) {
 	s.PayoutsInfo = val
 }
 
@@ -725,6 +540,164 @@ func (s *PoolInfo) SetAgents(val []string) {
 	s.Agents = val
 }
 
-type PoolSlave jx.Raw
+// Ref: #/components/schemas/PoolSlave
+type PoolSlave struct {
+	Region      string `json:"region"`
+	Host        string `json:"host"`
+	TCPPort     int    `json:"tcp_port"`
+	SslPort     int    `json:"ssl_port"`
+	SoloPort    OptInt `json:"solo_port"`
+	ConnectedAt string `json:"connected_at"`
+}
 
-type PoolStats jx.Raw
+// GetRegion returns the value of Region.
+func (s *PoolSlave) GetRegion() string {
+	return s.Region
+}
+
+// GetHost returns the value of Host.
+func (s *PoolSlave) GetHost() string {
+	return s.Host
+}
+
+// GetTCPPort returns the value of TCPPort.
+func (s *PoolSlave) GetTCPPort() int {
+	return s.TCPPort
+}
+
+// GetSslPort returns the value of SslPort.
+func (s *PoolSlave) GetSslPort() int {
+	return s.SslPort
+}
+
+// GetSoloPort returns the value of SoloPort.
+func (s *PoolSlave) GetSoloPort() OptInt {
+	return s.SoloPort
+}
+
+// GetConnectedAt returns the value of ConnectedAt.
+func (s *PoolSlave) GetConnectedAt() string {
+	return s.ConnectedAt
+}
+
+// SetRegion sets the value of Region.
+func (s *PoolSlave) SetRegion(val string) {
+	s.Region = val
+}
+
+// SetHost sets the value of Host.
+func (s *PoolSlave) SetHost(val string) {
+	s.Host = val
+}
+
+// SetTCPPort sets the value of TCPPort.
+func (s *PoolSlave) SetTCPPort(val int) {
+	s.TCPPort = val
+}
+
+// SetSslPort sets the value of SslPort.
+func (s *PoolSlave) SetSslPort(val int) {
+	s.SslPort = val
+}
+
+// SetSoloPort sets the value of SoloPort.
+func (s *PoolSlave) SetSoloPort(val OptInt) {
+	s.SoloPort = val
+}
+
+// SetConnectedAt sets the value of ConnectedAt.
+func (s *PoolSlave) SetConnectedAt(val string) {
+	s.ConnectedAt = val
+}
+
+// Ref: #/components/schemas/PoolStats
+type PoolStats struct {
+	MinersCount         int       `json:"miners_count"`
+	SoloMinersCount     OptInt    `json:"solo_miners_count"`
+	Hashrate            string    `json:"hashrate"`
+	AvgHashrate         string    `json:"avg_hashrate"`
+	SoloHashrate        OptString `json:"solo_hashrate"`
+	SoloAvgHashrate     OptString `json:"solo_avg_hashrate"`
+	ShareDifficulty     int       `json:"share_difficulty"`
+	SoloShareDifficulty OptInt    `json:"solo_share_difficulty"`
+}
+
+// GetMinersCount returns the value of MinersCount.
+func (s *PoolStats) GetMinersCount() int {
+	return s.MinersCount
+}
+
+// GetSoloMinersCount returns the value of SoloMinersCount.
+func (s *PoolStats) GetSoloMinersCount() OptInt {
+	return s.SoloMinersCount
+}
+
+// GetHashrate returns the value of Hashrate.
+func (s *PoolStats) GetHashrate() string {
+	return s.Hashrate
+}
+
+// GetAvgHashrate returns the value of AvgHashrate.
+func (s *PoolStats) GetAvgHashrate() string {
+	return s.AvgHashrate
+}
+
+// GetSoloHashrate returns the value of SoloHashrate.
+func (s *PoolStats) GetSoloHashrate() OptString {
+	return s.SoloHashrate
+}
+
+// GetSoloAvgHashrate returns the value of SoloAvgHashrate.
+func (s *PoolStats) GetSoloAvgHashrate() OptString {
+	return s.SoloAvgHashrate
+}
+
+// GetShareDifficulty returns the value of ShareDifficulty.
+func (s *PoolStats) GetShareDifficulty() int {
+	return s.ShareDifficulty
+}
+
+// GetSoloShareDifficulty returns the value of SoloShareDifficulty.
+func (s *PoolStats) GetSoloShareDifficulty() OptInt {
+	return s.SoloShareDifficulty
+}
+
+// SetMinersCount sets the value of MinersCount.
+func (s *PoolStats) SetMinersCount(val int) {
+	s.MinersCount = val
+}
+
+// SetSoloMinersCount sets the value of SoloMinersCount.
+func (s *PoolStats) SetSoloMinersCount(val OptInt) {
+	s.SoloMinersCount = val
+}
+
+// SetHashrate sets the value of Hashrate.
+func (s *PoolStats) SetHashrate(val string) {
+	s.Hashrate = val
+}
+
+// SetAvgHashrate sets the value of AvgHashrate.
+func (s *PoolStats) SetAvgHashrate(val string) {
+	s.AvgHashrate = val
+}
+
+// SetSoloHashrate sets the value of SoloHashrate.
+func (s *PoolStats) SetSoloHashrate(val OptString) {
+	s.SoloHashrate = val
+}
+
+// SetSoloAvgHashrate sets the value of SoloAvgHashrate.
+func (s *PoolStats) SetSoloAvgHashrate(val OptString) {
+	s.SoloAvgHashrate = val
+}
+
+// SetShareDifficulty sets the value of ShareDifficulty.
+func (s *PoolStats) SetShareDifficulty(val int) {
+	s.ShareDifficulty = val
+}
+
+// SetSoloShareDifficulty sets the value of SoloShareDifficulty.
+func (s *PoolStats) SetSoloShareDifficulty(val OptInt) {
+	s.SoloShareDifficulty = val
+}

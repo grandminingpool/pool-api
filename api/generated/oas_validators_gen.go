@@ -233,15 +233,8 @@ func (s *PoolInfo) Validate() error {
 
 	var failures []validate.FieldError
 	if err := func() error {
-		if value, ok := s.PayoutMode.Get(); ok {
-			if err := func() error {
-				if err := value.Validate(); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return err
-			}
+		if err := s.PayoutMode.Validate(); err != nil {
+			return err
 		}
 		return nil
 	}(); err != nil {
@@ -251,15 +244,8 @@ func (s *PoolInfo) Validate() error {
 		})
 	}
 	if err := func() error {
-		if value, ok := s.Fee.Get(); ok {
-			if err := func() error {
-				if err := value.Validate(); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return err
-			}
+		if err := s.Fee.Validate(); err != nil {
+			return err
 		}
 		return nil
 	}(); err != nil {

@@ -31,7 +31,7 @@ type Handler interface {
 	// Get pool statistics on blockchain.
 	//
 	// GET /pools/{blockchain}/stats
-	GetBlockchainPoolStats(ctx context.Context, params GetBlockchainPoolStatsParams) (PoolStats, error)
+	GetBlockchainPoolStats(ctx context.Context, params GetBlockchainPoolStatsParams) (*PoolStats, error)
 	// GetBlockchainPrice implements getBlockchainPrice operation.
 	//
 	// Get blockchain coin price and markets.
