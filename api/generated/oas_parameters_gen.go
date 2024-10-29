@@ -15,6 +15,1855 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
+// GetBlockchainBlocksParams is parameters of getBlockchainBlocks operation.
+type GetBlockchainBlocksParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// List rows limit.
+	Limit uint32
+	// List rows offset.
+	Offset uint32
+	// Blocks list sorts.
+	Sorts OptString
+	// Mined block miner address filter.
+	Miner OptString
+	// Mined block miner hashrate filter.
+	MinerHashrate OptString
+	// Mined block hash filter.
+	BlockHash OptString
+	// Mined block share difficulty filter.
+	ShareDifficulty OptString
+	// Round miners count filter.
+	RoundMinersCount OptString
+	// Mined block time filter.
+	MinedAt OptString
+}
+
+func unpackGetBlockchainBlocksParams(packed middleware.Parameters) (params GetBlockchainBlocksParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "limit",
+			In:   "query",
+		}
+		params.Limit = packed[key].(uint32)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "offset",
+			In:   "query",
+		}
+		params.Offset = packed[key].(uint32)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "sorts",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Sorts = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "miner",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Miner = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "miner_hashrate",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.MinerHashrate = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "block_hash",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.BlockHash = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "share_difficulty",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.ShareDifficulty = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "round_miners_count",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.RoundMinersCount = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "mined_at",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.MinedAt = v.(OptString)
+		}
+	}
+	return params
+}
+
+func decodeGetBlockchainBlocksParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainBlocksParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Set default value for query: limit.
+	{
+		val := uint32(10)
+		params.Limit = val
+	}
+	// Decode query: limit.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "limit",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToUint32(val)
+				if err != nil {
+					return err
+				}
+
+				params.Limit = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "limit",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Set default value for query: offset.
+	{
+		val := uint32(0)
+		params.Offset = val
+	}
+	// Decode query: offset.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "offset",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToUint32(val)
+				if err != nil {
+					return err
+				}
+
+				params.Offset = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "offset",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: sorts.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "sorts",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSortsVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotSortsVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Sorts.SetTo(paramsDotSortsVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "sorts",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: miner.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "miner",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotMinerVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotMinerVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Miner.SetTo(paramsDotMinerVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "miner",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: miner_hashrate.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "miner_hashrate",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotMinerHashrateVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotMinerHashrateVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.MinerHashrate.SetTo(paramsDotMinerHashrateVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "miner_hashrate",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: block_hash.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "block_hash",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotBlockHashVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotBlockHashVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.BlockHash.SetTo(paramsDotBlockHashVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "block_hash",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: share_difficulty.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "share_difficulty",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotShareDifficultyVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotShareDifficultyVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.ShareDifficulty.SetTo(paramsDotShareDifficultyVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "share_difficulty",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: round_miners_count.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "round_miners_count",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotRoundMinersCountVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotRoundMinersCountVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.RoundMinersCount.SetTo(paramsDotRoundMinersCountVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "round_miners_count",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: mined_at.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "mined_at",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotMinedAtVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotMinedAtVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.MinedAt.SetTo(paramsDotMinedAtVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "mined_at",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetBlockchainMinerParams is parameters of getBlockchainMiner operation.
+type GetBlockchainMinerParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// Pool miner.
+	Miner string
+}
+
+func unpackGetBlockchainMinerParams(packed middleware.Parameters) (params GetBlockchainMinerParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "miner",
+			In:   "path",
+		}
+		params.Miner = packed[key].(string)
+	}
+	return params
+}
+
+func decodeGetBlockchainMinerParams(args [2]string, argsEscaped bool, r *http.Request) (params GetBlockchainMinerParams, _ error) {
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: miner.
+	if err := func() error {
+		param := args[1]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[1])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "miner",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Miner = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "miner",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetBlockchainMinerBalanceParams is parameters of getBlockchainMinerBalance operation.
+type GetBlockchainMinerBalanceParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// Pool miner.
+	Miner string
+}
+
+func unpackGetBlockchainMinerBalanceParams(packed middleware.Parameters) (params GetBlockchainMinerBalanceParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "miner",
+			In:   "path",
+		}
+		params.Miner = packed[key].(string)
+	}
+	return params
+}
+
+func decodeGetBlockchainMinerBalanceParams(args [2]string, argsEscaped bool, r *http.Request) (params GetBlockchainMinerBalanceParams, _ error) {
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: miner.
+	if err := func() error {
+		param := args[1]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[1])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "miner",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Miner = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "miner",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetBlockchainMinerWorkersParams is parameters of getBlockchainMinerWorkers operation.
+type GetBlockchainMinerWorkersParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// Pool miner.
+	Miner string
+}
+
+func unpackGetBlockchainMinerWorkersParams(packed middleware.Parameters) (params GetBlockchainMinerWorkersParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "miner",
+			In:   "path",
+		}
+		params.Miner = packed[key].(string)
+	}
+	return params
+}
+
+func decodeGetBlockchainMinerWorkersParams(args [2]string, argsEscaped bool, r *http.Request) (params GetBlockchainMinerWorkersParams, _ error) {
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: miner.
+	if err := func() error {
+		param := args[1]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[1])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "miner",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Miner = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "miner",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetBlockchainMinersParams is parameters of getBlockchainMiners operation.
+type GetBlockchainMinersParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// List rows limit.
+	Limit uint32
+	// List rows offset.
+	Offset uint32
+	// Miners list sorts.
+	Sorts OptString
+	// Miner address filter.
+	Address OptString
+	// Miner hashrate filter.
+	Hashrate OptString
+	// Miner workers count filter.
+	WorkersCount OptString
+	// Miner mined blocks count filter.
+	BlocksCount OptString
+	// Miner mined solo blocks count filter.
+	SoloBlocksCount OptString
+	// Miner joined at time filter.
+	JoinedAt OptString
+}
+
+func unpackGetBlockchainMinersParams(packed middleware.Parameters) (params GetBlockchainMinersParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "limit",
+			In:   "query",
+		}
+		params.Limit = packed[key].(uint32)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "offset",
+			In:   "query",
+		}
+		params.Offset = packed[key].(uint32)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "sorts",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Sorts = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "address",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Address = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "hashrate",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Hashrate = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "workers_count",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.WorkersCount = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "blocks_count",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.BlocksCount = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "solo_blocks_count",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.SoloBlocksCount = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "joined_at",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.JoinedAt = v.(OptString)
+		}
+	}
+	return params
+}
+
+func decodeGetBlockchainMinersParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainMinersParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Set default value for query: limit.
+	{
+		val := uint32(10)
+		params.Limit = val
+	}
+	// Decode query: limit.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "limit",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToUint32(val)
+				if err != nil {
+					return err
+				}
+
+				params.Limit = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "limit",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Set default value for query: offset.
+	{
+		val := uint32(0)
+		params.Offset = val
+	}
+	// Decode query: offset.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "offset",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToUint32(val)
+				if err != nil {
+					return err
+				}
+
+				params.Offset = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "offset",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: sorts.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "sorts",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSortsVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotSortsVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Sorts.SetTo(paramsDotSortsVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "sorts",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: address.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "address",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotAddressVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotAddressVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Address.SetTo(paramsDotAddressVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "address",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: hashrate.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "hashrate",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotHashrateVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotHashrateVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Hashrate.SetTo(paramsDotHashrateVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "hashrate",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: workers_count.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "workers_count",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotWorkersCountVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotWorkersCountVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.WorkersCount.SetTo(paramsDotWorkersCountVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "workers_count",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: blocks_count.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "blocks_count",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotBlocksCountVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotBlocksCountVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.BlocksCount.SetTo(paramsDotBlocksCountVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blocks_count",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: solo_blocks_count.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "solo_blocks_count",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSoloBlocksCountVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotSoloBlocksCountVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.SoloBlocksCount.SetTo(paramsDotSoloBlocksCountVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "solo_blocks_count",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: joined_at.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "joined_at",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotJoinedAtVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotJoinedAtVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.JoinedAt.SetTo(paramsDotJoinedAtVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "joined_at",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetBlockchainPayoutsParams is parameters of getBlockchainPayouts operation.
+type GetBlockchainPayoutsParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// List rows limit.
+	Limit uint32
+	// List rows offset.
+	Offset uint32
+	// Payouts list sorts.
+	Sorts OptString
+	// Payout miner address filter.
+	Miner OptString
+	// Payout transaction hash filter.
+	TxHash OptString
+	// Payout amount filter.
+	Amount OptString
+	// Payout time filter.
+	PaidAt OptString
+}
+
+func unpackGetBlockchainPayoutsParams(packed middleware.Parameters) (params GetBlockchainPayoutsParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "limit",
+			In:   "query",
+		}
+		params.Limit = packed[key].(uint32)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "offset",
+			In:   "query",
+		}
+		params.Offset = packed[key].(uint32)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "sorts",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Sorts = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "miner",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Miner = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "tx_hash",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.TxHash = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "amount",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Amount = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "paid_at",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.PaidAt = v.(OptString)
+		}
+	}
+	return params
+}
+
+func decodeGetBlockchainPayoutsParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainPayoutsParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Set default value for query: limit.
+	{
+		val := uint32(10)
+		params.Limit = val
+	}
+	// Decode query: limit.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "limit",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToUint32(val)
+				if err != nil {
+					return err
+				}
+
+				params.Limit = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "limit",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Set default value for query: offset.
+	{
+		val := uint32(0)
+		params.Offset = val
+	}
+	// Decode query: offset.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "offset",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToUint32(val)
+				if err != nil {
+					return err
+				}
+
+				params.Offset = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "offset",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: sorts.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "sorts",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSortsVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotSortsVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Sorts.SetTo(paramsDotSortsVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "sorts",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: miner.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "miner",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotMinerVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotMinerVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Miner.SetTo(paramsDotMinerVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "miner",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: tx_hash.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "tx_hash",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotTxHashVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotTxHashVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.TxHash.SetTo(paramsDotTxHashVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "tx_hash",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: amount.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "amount",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotAmountVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotAmountVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Amount.SetTo(paramsDotAmountVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "amount",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: paid_at.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "paid_at",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotPaidAtVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotPaidAtVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.PaidAt.SetTo(paramsDotPaidAtVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "paid_at",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
 // GetBlockchainPoolParams is parameters of getBlockchainPool operation.
 type GetBlockchainPoolParams struct {
 	// Pool blockchain.
@@ -339,6 +2188,589 @@ func decodeGetBlockchainPriceParams(args [1]string, argsEscaped bool, r *http.Re
 		return params, &ogenerrors.DecodeParamError{
 			Name: "blockchain",
 			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetBlockchainSoloBlocksParams is parameters of getBlockchainSoloBlocks operation.
+type GetBlockchainSoloBlocksParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// List rows limit.
+	Limit uint32
+	// List rows offset.
+	Offset uint32
+	// Solo blocks list sorts.
+	Sorts OptString
+	// Mined solo block miner address filter.
+	Miner OptString
+	// Mined solo block miner hashrate filter.
+	MinerHashrate OptString
+	// Mined solo block hash filter.
+	BlockHash OptString
+	// Mined solo block reward filter.
+	Reward OptString
+	// Mined solo block transaction hash filter.
+	TxHash OptString
+	// Mined solo block share difficulty filter.
+	ShareDifficulty OptString
+	// Mined solo block time filter.
+	MinedAt OptString
+}
+
+func unpackGetBlockchainSoloBlocksParams(packed middleware.Parameters) (params GetBlockchainSoloBlocksParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "limit",
+			In:   "query",
+		}
+		params.Limit = packed[key].(uint32)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "offset",
+			In:   "query",
+		}
+		params.Offset = packed[key].(uint32)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "sorts",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Sorts = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "miner",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Miner = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "miner_hashrate",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.MinerHashrate = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "block_hash",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.BlockHash = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "reward",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Reward = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "tx_hash",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.TxHash = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "share_difficulty",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.ShareDifficulty = v.(OptString)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "mined_at",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.MinedAt = v.(OptString)
+		}
+	}
+	return params
+}
+
+func decodeGetBlockchainSoloBlocksParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainSoloBlocksParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Set default value for query: limit.
+	{
+		val := uint32(10)
+		params.Limit = val
+	}
+	// Decode query: limit.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "limit",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToUint32(val)
+				if err != nil {
+					return err
+				}
+
+				params.Limit = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "limit",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Set default value for query: offset.
+	{
+		val := uint32(0)
+		params.Offset = val
+	}
+	// Decode query: offset.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "offset",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToUint32(val)
+				if err != nil {
+					return err
+				}
+
+				params.Offset = c
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "offset",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: sorts.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "sorts",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSortsVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotSortsVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Sorts.SetTo(paramsDotSortsVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "sorts",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: miner.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "miner",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotMinerVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotMinerVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Miner.SetTo(paramsDotMinerVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "miner",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: miner_hashrate.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "miner_hashrate",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotMinerHashrateVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotMinerHashrateVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.MinerHashrate.SetTo(paramsDotMinerHashrateVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "miner_hashrate",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: block_hash.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "block_hash",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotBlockHashVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotBlockHashVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.BlockHash.SetTo(paramsDotBlockHashVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "block_hash",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: reward.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "reward",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotRewardVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotRewardVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Reward.SetTo(paramsDotRewardVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "reward",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: tx_hash.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "tx_hash",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotTxHashVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotTxHashVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.TxHash.SetTo(paramsDotTxHashVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "tx_hash",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: share_difficulty.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "share_difficulty",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotShareDifficultyVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotShareDifficultyVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.ShareDifficulty.SetTo(paramsDotShareDifficultyVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "share_difficulty",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: mined_at.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "mined_at",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotMinedAtVal string
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToString(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotMinedAtVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.MinedAt.SetTo(paramsDotMinedAtVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "mined_at",
+			In:   "query",
 			Err:  err,
 		}
 	}

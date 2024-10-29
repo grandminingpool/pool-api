@@ -32,7 +32,7 @@ type PricesService struct {
 	pgConn *sqlx.DB
 }
 
-func (s *PricesService) GetCoinPrices(ctx context.Context) ([]CoinPriceDB, error) {
+func (s *PricesService) GetPrices(ctx context.Context) ([]CoinPriceDB, error) {
 	coinPrices := []CoinPriceDB{}
 	err := s.pgConn.SelectContext(ctx, &coinPrices, `SELECT blockchain_coin, price, price_usd_24h_ago
 		FROM coin_prices WHERE usdt = true`)

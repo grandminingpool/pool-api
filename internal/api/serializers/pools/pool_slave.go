@@ -11,16 +11,16 @@ import (
 type PoolSlaveSerialzier struct{}
 
 func (s *PoolSlaveSerialzier) Serialize(ctx context.Context, poolSlave *poolProto.PoolSlave) *apiModels.PoolSlave {
-	soloPort := apiModels.OptInt{}
+	soloPort := apiModels.OptUint32{}
 	if poolSlave.SoloPort != nil {
-		soloPort.SetTo(int(*poolSlave.SoloPort))
+		soloPort.SetTo(*poolSlave.SoloPort)
 	}
 
 	return &apiModels.PoolSlave{
 		Region:      poolSlave.Region,
 		Host:        poolSlave.Host,
-		TCPPort:     int(poolSlave.TcpPort),
-		SslPort:     int(poolSlave.SslPort),
+		TCPPort:     poolSlave.TcpPort,
+		SslPort:     poolSlave.SslPort,
 		SoloPort:    soloPort,
 		ConnectedAt: poolSlave.ConnectedAt.AsTime().Format(time.RFC3339),
 	}

@@ -8,12 +8,12 @@ import (
 	"github.com/grandminingpool/pool-api/internal/common/serializers"
 )
 
-type BlockchainsHandler struct {
+type Handler struct {
 	blockchainsService   *blockchains.Service
 	blockchainSerializer serializers.BaseSerializer[*blockchains.BlockchainInfo, *apiModels.Blockchain]
 }
 
-func (h *BlockchainsHandler) Get(ctx context.Context) ([]apiModels.Blockchain, error) {
+func (h *Handler) Get(ctx context.Context) ([]apiModels.Blockchain, error) {
 	blockchainsInfo := h.blockchainsService.GetBlockchainsInfo()
 	response := make([]apiModels.Blockchain, 0, len(blockchainsInfo))
 

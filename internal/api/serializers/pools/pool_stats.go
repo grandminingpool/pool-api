@@ -11,9 +11,9 @@ import (
 type PoolStatsSerializer struct{}
 
 func (s *PoolStatsSerializer) Serialize(ctx context.Context, poolStats *poolProto.PoolStats) *apiModels.PoolStats {
-	soloMinersCount := apiModels.OptInt{}
+	soloMinersCount := apiModels.OptUint32{}
 	if poolStats.SoloMinersCount != nil {
-		soloMinersCount.SetTo(int(*poolStats.SoloMinersCount))
+		soloMinersCount.SetTo(*poolStats.SoloMinersCount)
 	}
 
 	soloHashrate := apiModels.OptString{}
@@ -26,19 +26,19 @@ func (s *PoolStatsSerializer) Serialize(ctx context.Context, poolStats *poolProt
 		soloAvgHashrate.SetTo(new(big.Int).SetBytes(poolStats.SoloAvgHashrate).String())
 	}
 
-	soloShareDifficulty := apiModels.OptInt{}
+	soloShareDifficulty := apiModels.OptUint64{}
 	if poolStats.SoloShareDifficulty != nil {
-		soloShareDifficulty.SetTo(int(*poolStats.SoloShareDifficulty))
+		soloShareDifficulty.SetTo(*poolStats.SoloShareDifficulty)
 	}
 
 	return &apiModels.PoolStats{
-		MinersCount:         int(poolStats.MinersCount),
+		MinersCount:         poolStats.MinersCount,
 		SoloMinersCount:     soloMinersCount,
 		Hashrate:            new(big.Int).SetBytes(poolStats.Hashrate).String(),
 		AvgHashrate:         new(big.Int).SetBytes(poolStats.AvgHashrate).String(),
 		SoloHashrate:        soloHashrate,
 		SoloAvgHashrate:     soloAvgHashrate,
-		ShareDifficulty:     int(poolStats.ShareDifficulty),
+		ShareDifficulty:     poolStats.ShareDifficulty,
 		SoloShareDifficulty: soloShareDifficulty,
 	}
 }

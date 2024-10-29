@@ -6,6 +6,8 @@ info:
 paths:
   /blockchains:
     get:
+      tags:
+        - blockchains
       summary: Get available blockchains list
       operationId: getBlockchains
       responses:
@@ -19,6 +21,8 @@ paths:
                   $ref: '#/components/schemas/Blockchain'
   /prices:
     get:
+      tags:
+        - prices
       summary: Get pool blockchain coin price list
       operationId: getPrices
       responses:
@@ -32,6 +36,8 @@ paths:
                   $ref: '#/components/schemas/CoinPrice'
   /prices/{blockchain}:
     get:
+      tags:
+        - prices
       summary: Get blockchain coin price and markets
       operationId: getBlockchainPrice
       parameters:
@@ -45,6 +51,8 @@ paths:
                 $ref: '#/components/schemas/BlockchainCoinPrice'
   /pools/{blockchain}:
     get:
+      tags:
+        - pools
       summary: Get full pool data on blockchain
       operationId: getBlockchainPool
       parameters:
@@ -58,6 +66,8 @@ paths:
                 $ref: '#/components/schemas/Pool'
   /pools/{blockchain}/info:
     get:
+      tags:
+        - pools
       summary: Get pool info on blockchain
       operationId: getBlockchainPoolInfo
       parameters:
@@ -71,6 +81,8 @@ paths:
                 $ref: '#/components/schemas/PoolInfo'
   /pools/{blockchain}/stats:
     get:
+      tags:
+        - pools
       summary: Get pool statistics on blockchain
       operationId: getBlockchainPoolStats
       parameters:
@@ -84,6 +96,8 @@ paths:
                 $ref: '#/components/schemas/PoolStats'
   /pools/{blockchain}/slaves:
     get:
+      tags:
+        - pools
       summary: Get pool locations on blockchain
       operationId: getBlockchainPoolSlaves
       parameters:
@@ -97,6 +111,284 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PoolSlave'
+  /miners/{blockchain}:
+    get:
+      tags:
+        - miners
+      summary: Get miners list on blockchain
+      operationId: getBlockchainMiners
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/QueryPaginationLimit"
+        - $ref: "#/components/parameters/QueryPaginationOffset"
+        - description: Miners list sorts
+          in: query
+          name: sorts
+          schema:
+            example: 'address:desc,hashrate:asc,workers_count:desc,blocks_count:asc,solo_blocks_count:desc,joined_at:asc'
+            type: string
+        - description: Miner address filter
+          name: address
+          in: query
+          schema:
+            type: string
+        - description: Miner hashrate filter
+          name: hashrate
+          in: query
+          schema:
+            example: '1000:100000000'
+            type: string
+        - description: Miner workers count filter
+          name: workers_count
+          in: query
+          schema:
+            example: '0:100'
+            type: string
+        - description: Miner mined blocks count filter
+          name: blocks_count
+          in: query
+          schema:
+            example: '1:10 or 50'
+            type: string
+        - description: Miner mined solo blocks count filter
+          name: solo_blocks_count
+          in: query
+          schema:
+            example: '1:10 or 50'
+            type: string
+        - description: Miner joined at time filter
+          name: joined_at
+          in: query
+          schema:
+            example: '2024-01-01T15:52:01+00:00..2024-02-02'
+            type: string
+      responses:
+        '200':
+          description: 'Miners list response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinersList'
+  /miners/{blockchain}/miner/{miner}:
+    get:
+      tags:
+        - miners
+      summary: Get miner info on blockchain
+      operationId: getBlockchainMiner
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/Miner"
+      responses:
+        '200':
+          description: 'Miner info response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Miner'
+  /miners/{blockchain}/workers/{miner}:
+    get:
+      tags:
+        - miners
+      summary: Get miner workers list on blockchain
+      operationId: getBlockchainMinerWorkers
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/Miner"
+      responses:
+        '200':
+          description: 'Miner workers list response'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MinerWorker'
+  /payouts/{blockchain}:
+    get:
+      tags:
+        - payouts
+      summary: Get payouts list on blockchain
+      operationId: getBlockchainPayouts
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/QueryPaginationLimit"
+        - $ref: "#/components/parameters/QueryPaginationOffset"
+        - description: Payouts list sorts
+          in: query
+          name: sorts
+          schema:
+            example: 'miner:desc,tx_hash:asc,amount:desc,paid_at:asc'
+            type: string
+        - description: Payout miner address filter
+          name: miner
+          in: query
+          schema:
+            type: string
+        - description: Payout transaction hash filter
+          name: tx_hash
+          in: query
+          schema:
+            type: string  
+        - description: Payout amount filter
+          name: amount
+          in: query
+          schema:
+            example: '1000:2000000'
+            type: string
+        - description: Payout time filter
+          name: paid_at
+          in: query
+          schema:
+            example: '2024-01-01T15:52:01+00:00..2024-02-02'
+            type: string
+      responses:
+        '200':
+          description: 'Payouts list response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayoutsList'
+  /payouts/{blockchain}/balance/{miner}:
+    get:
+      tags:
+        - payouts
+      summary: Get miner balance on blockchain
+      operationId: getBlockchainMinerBalance
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/Miner"
+      responses:
+        '200':
+          description: 'Miner balance response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinerBalance'
+  /blocks/{blockchain}:
+    get:
+      tags:
+        - blocks
+      summary: Get blocks list on blockchain
+      operationId: getBlockchainBlocks
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/QueryPaginationLimit"
+        - $ref: "#/components/parameters/QueryPaginationOffset"
+        - description: Blocks list sorts
+          in: query
+          name: sorts
+          schema:
+            example: 'miner:desc,miner_hashrate:asc,block_hash:desc,share_difficulty:asc,round_miners_count:desc,mined_at:asc'
+            type: string
+        - description: Mined block miner address filter
+          name: miner
+          in: query
+          schema:
+            type: string
+        - description: Mined block miner hashrate filter
+          name: miner_hashrate
+          in: query
+          schema:
+            example: '1000:100000000'
+            type: string
+        - description: Mined block hash filter
+          name: block_hash
+          in: query
+          schema:
+            type: string
+        - description: Mined block share difficulty filter
+          name: share_difficulty
+          in: query
+          schema:
+            example: '1000:40000000'
+            type: string
+        - description: Round miners count filter
+          name: round_miners_count
+          in: query
+          schema:
+            example: '500 or 100:1000'
+            type: string
+        - description: Mined block time filter
+          name: 'mined_at'
+          in: query
+          schema:
+            example: '2024-01-01T15:52:01+00:00..2024-02-02'
+            type: string
+      responses:
+        '200':
+          description: 'Mined blocks list response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinedBlocksList'
+  /blocks/{blockchain}/solo:
+    get:
+      tags:
+        - blocks
+      summary: Get solo blocks list on blockchain
+      operationId: getBlockchainSoloBlocks
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/QueryPaginationLimit"
+        - $ref: "#/components/parameters/QueryPaginationOffset"
+        - description: Solo blocks list sorts
+          in: query
+          name: sorts
+          schema:
+            example: 'miner:desc,miner_hashrate:asc,block_hash:desc,reward:asc,tx_hash:desc,share_difficulty:asc,mined_at:desc'
+            type: string
+        - description: Mined solo block miner address filter
+          name: miner
+          in: query
+          schema:
+            type: string
+        - description: Mined solo block miner hashrate filter
+          name: miner_hashrate
+          in: query
+          schema:
+            example: '1000:100000000'
+            type: string
+        - description: Mined solo block hash filter
+          name: block_hash
+          in: query
+          schema:
+            type: string
+        - description: Mined solo block reward filter
+          name: reward
+          in: query
+          schema:
+            example: '999:99999999'
+            type: string
+        - description: Mined solo block transaction hash filter
+          name: tx_hash
+          in: query
+          schema:
+            type: string
+        - description: Mined solo block share difficulty filter
+          name: share_difficulty
+          in: query
+          schema:
+            example: '1000:40000000'
+            type: string
+        - description: Mined solo block time filter
+          name: 'mined_at'
+          in: query
+          schema:
+            example: '2024-01-01T15:52:01+00:00..2024-02-02'
+            type: string
+      responses:
+        '200':
+          description: 'Solo blocks list response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinedSoloBlocksList'
+        '405':
+          description: 'Solo blocks list not allowed on blockchain'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   parameters:
     Blockchain:
@@ -106,7 +398,58 @@ components:
       required: true
       schema:
         type: string
+    Miner:
+      name: miner
+      in: path
+      description: Pool miner
+      required: true
+      schema:
+        type: string
+    QueryPaginationLimit:
+      description: List rows limit
+      in: query
+      name: limit
+      required: true
+      schema:
+        default: 10
+        format: uint32
+        type: integer
+    QueryPaginationOffset:
+      description: List rows offset
+      in: query
+      name: offset
+      required: true
+      schema:
+        default: 0
+        format: uint32
+        type: integer
   schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    ListPagination:
+      type: object
+      required:
+        - limit
+        - offset
+        - total
+      properties:
+        limit:
+          format: uint32
+          type: integer
+        offset:
+          format: uint32
+          type: integer
+        total:
+          format: uint32
+          type: integer
     Blockchain:
       type: object
       required:
@@ -122,6 +465,7 @@ components:
         ticker:
           type: string
         atomic_unit:
+          format: uint16
           type: integer
     Price:
       type: object
@@ -186,10 +530,13 @@ components:
         - interval
       properties:
         interval:
+          format: uint32
           type: integer
         min_payout:
+          format: uint64
           type: integer
         max_payout:
+          format: uint64
           type: integer
     PoolInfo:
       type: object
@@ -230,8 +577,10 @@ components:
         - share_difficulty
       properties:
         miners_count:
+          format: uint32
           type: integer
         solo_miners_count:
+          format: uint32
           type: integer
         hashrate:
           type: string
@@ -242,8 +591,10 @@ components:
         solo_avg_hashrate:
           type: string
         share_difficulty:
+          format: uint64
           type: integer
         solo_share_difficulty:
+          format: uint64
           type: integer
     PoolSlave:
       type: object
@@ -259,10 +610,13 @@ components:
         host:
           type: string
         tcp_port:
+          format: uint32
           type: integer
         ssl_port:
+          format: uint32
           type: integer
         solo_port:
+          format: uint32
           type: integer
         connected_at:
           type: string
@@ -281,4 +635,174 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PoolSlave'
+    Miner:
+      type: object
+      required:
+        - address
+        - hashrate
+        - workers_count
+        - blocks_count
+        - solo_blocks_count
+        - joined_at
+        - last_activity
+      properties:
+        address:
+          type: string
+        hashrate:
+          type: string
+        workers_count:
+          format: uint32
+          type: integer
+        blocks_count:
+          format: uint32
+          type: integer
+        solo_blocks_count:
+          format: uint32
+          type: integer
+        joined_at:
+          type: string
+        last_activity:
+          type: string
+    MinersList:
+      allOf:
+        - $ref: '#/components/schemas/ListPagination'
+        - type: object
+          required:
+            - miners
+          properties:
+            miners:
+              type: array
+              items:
+                $ref: '#/components/schemas/Miner'
+    Payout:
+      type: object
+      required:
+        - miner
+        - tx_hash
+        - amount
+        - paid_at
+      properties:
+        miner:
+          type: string
+        tx_hash:
+          type: string
+        amount:
+          format: uint64
+          type: integer
+        paid_at:
+          type: string
+    PayoutsList:
+      allOf:
+        - $ref: '#/components/schemas/ListPagination'
+        - type: object
+          required:
+            - miners
+          properties:
+            payouts:
+              type: array
+              items:
+                $ref: '#/components/schemas/Payout'
+    MinerWorker:
+      type: object
+      required:
+        - worker
+        - region
+        - agent
+        - solo
+        - hashrate
+        - connected_at
+      properties:
+        worker:
+          type: string
+        region:
+          type: string
+        agent:
+          type: string
+        solo:
+          type: boolean
+        hashrate:
+          type: string
+        connected_at:
+          type: string
+    MinerBalance:
+      type: object
+      required:
+        - balance
+      properties:
+        balance:
+          format: uint64
+          type: integer
+    MinedBlock:
+      type: object
+      required:
+        - miner
+        - miner_hashrate
+        - block_hash
+        - share_difficulty
+        - round_miners_count
+        - mined_at 
+      properties:
+        miner:
+          type: string
+        miner_hashrate:
+          type: string
+        block_hash:
+          type: string
+        share_difficulty:
+          format: uint64
+          type: integer
+        round_miners_count:
+          format: uint32
+          type: integer
+        mined_at:
+          type: string
+    MinedBlocksList:
+      allOf:
+        - $ref: '#/components/schemas/ListPagination'
+        - type: object
+          required:
+            - miners
+          properties:
+            blocks:
+              type: array
+              items:
+                $ref: '#/components/schemas/MinedBlock'
+    MinedSoloBlock:
+      type: object
+      required:
+        - miner
+        - miner_hashrate
+        - block_hash
+        - reward
+        - tx_hash
+        - share_difficulty
+        - mined_at 
+      properties:
+        miner:
+          type: string
+        miner_hashrate:
+          type: string
+        block_hash:
+          type: string
+        reward:
+          format: uint64
+          type: integer
+        tx_hash:
+          type: string
+        share_difficulty:
+          format: uint64
+          type: integer
+        mined_at:
+          type: string
+    MinedSoloBlocksList:
+      allOf:
+        - $ref: '#/components/schemas/ListPagination'
+        - type: object
+          required:
+            - miners
+          properties:
+            blocks:
+              type: array
+              items:
+                $ref: '#/components/schemas/MinedSoloBlock'
 

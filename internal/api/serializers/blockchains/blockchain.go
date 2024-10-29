@@ -14,6 +14,6 @@ func (s *BlockchainSerializer) Serialize(ctx context.Context, blockchainInfo *bl
 		Coin:       blockchainInfo.Coin,
 		Name:       blockchainInfo.Name,
 		Ticker:     blockchainInfo.Ticker,
-		AtomicUnit: int(blockchainInfo.AtomicUnit),
+		AtomicUnit: blockchainInfo.AtomicUnit,
 	}
 }

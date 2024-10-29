@@ -13,6 +13,60 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
+// GetBlockchainBlocks implements getBlockchainBlocks operation.
+//
+// Get blocks list on blockchain.
+//
+// GET /blocks/{blockchain}
+func (UnimplementedHandler) GetBlockchainBlocks(ctx context.Context, params GetBlockchainBlocksParams) (r *MinedBlocksList, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchainMiner implements getBlockchainMiner operation.
+//
+// Get miner info on blockchain.
+//
+// GET /miners/{blockchain}/miner/{miner}
+func (UnimplementedHandler) GetBlockchainMiner(ctx context.Context, params GetBlockchainMinerParams) (r *Miner, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchainMinerBalance implements getBlockchainMinerBalance operation.
+//
+// Get miner balance on blockchain.
+//
+// GET /payouts/{blockchain}/balance/{miner}
+func (UnimplementedHandler) GetBlockchainMinerBalance(ctx context.Context, params GetBlockchainMinerBalanceParams) (r *MinerBalance, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchainMinerWorkers implements getBlockchainMinerWorkers operation.
+//
+// Get miner workers list on blockchain.
+//
+// GET /miners/{blockchain}/workers/{miner}
+func (UnimplementedHandler) GetBlockchainMinerWorkers(ctx context.Context, params GetBlockchainMinerWorkersParams) (r []MinerWorker, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchainMiners implements getBlockchainMiners operation.
+//
+// Get miners list on blockchain.
+//
+// GET /miners/{blockchain}
+func (UnimplementedHandler) GetBlockchainMiners(ctx context.Context, params GetBlockchainMinersParams) (r *MinersList, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchainPayouts implements getBlockchainPayouts operation.
+//
+// Get payouts list on blockchain.
+//
+// GET /payouts/{blockchain}
+func (UnimplementedHandler) GetBlockchainPayouts(ctx context.Context, params GetBlockchainPayoutsParams) (r *PayoutsList, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // GetBlockchainPool implements getBlockchainPool operation.
 //
 // Get full pool data on blockchain.
@@ -55,6 +109,15 @@ func (UnimplementedHandler) GetBlockchainPoolStats(ctx context.Context, params G
 //
 // GET /prices/{blockchain}
 func (UnimplementedHandler) GetBlockchainPrice(ctx context.Context, params GetBlockchainPriceParams) (r *BlockchainCoinPrice, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchainSoloBlocks implements getBlockchainSoloBlocks operation.
+//
+// Get solo blocks list on blockchain.
+//
+// GET /blocks/{blockchain}/solo
+func (UnimplementedHandler) GetBlockchainSoloBlocks(ctx context.Context, params GetBlockchainSoloBlocksParams) (r GetBlockchainSoloBlocksRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

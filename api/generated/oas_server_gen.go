@@ -8,6 +8,42 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
+	// GetBlockchainBlocks implements getBlockchainBlocks operation.
+	//
+	// Get blocks list on blockchain.
+	//
+	// GET /blocks/{blockchain}
+	GetBlockchainBlocks(ctx context.Context, params GetBlockchainBlocksParams) (*MinedBlocksList, error)
+	// GetBlockchainMiner implements getBlockchainMiner operation.
+	//
+	// Get miner info on blockchain.
+	//
+	// GET /miners/{blockchain}/miner/{miner}
+	GetBlockchainMiner(ctx context.Context, params GetBlockchainMinerParams) (*Miner, error)
+	// GetBlockchainMinerBalance implements getBlockchainMinerBalance operation.
+	//
+	// Get miner balance on blockchain.
+	//
+	// GET /payouts/{blockchain}/balance/{miner}
+	GetBlockchainMinerBalance(ctx context.Context, params GetBlockchainMinerBalanceParams) (*MinerBalance, error)
+	// GetBlockchainMinerWorkers implements getBlockchainMinerWorkers operation.
+	//
+	// Get miner workers list on blockchain.
+	//
+	// GET /miners/{blockchain}/workers/{miner}
+	GetBlockchainMinerWorkers(ctx context.Context, params GetBlockchainMinerWorkersParams) ([]MinerWorker, error)
+	// GetBlockchainMiners implements getBlockchainMiners operation.
+	//
+	// Get miners list on blockchain.
+	//
+	// GET /miners/{blockchain}
+	GetBlockchainMiners(ctx context.Context, params GetBlockchainMinersParams) (*MinersList, error)
+	// GetBlockchainPayouts implements getBlockchainPayouts operation.
+	//
+	// Get payouts list on blockchain.
+	//
+	// GET /payouts/{blockchain}
+	GetBlockchainPayouts(ctx context.Context, params GetBlockchainPayoutsParams) (*PayoutsList, error)
 	// GetBlockchainPool implements getBlockchainPool operation.
 	//
 	// Get full pool data on blockchain.
@@ -38,6 +74,12 @@ type Handler interface {
 	//
 	// GET /prices/{blockchain}
 	GetBlockchainPrice(ctx context.Context, params GetBlockchainPriceParams) (*BlockchainCoinPrice, error)
+	// GetBlockchainSoloBlocks implements getBlockchainSoloBlocks operation.
+	//
+	// Get solo blocks list on blockchain.
+	//
+	// GET /blocks/{blockchain}/solo
+	GetBlockchainSoloBlocks(ctx context.Context, params GetBlockchainSoloBlocksParams) (GetBlockchainSoloBlocksRes, error)
 	// GetBlockchains implements getBlockchains operation.
 	//
 	// Get available blockchains list.

@@ -11,7 +11,7 @@ type Blockchain struct {
 	Coin       string `json:"coin"`
 	Name       string `json:"name"`
 	Ticker     string `json:"ticker"`
-	AtomicUnit int    `json:"atomic_unit"`
+	AtomicUnit uint16 `json:"atomic_unit"`
 }
 
 // GetCoin returns the value of Coin.
@@ -30,7 +30,7 @@ func (s *Blockchain) GetTicker() string {
 }
 
 // GetAtomicUnit returns the value of AtomicUnit.
-func (s *Blockchain) GetAtomicUnit() int {
+func (s *Blockchain) GetAtomicUnit() uint16 {
 	return s.AtomicUnit
 }
 
@@ -50,7 +50,7 @@ func (s *Blockchain) SetTicker(val string) {
 }
 
 // SetAtomicUnit sets the value of AtomicUnit.
-func (s *Blockchain) SetAtomicUnit(val int) {
+func (s *Blockchain) SetAtomicUnit(val uint16) {
 	s.AtomicUnit = val
 }
 
@@ -130,6 +130,34 @@ func (s *CoinPrice) SetCoin(val string) {
 	s.Coin = val
 }
 
+// Ref: #/components/schemas/Error
+type Error struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *Error) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *Error) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *Error) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *Error) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*Error) getBlockchainSoloBlocksRes() {}
+
 // Merged schema.
 // Ref: #/components/schemas/MarketPrice
 type MarketPrice struct {
@@ -166,6 +194,472 @@ func (s *MarketPrice) SetPriceChange24hPercentage(val float64) {
 // SetTicker sets the value of Ticker.
 func (s *MarketPrice) SetTicker(val string) {
 	s.Ticker = val
+}
+
+// Ref: #/components/schemas/MinedBlock
+type MinedBlock struct {
+	Miner            string `json:"miner"`
+	MinerHashrate    string `json:"miner_hashrate"`
+	BlockHash        string `json:"block_hash"`
+	ShareDifficulty  uint64 `json:"share_difficulty"`
+	RoundMinersCount uint32 `json:"round_miners_count"`
+	MinedAt          string `json:"mined_at"`
+}
+
+// GetMiner returns the value of Miner.
+func (s *MinedBlock) GetMiner() string {
+	return s.Miner
+}
+
+// GetMinerHashrate returns the value of MinerHashrate.
+func (s *MinedBlock) GetMinerHashrate() string {
+	return s.MinerHashrate
+}
+
+// GetBlockHash returns the value of BlockHash.
+func (s *MinedBlock) GetBlockHash() string {
+	return s.BlockHash
+}
+
+// GetShareDifficulty returns the value of ShareDifficulty.
+func (s *MinedBlock) GetShareDifficulty() uint64 {
+	return s.ShareDifficulty
+}
+
+// GetRoundMinersCount returns the value of RoundMinersCount.
+func (s *MinedBlock) GetRoundMinersCount() uint32 {
+	return s.RoundMinersCount
+}
+
+// GetMinedAt returns the value of MinedAt.
+func (s *MinedBlock) GetMinedAt() string {
+	return s.MinedAt
+}
+
+// SetMiner sets the value of Miner.
+func (s *MinedBlock) SetMiner(val string) {
+	s.Miner = val
+}
+
+// SetMinerHashrate sets the value of MinerHashrate.
+func (s *MinedBlock) SetMinerHashrate(val string) {
+	s.MinerHashrate = val
+}
+
+// SetBlockHash sets the value of BlockHash.
+func (s *MinedBlock) SetBlockHash(val string) {
+	s.BlockHash = val
+}
+
+// SetShareDifficulty sets the value of ShareDifficulty.
+func (s *MinedBlock) SetShareDifficulty(val uint64) {
+	s.ShareDifficulty = val
+}
+
+// SetRoundMinersCount sets the value of RoundMinersCount.
+func (s *MinedBlock) SetRoundMinersCount(val uint32) {
+	s.RoundMinersCount = val
+}
+
+// SetMinedAt sets the value of MinedAt.
+func (s *MinedBlock) SetMinedAt(val string) {
+	s.MinedAt = val
+}
+
+// Merged schema.
+// Ref: #/components/schemas/MinedBlocksList
+type MinedBlocksList struct {
+	Limit  uint32       `json:"limit"`
+	Offset uint32       `json:"offset"`
+	Total  uint32       `json:"total"`
+	Blocks []MinedBlock `json:"blocks"`
+}
+
+// GetLimit returns the value of Limit.
+func (s *MinedBlocksList) GetLimit() uint32 {
+	return s.Limit
+}
+
+// GetOffset returns the value of Offset.
+func (s *MinedBlocksList) GetOffset() uint32 {
+	return s.Offset
+}
+
+// GetTotal returns the value of Total.
+func (s *MinedBlocksList) GetTotal() uint32 {
+	return s.Total
+}
+
+// GetBlocks returns the value of Blocks.
+func (s *MinedBlocksList) GetBlocks() []MinedBlock {
+	return s.Blocks
+}
+
+// SetLimit sets the value of Limit.
+func (s *MinedBlocksList) SetLimit(val uint32) {
+	s.Limit = val
+}
+
+// SetOffset sets the value of Offset.
+func (s *MinedBlocksList) SetOffset(val uint32) {
+	s.Offset = val
+}
+
+// SetTotal sets the value of Total.
+func (s *MinedBlocksList) SetTotal(val uint32) {
+	s.Total = val
+}
+
+// SetBlocks sets the value of Blocks.
+func (s *MinedBlocksList) SetBlocks(val []MinedBlock) {
+	s.Blocks = val
+}
+
+// Ref: #/components/schemas/MinedSoloBlock
+type MinedSoloBlock struct {
+	Miner           string `json:"miner"`
+	MinerHashrate   string `json:"miner_hashrate"`
+	BlockHash       string `json:"block_hash"`
+	Reward          uint64 `json:"reward"`
+	TxHash          string `json:"tx_hash"`
+	ShareDifficulty uint64 `json:"share_difficulty"`
+	MinedAt         string `json:"mined_at"`
+}
+
+// GetMiner returns the value of Miner.
+func (s *MinedSoloBlock) GetMiner() string {
+	return s.Miner
+}
+
+// GetMinerHashrate returns the value of MinerHashrate.
+func (s *MinedSoloBlock) GetMinerHashrate() string {
+	return s.MinerHashrate
+}
+
+// GetBlockHash returns the value of BlockHash.
+func (s *MinedSoloBlock) GetBlockHash() string {
+	return s.BlockHash
+}
+
+// GetReward returns the value of Reward.
+func (s *MinedSoloBlock) GetReward() uint64 {
+	return s.Reward
+}
+
+// GetTxHash returns the value of TxHash.
+func (s *MinedSoloBlock) GetTxHash() string {
+	return s.TxHash
+}
+
+// GetShareDifficulty returns the value of ShareDifficulty.
+func (s *MinedSoloBlock) GetShareDifficulty() uint64 {
+	return s.ShareDifficulty
+}
+
+// GetMinedAt returns the value of MinedAt.
+func (s *MinedSoloBlock) GetMinedAt() string {
+	return s.MinedAt
+}
+
+// SetMiner sets the value of Miner.
+func (s *MinedSoloBlock) SetMiner(val string) {
+	s.Miner = val
+}
+
+// SetMinerHashrate sets the value of MinerHashrate.
+func (s *MinedSoloBlock) SetMinerHashrate(val string) {
+	s.MinerHashrate = val
+}
+
+// SetBlockHash sets the value of BlockHash.
+func (s *MinedSoloBlock) SetBlockHash(val string) {
+	s.BlockHash = val
+}
+
+// SetReward sets the value of Reward.
+func (s *MinedSoloBlock) SetReward(val uint64) {
+	s.Reward = val
+}
+
+// SetTxHash sets the value of TxHash.
+func (s *MinedSoloBlock) SetTxHash(val string) {
+	s.TxHash = val
+}
+
+// SetShareDifficulty sets the value of ShareDifficulty.
+func (s *MinedSoloBlock) SetShareDifficulty(val uint64) {
+	s.ShareDifficulty = val
+}
+
+// SetMinedAt sets the value of MinedAt.
+func (s *MinedSoloBlock) SetMinedAt(val string) {
+	s.MinedAt = val
+}
+
+// Merged schema.
+// Ref: #/components/schemas/MinedSoloBlocksList
+type MinedSoloBlocksList struct {
+	Limit  uint32           `json:"limit"`
+	Offset uint32           `json:"offset"`
+	Total  uint32           `json:"total"`
+	Blocks []MinedSoloBlock `json:"blocks"`
+}
+
+// GetLimit returns the value of Limit.
+func (s *MinedSoloBlocksList) GetLimit() uint32 {
+	return s.Limit
+}
+
+// GetOffset returns the value of Offset.
+func (s *MinedSoloBlocksList) GetOffset() uint32 {
+	return s.Offset
+}
+
+// GetTotal returns the value of Total.
+func (s *MinedSoloBlocksList) GetTotal() uint32 {
+	return s.Total
+}
+
+// GetBlocks returns the value of Blocks.
+func (s *MinedSoloBlocksList) GetBlocks() []MinedSoloBlock {
+	return s.Blocks
+}
+
+// SetLimit sets the value of Limit.
+func (s *MinedSoloBlocksList) SetLimit(val uint32) {
+	s.Limit = val
+}
+
+// SetOffset sets the value of Offset.
+func (s *MinedSoloBlocksList) SetOffset(val uint32) {
+	s.Offset = val
+}
+
+// SetTotal sets the value of Total.
+func (s *MinedSoloBlocksList) SetTotal(val uint32) {
+	s.Total = val
+}
+
+// SetBlocks sets the value of Blocks.
+func (s *MinedSoloBlocksList) SetBlocks(val []MinedSoloBlock) {
+	s.Blocks = val
+}
+
+func (*MinedSoloBlocksList) getBlockchainSoloBlocksRes() {}
+
+// Ref: #/components/schemas/Miner
+type Miner struct {
+	Address         string `json:"address"`
+	Hashrate        string `json:"hashrate"`
+	WorkersCount    uint32 `json:"workers_count"`
+	BlocksCount     uint32 `json:"blocks_count"`
+	SoloBlocksCount uint32 `json:"solo_blocks_count"`
+	JoinedAt        string `json:"joined_at"`
+	LastActivity    string `json:"last_activity"`
+}
+
+// GetAddress returns the value of Address.
+func (s *Miner) GetAddress() string {
+	return s.Address
+}
+
+// GetHashrate returns the value of Hashrate.
+func (s *Miner) GetHashrate() string {
+	return s.Hashrate
+}
+
+// GetWorkersCount returns the value of WorkersCount.
+func (s *Miner) GetWorkersCount() uint32 {
+	return s.WorkersCount
+}
+
+// GetBlocksCount returns the value of BlocksCount.
+func (s *Miner) GetBlocksCount() uint32 {
+	return s.BlocksCount
+}
+
+// GetSoloBlocksCount returns the value of SoloBlocksCount.
+func (s *Miner) GetSoloBlocksCount() uint32 {
+	return s.SoloBlocksCount
+}
+
+// GetJoinedAt returns the value of JoinedAt.
+func (s *Miner) GetJoinedAt() string {
+	return s.JoinedAt
+}
+
+// GetLastActivity returns the value of LastActivity.
+func (s *Miner) GetLastActivity() string {
+	return s.LastActivity
+}
+
+// SetAddress sets the value of Address.
+func (s *Miner) SetAddress(val string) {
+	s.Address = val
+}
+
+// SetHashrate sets the value of Hashrate.
+func (s *Miner) SetHashrate(val string) {
+	s.Hashrate = val
+}
+
+// SetWorkersCount sets the value of WorkersCount.
+func (s *Miner) SetWorkersCount(val uint32) {
+	s.WorkersCount = val
+}
+
+// SetBlocksCount sets the value of BlocksCount.
+func (s *Miner) SetBlocksCount(val uint32) {
+	s.BlocksCount = val
+}
+
+// SetSoloBlocksCount sets the value of SoloBlocksCount.
+func (s *Miner) SetSoloBlocksCount(val uint32) {
+	s.SoloBlocksCount = val
+}
+
+// SetJoinedAt sets the value of JoinedAt.
+func (s *Miner) SetJoinedAt(val string) {
+	s.JoinedAt = val
+}
+
+// SetLastActivity sets the value of LastActivity.
+func (s *Miner) SetLastActivity(val string) {
+	s.LastActivity = val
+}
+
+// Ref: #/components/schemas/MinerBalance
+type MinerBalance struct {
+	Balance uint64 `json:"balance"`
+}
+
+// GetBalance returns the value of Balance.
+func (s *MinerBalance) GetBalance() uint64 {
+	return s.Balance
+}
+
+// SetBalance sets the value of Balance.
+func (s *MinerBalance) SetBalance(val uint64) {
+	s.Balance = val
+}
+
+// Ref: #/components/schemas/MinerWorker
+type MinerWorker struct {
+	Worker      string `json:"worker"`
+	Region      string `json:"region"`
+	Agent       string `json:"agent"`
+	Solo        bool   `json:"solo"`
+	Hashrate    string `json:"hashrate"`
+	ConnectedAt string `json:"connected_at"`
+}
+
+// GetWorker returns the value of Worker.
+func (s *MinerWorker) GetWorker() string {
+	return s.Worker
+}
+
+// GetRegion returns the value of Region.
+func (s *MinerWorker) GetRegion() string {
+	return s.Region
+}
+
+// GetAgent returns the value of Agent.
+func (s *MinerWorker) GetAgent() string {
+	return s.Agent
+}
+
+// GetSolo returns the value of Solo.
+func (s *MinerWorker) GetSolo() bool {
+	return s.Solo
+}
+
+// GetHashrate returns the value of Hashrate.
+func (s *MinerWorker) GetHashrate() string {
+	return s.Hashrate
+}
+
+// GetConnectedAt returns the value of ConnectedAt.
+func (s *MinerWorker) GetConnectedAt() string {
+	return s.ConnectedAt
+}
+
+// SetWorker sets the value of Worker.
+func (s *MinerWorker) SetWorker(val string) {
+	s.Worker = val
+}
+
+// SetRegion sets the value of Region.
+func (s *MinerWorker) SetRegion(val string) {
+	s.Region = val
+}
+
+// SetAgent sets the value of Agent.
+func (s *MinerWorker) SetAgent(val string) {
+	s.Agent = val
+}
+
+// SetSolo sets the value of Solo.
+func (s *MinerWorker) SetSolo(val bool) {
+	s.Solo = val
+}
+
+// SetHashrate sets the value of Hashrate.
+func (s *MinerWorker) SetHashrate(val string) {
+	s.Hashrate = val
+}
+
+// SetConnectedAt sets the value of ConnectedAt.
+func (s *MinerWorker) SetConnectedAt(val string) {
+	s.ConnectedAt = val
+}
+
+// Merged schema.
+// Ref: #/components/schemas/MinersList
+type MinersList struct {
+	Limit  uint32  `json:"limit"`
+	Offset uint32  `json:"offset"`
+	Total  uint32  `json:"total"`
+	Miners []Miner `json:"miners"`
+}
+
+// GetLimit returns the value of Limit.
+func (s *MinersList) GetLimit() uint32 {
+	return s.Limit
+}
+
+// GetOffset returns the value of Offset.
+func (s *MinersList) GetOffset() uint32 {
+	return s.Offset
+}
+
+// GetTotal returns the value of Total.
+func (s *MinersList) GetTotal() uint32 {
+	return s.Total
+}
+
+// GetMiners returns the value of Miners.
+func (s *MinersList) GetMiners() []Miner {
+	return s.Miners
+}
+
+// SetLimit sets the value of Limit.
+func (s *MinersList) SetLimit(val uint32) {
+	s.Limit = val
+}
+
+// SetOffset sets the value of Offset.
+func (s *MinersList) SetOffset(val uint32) {
+	s.Offset = val
+}
+
+// SetTotal sets the value of Total.
+func (s *MinersList) SetTotal(val uint32) {
+	s.Total = val
+}
+
+// SetMiners sets the value of Miners.
+func (s *MinersList) SetMiners(val []Miner) {
+	s.Miners = val
 }
 
 // NewOptFloat64 returns new OptFloat64 with value set to v.
@@ -208,52 +702,6 @@ func (o OptFloat64) Get() (v float64, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptFloat64) Or(d float64) float64 {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
-// NewOptInt returns new OptInt with value set to v.
-func NewOptInt(v int) OptInt {
-	return OptInt{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptInt is optional int.
-type OptInt struct {
-	Value int
-	Set   bool
-}
-
-// IsSet returns true if OptInt was set.
-func (o OptInt) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptInt) Reset() {
-	var v int
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptInt) SetTo(v int) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptInt) Get() (v int, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptInt) Or(d int) int {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -306,6 +754,146 @@ func (o OptString) Or(d string) string {
 	return d
 }
 
+// NewOptUint32 returns new OptUint32 with value set to v.
+func NewOptUint32(v uint32) OptUint32 {
+	return OptUint32{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptUint32 is optional uint32.
+type OptUint32 struct {
+	Value uint32
+	Set   bool
+}
+
+// IsSet returns true if OptUint32 was set.
+func (o OptUint32) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptUint32) Reset() {
+	var v uint32
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptUint32) SetTo(v uint32) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptUint32) Get() (v uint32, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptUint32) Or(d uint32) uint32 {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptUint64 returns new OptUint64 with value set to v.
+func NewOptUint64(v uint64) OptUint64 {
+	return OptUint64{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptUint64 is optional uint64.
+type OptUint64 struct {
+	Value uint64
+	Set   bool
+}
+
+// IsSet returns true if OptUint64 was set.
+func (o OptUint64) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptUint64) Reset() {
+	var v uint64
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptUint64) SetTo(v uint64) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptUint64) Get() (v uint64, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptUint64) Or(d uint64) uint64 {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// Ref: #/components/schemas/Payout
+type Payout struct {
+	Miner  string `json:"miner"`
+	TxHash string `json:"tx_hash"`
+	Amount uint64 `json:"amount"`
+	PaidAt string `json:"paid_at"`
+}
+
+// GetMiner returns the value of Miner.
+func (s *Payout) GetMiner() string {
+	return s.Miner
+}
+
+// GetTxHash returns the value of TxHash.
+func (s *Payout) GetTxHash() string {
+	return s.TxHash
+}
+
+// GetAmount returns the value of Amount.
+func (s *Payout) GetAmount() uint64 {
+	return s.Amount
+}
+
+// GetPaidAt returns the value of PaidAt.
+func (s *Payout) GetPaidAt() string {
+	return s.PaidAt
+}
+
+// SetMiner sets the value of Miner.
+func (s *Payout) SetMiner(val string) {
+	s.Miner = val
+}
+
+// SetTxHash sets the value of TxHash.
+func (s *Payout) SetTxHash(val string) {
+	s.TxHash = val
+}
+
+// SetAmount sets the value of Amount.
+func (s *Payout) SetAmount(val uint64) {
+	s.Amount = val
+}
+
+// SetPaidAt sets the value of PaidAt.
+func (s *Payout) SetPaidAt(val string) {
+	s.PaidAt = val
+}
+
 // Ref: #/components/schemas/PayoutMode
 type PayoutMode string
 
@@ -350,39 +938,88 @@ func (s *PayoutMode) UnmarshalText(data []byte) error {
 
 // Ref: #/components/schemas/PayoutsInfo
 type PayoutsInfo struct {
-	Interval  int    `json:"interval"`
-	MinPayout OptInt `json:"min_payout"`
-	MaxPayout OptInt `json:"max_payout"`
+	Interval  uint32    `json:"interval"`
+	MinPayout OptUint64 `json:"min_payout"`
+	MaxPayout OptUint64 `json:"max_payout"`
 }
 
 // GetInterval returns the value of Interval.
-func (s *PayoutsInfo) GetInterval() int {
+func (s *PayoutsInfo) GetInterval() uint32 {
 	return s.Interval
 }
 
 // GetMinPayout returns the value of MinPayout.
-func (s *PayoutsInfo) GetMinPayout() OptInt {
+func (s *PayoutsInfo) GetMinPayout() OptUint64 {
 	return s.MinPayout
 }
 
 // GetMaxPayout returns the value of MaxPayout.
-func (s *PayoutsInfo) GetMaxPayout() OptInt {
+func (s *PayoutsInfo) GetMaxPayout() OptUint64 {
 	return s.MaxPayout
 }
 
 // SetInterval sets the value of Interval.
-func (s *PayoutsInfo) SetInterval(val int) {
+func (s *PayoutsInfo) SetInterval(val uint32) {
 	s.Interval = val
 }
 
 // SetMinPayout sets the value of MinPayout.
-func (s *PayoutsInfo) SetMinPayout(val OptInt) {
+func (s *PayoutsInfo) SetMinPayout(val OptUint64) {
 	s.MinPayout = val
 }
 
 // SetMaxPayout sets the value of MaxPayout.
-func (s *PayoutsInfo) SetMaxPayout(val OptInt) {
+func (s *PayoutsInfo) SetMaxPayout(val OptUint64) {
 	s.MaxPayout = val
+}
+
+// Merged schema.
+// Ref: #/components/schemas/PayoutsList
+type PayoutsList struct {
+	Limit   uint32   `json:"limit"`
+	Offset  uint32   `json:"offset"`
+	Total   uint32   `json:"total"`
+	Payouts []Payout `json:"payouts"`
+}
+
+// GetLimit returns the value of Limit.
+func (s *PayoutsList) GetLimit() uint32 {
+	return s.Limit
+}
+
+// GetOffset returns the value of Offset.
+func (s *PayoutsList) GetOffset() uint32 {
+	return s.Offset
+}
+
+// GetTotal returns the value of Total.
+func (s *PayoutsList) GetTotal() uint32 {
+	return s.Total
+}
+
+// GetPayouts returns the value of Payouts.
+func (s *PayoutsList) GetPayouts() []Payout {
+	return s.Payouts
+}
+
+// SetLimit sets the value of Limit.
+func (s *PayoutsList) SetLimit(val uint32) {
+	s.Limit = val
+}
+
+// SetOffset sets the value of Offset.
+func (s *PayoutsList) SetOffset(val uint32) {
+	s.Offset = val
+}
+
+// SetTotal sets the value of Total.
+func (s *PayoutsList) SetTotal(val uint32) {
+	s.Total = val
+}
+
+// SetPayouts sets the value of Payouts.
+func (s *PayoutsList) SetPayouts(val []Payout) {
+	s.Payouts = val
 }
 
 // Ref: #/components/schemas/Pool
@@ -542,12 +1179,12 @@ func (s *PoolInfo) SetAgents(val []string) {
 
 // Ref: #/components/schemas/PoolSlave
 type PoolSlave struct {
-	Region      string `json:"region"`
-	Host        string `json:"host"`
-	TCPPort     int    `json:"tcp_port"`
-	SslPort     int    `json:"ssl_port"`
-	SoloPort    OptInt `json:"solo_port"`
-	ConnectedAt string `json:"connected_at"`
+	Region      string    `json:"region"`
+	Host        string    `json:"host"`
+	TCPPort     uint32    `json:"tcp_port"`
+	SslPort     uint32    `json:"ssl_port"`
+	SoloPort    OptUint32 `json:"solo_port"`
+	ConnectedAt string    `json:"connected_at"`
 }
 
 // GetRegion returns the value of Region.
@@ -561,17 +1198,17 @@ func (s *PoolSlave) GetHost() string {
 }
 
 // GetTCPPort returns the value of TCPPort.
-func (s *PoolSlave) GetTCPPort() int {
+func (s *PoolSlave) GetTCPPort() uint32 {
 	return s.TCPPort
 }
 
 // GetSslPort returns the value of SslPort.
-func (s *PoolSlave) GetSslPort() int {
+func (s *PoolSlave) GetSslPort() uint32 {
 	return s.SslPort
 }
 
 // GetSoloPort returns the value of SoloPort.
-func (s *PoolSlave) GetSoloPort() OptInt {
+func (s *PoolSlave) GetSoloPort() OptUint32 {
 	return s.SoloPort
 }
 
@@ -591,17 +1228,17 @@ func (s *PoolSlave) SetHost(val string) {
 }
 
 // SetTCPPort sets the value of TCPPort.
-func (s *PoolSlave) SetTCPPort(val int) {
+func (s *PoolSlave) SetTCPPort(val uint32) {
 	s.TCPPort = val
 }
 
 // SetSslPort sets the value of SslPort.
-func (s *PoolSlave) SetSslPort(val int) {
+func (s *PoolSlave) SetSslPort(val uint32) {
 	s.SslPort = val
 }
 
 // SetSoloPort sets the value of SoloPort.
-func (s *PoolSlave) SetSoloPort(val OptInt) {
+func (s *PoolSlave) SetSoloPort(val OptUint32) {
 	s.SoloPort = val
 }
 
@@ -612,23 +1249,23 @@ func (s *PoolSlave) SetConnectedAt(val string) {
 
 // Ref: #/components/schemas/PoolStats
 type PoolStats struct {
-	MinersCount         int       `json:"miners_count"`
-	SoloMinersCount     OptInt    `json:"solo_miners_count"`
+	MinersCount         uint32    `json:"miners_count"`
+	SoloMinersCount     OptUint32 `json:"solo_miners_count"`
 	Hashrate            string    `json:"hashrate"`
 	AvgHashrate         string    `json:"avg_hashrate"`
 	SoloHashrate        OptString `json:"solo_hashrate"`
 	SoloAvgHashrate     OptString `json:"solo_avg_hashrate"`
-	ShareDifficulty     int       `json:"share_difficulty"`
-	SoloShareDifficulty OptInt    `json:"solo_share_difficulty"`
+	ShareDifficulty     uint64    `json:"share_difficulty"`
+	SoloShareDifficulty OptUint64 `json:"solo_share_difficulty"`
 }
 
 // GetMinersCount returns the value of MinersCount.
-func (s *PoolStats) GetMinersCount() int {
+func (s *PoolStats) GetMinersCount() uint32 {
 	return s.MinersCount
 }
 
 // GetSoloMinersCount returns the value of SoloMinersCount.
-func (s *PoolStats) GetSoloMinersCount() OptInt {
+func (s *PoolStats) GetSoloMinersCount() OptUint32 {
 	return s.SoloMinersCount
 }
 
@@ -653,22 +1290,22 @@ func (s *PoolStats) GetSoloAvgHashrate() OptString {
 }
 
 // GetShareDifficulty returns the value of ShareDifficulty.
-func (s *PoolStats) GetShareDifficulty() int {
+func (s *PoolStats) GetShareDifficulty() uint64 {
 	return s.ShareDifficulty
 }
 
 // GetSoloShareDifficulty returns the value of SoloShareDifficulty.
-func (s *PoolStats) GetSoloShareDifficulty() OptInt {
+func (s *PoolStats) GetSoloShareDifficulty() OptUint64 {
 	return s.SoloShareDifficulty
 }
 
 // SetMinersCount sets the value of MinersCount.
-func (s *PoolStats) SetMinersCount(val int) {
+func (s *PoolStats) SetMinersCount(val uint32) {
 	s.MinersCount = val
 }
 
 // SetSoloMinersCount sets the value of SoloMinersCount.
-func (s *PoolStats) SetSoloMinersCount(val OptInt) {
+func (s *PoolStats) SetSoloMinersCount(val OptUint32) {
 	s.SoloMinersCount = val
 }
 
@@ -693,11 +1330,11 @@ func (s *PoolStats) SetSoloAvgHashrate(val OptString) {
 }
 
 // SetShareDifficulty sets the value of ShareDifficulty.
-func (s *PoolStats) SetShareDifficulty(val int) {
+func (s *PoolStats) SetShareDifficulty(val uint64) {
 	s.ShareDifficulty = val
 }
 
 // SetSoloShareDifficulty sets the value of SoloShareDifficulty.
-func (s *PoolStats) SetSoloShareDifficulty(val OptInt) {
+func (s *PoolStats) SetSoloShareDifficulty(val OptUint64) {
 	s.SoloShareDifficulty = val
 }

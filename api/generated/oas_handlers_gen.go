@@ -15,6 +15,592 @@ import (
 
 func recordError(string, error) {}
 
+// handleGetBlockchainBlocksRequest handles getBlockchainBlocks operation.
+//
+// Get blocks list on blockchain.
+//
+// GET /blocks/{blockchain}
+func (s *Server) handleGetBlockchainBlocksRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var (
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetBlockchainBlocks",
+			ID:   "getBlockchainBlocks",
+		}
+	)
+	params, err := decodeGetBlockchainBlocksParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	var response *MinedBlocksList
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "GetBlockchainBlocks",
+			OperationSummary: "Get blocks list on blockchain",
+			OperationID:      "getBlockchainBlocks",
+			Body:             nil,
+			Params: middleware.Parameters{
+				{
+					Name: "blockchain",
+					In:   "path",
+				}: params.Blockchain,
+				{
+					Name: "limit",
+					In:   "query",
+				}: params.Limit,
+				{
+					Name: "offset",
+					In:   "query",
+				}: params.Offset,
+				{
+					Name: "sorts",
+					In:   "query",
+				}: params.Sorts,
+				{
+					Name: "miner",
+					In:   "query",
+				}: params.Miner,
+				{
+					Name: "miner_hashrate",
+					In:   "query",
+				}: params.MinerHashrate,
+				{
+					Name: "block_hash",
+					In:   "query",
+				}: params.BlockHash,
+				{
+					Name: "share_difficulty",
+					In:   "query",
+				}: params.ShareDifficulty,
+				{
+					Name: "round_miners_count",
+					In:   "query",
+				}: params.RoundMinersCount,
+				{
+					Name: "mined_at",
+					In:   "query",
+				}: params.MinedAt,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = GetBlockchainBlocksParams
+			Response = *MinedBlocksList
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackGetBlockchainBlocksParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetBlockchainBlocks(ctx, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetBlockchainBlocks(ctx, params)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeGetBlockchainBlocksResponse(response, w); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleGetBlockchainMinerRequest handles getBlockchainMiner operation.
+//
+// Get miner info on blockchain.
+//
+// GET /miners/{blockchain}/miner/{miner}
+func (s *Server) handleGetBlockchainMinerRequest(args [2]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var (
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetBlockchainMiner",
+			ID:   "getBlockchainMiner",
+		}
+	)
+	params, err := decodeGetBlockchainMinerParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	var response *Miner
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "GetBlockchainMiner",
+			OperationSummary: "Get miner info on blockchain",
+			OperationID:      "getBlockchainMiner",
+			Body:             nil,
+			Params: middleware.Parameters{
+				{
+					Name: "blockchain",
+					In:   "path",
+				}: params.Blockchain,
+				{
+					Name: "miner",
+					In:   "path",
+				}: params.Miner,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = GetBlockchainMinerParams
+			Response = *Miner
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackGetBlockchainMinerParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetBlockchainMiner(ctx, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetBlockchainMiner(ctx, params)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeGetBlockchainMinerResponse(response, w); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleGetBlockchainMinerBalanceRequest handles getBlockchainMinerBalance operation.
+//
+// Get miner balance on blockchain.
+//
+// GET /payouts/{blockchain}/balance/{miner}
+func (s *Server) handleGetBlockchainMinerBalanceRequest(args [2]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var (
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetBlockchainMinerBalance",
+			ID:   "getBlockchainMinerBalance",
+		}
+	)
+	params, err := decodeGetBlockchainMinerBalanceParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	var response *MinerBalance
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "GetBlockchainMinerBalance",
+			OperationSummary: "Get miner balance on blockchain",
+			OperationID:      "getBlockchainMinerBalance",
+			Body:             nil,
+			Params: middleware.Parameters{
+				{
+					Name: "blockchain",
+					In:   "path",
+				}: params.Blockchain,
+				{
+					Name: "miner",
+					In:   "path",
+				}: params.Miner,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = GetBlockchainMinerBalanceParams
+			Response = *MinerBalance
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackGetBlockchainMinerBalanceParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetBlockchainMinerBalance(ctx, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetBlockchainMinerBalance(ctx, params)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeGetBlockchainMinerBalanceResponse(response, w); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleGetBlockchainMinerWorkersRequest handles getBlockchainMinerWorkers operation.
+//
+// Get miner workers list on blockchain.
+//
+// GET /miners/{blockchain}/workers/{miner}
+func (s *Server) handleGetBlockchainMinerWorkersRequest(args [2]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var (
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetBlockchainMinerWorkers",
+			ID:   "getBlockchainMinerWorkers",
+		}
+	)
+	params, err := decodeGetBlockchainMinerWorkersParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	var response []MinerWorker
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "GetBlockchainMinerWorkers",
+			OperationSummary: "Get miner workers list on blockchain",
+			OperationID:      "getBlockchainMinerWorkers",
+			Body:             nil,
+			Params: middleware.Parameters{
+				{
+					Name: "blockchain",
+					In:   "path",
+				}: params.Blockchain,
+				{
+					Name: "miner",
+					In:   "path",
+				}: params.Miner,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = GetBlockchainMinerWorkersParams
+			Response = []MinerWorker
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackGetBlockchainMinerWorkersParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetBlockchainMinerWorkers(ctx, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetBlockchainMinerWorkers(ctx, params)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeGetBlockchainMinerWorkersResponse(response, w); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleGetBlockchainMinersRequest handles getBlockchainMiners operation.
+//
+// Get miners list on blockchain.
+//
+// GET /miners/{blockchain}
+func (s *Server) handleGetBlockchainMinersRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var (
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetBlockchainMiners",
+			ID:   "getBlockchainMiners",
+		}
+	)
+	params, err := decodeGetBlockchainMinersParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	var response *MinersList
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "GetBlockchainMiners",
+			OperationSummary: "Get miners list on blockchain",
+			OperationID:      "getBlockchainMiners",
+			Body:             nil,
+			Params: middleware.Parameters{
+				{
+					Name: "blockchain",
+					In:   "path",
+				}: params.Blockchain,
+				{
+					Name: "limit",
+					In:   "query",
+				}: params.Limit,
+				{
+					Name: "offset",
+					In:   "query",
+				}: params.Offset,
+				{
+					Name: "sorts",
+					In:   "query",
+				}: params.Sorts,
+				{
+					Name: "address",
+					In:   "query",
+				}: params.Address,
+				{
+					Name: "hashrate",
+					In:   "query",
+				}: params.Hashrate,
+				{
+					Name: "workers_count",
+					In:   "query",
+				}: params.WorkersCount,
+				{
+					Name: "blocks_count",
+					In:   "query",
+				}: params.BlocksCount,
+				{
+					Name: "solo_blocks_count",
+					In:   "query",
+				}: params.SoloBlocksCount,
+				{
+					Name: "joined_at",
+					In:   "query",
+				}: params.JoinedAt,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = GetBlockchainMinersParams
+			Response = *MinersList
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackGetBlockchainMinersParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetBlockchainMiners(ctx, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetBlockchainMiners(ctx, params)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeGetBlockchainMinersResponse(response, w); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleGetBlockchainPayoutsRequest handles getBlockchainPayouts operation.
+//
+// Get payouts list on blockchain.
+//
+// GET /payouts/{blockchain}
+func (s *Server) handleGetBlockchainPayoutsRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var (
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetBlockchainPayouts",
+			ID:   "getBlockchainPayouts",
+		}
+	)
+	params, err := decodeGetBlockchainPayoutsParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	var response *PayoutsList
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "GetBlockchainPayouts",
+			OperationSummary: "Get payouts list on blockchain",
+			OperationID:      "getBlockchainPayouts",
+			Body:             nil,
+			Params: middleware.Parameters{
+				{
+					Name: "blockchain",
+					In:   "path",
+				}: params.Blockchain,
+				{
+					Name: "limit",
+					In:   "query",
+				}: params.Limit,
+				{
+					Name: "offset",
+					In:   "query",
+				}: params.Offset,
+				{
+					Name: "sorts",
+					In:   "query",
+				}: params.Sorts,
+				{
+					Name: "miner",
+					In:   "query",
+				}: params.Miner,
+				{
+					Name: "tx_hash",
+					In:   "query",
+				}: params.TxHash,
+				{
+					Name: "amount",
+					In:   "query",
+				}: params.Amount,
+				{
+					Name: "paid_at",
+					In:   "query",
+				}: params.PaidAt,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = GetBlockchainPayoutsParams
+			Response = *PayoutsList
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackGetBlockchainPayoutsParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetBlockchainPayouts(ctx, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetBlockchainPayouts(ctx, params)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeGetBlockchainPayoutsResponse(response, w); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
 // handleGetBlockchainPoolRequest handles getBlockchainPool operation.
 //
 // Get full pool data on blockchain.
@@ -402,6 +988,125 @@ func (s *Server) handleGetBlockchainPriceRequest(args [1]string, argsEscaped boo
 	}
 
 	if err := encodeGetBlockchainPriceResponse(response, w); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
+// handleGetBlockchainSoloBlocksRequest handles getBlockchainSoloBlocks operation.
+//
+// Get solo blocks list on blockchain.
+//
+// GET /blocks/{blockchain}/solo
+func (s *Server) handleGetBlockchainSoloBlocksRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var (
+		err          error
+		opErrContext = ogenerrors.OperationContext{
+			Name: "GetBlockchainSoloBlocks",
+			ID:   "getBlockchainSoloBlocks",
+		}
+	)
+	params, err := decodeGetBlockchainSoloBlocksParams(args, argsEscaped, r)
+	if err != nil {
+		err = &ogenerrors.DecodeParamsError{
+			OperationContext: opErrContext,
+			Err:              err,
+		}
+		defer recordError("DecodeParams", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	var response GetBlockchainSoloBlocksRes
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "GetBlockchainSoloBlocks",
+			OperationSummary: "Get solo blocks list on blockchain",
+			OperationID:      "getBlockchainSoloBlocks",
+			Body:             nil,
+			Params: middleware.Parameters{
+				{
+					Name: "blockchain",
+					In:   "path",
+				}: params.Blockchain,
+				{
+					Name: "limit",
+					In:   "query",
+				}: params.Limit,
+				{
+					Name: "offset",
+					In:   "query",
+				}: params.Offset,
+				{
+					Name: "sorts",
+					In:   "query",
+				}: params.Sorts,
+				{
+					Name: "miner",
+					In:   "query",
+				}: params.Miner,
+				{
+					Name: "miner_hashrate",
+					In:   "query",
+				}: params.MinerHashrate,
+				{
+					Name: "block_hash",
+					In:   "query",
+				}: params.BlockHash,
+				{
+					Name: "reward",
+					In:   "query",
+				}: params.Reward,
+				{
+					Name: "tx_hash",
+					In:   "query",
+				}: params.TxHash,
+				{
+					Name: "share_difficulty",
+					In:   "query",
+				}: params.ShareDifficulty,
+				{
+					Name: "mined_at",
+					In:   "query",
+				}: params.MinedAt,
+			},
+			Raw: r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = GetBlockchainSoloBlocksParams
+			Response = GetBlockchainSoloBlocksRes
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			unpackGetBlockchainSoloBlocksParams,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetBlockchainSoloBlocks(ctx, params)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetBlockchainSoloBlocks(ctx, params)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeGetBlockchainSoloBlocksResponse(response, w); err != nil {
 		defer recordError("EncodeResponse", err)
 		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
