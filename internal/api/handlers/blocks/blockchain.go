@@ -82,3 +82,15 @@ func (h *BlockchainHandler) GetSoloBlocks(
 		Total:  soloBlocksList.Pagination.Total,
 	}
 }
+
+func NewBlockchainHandler(
+	blockchainService *blocksServices.BlockchainService,
+	minedBlockSerializer serializers.BaseSerializer[*poolPayoutsProto.MinedBlock, *apiModels.MinedBlock],
+	minedSoloBlockSerializer serializers.BaseSerializer[*poolPayoutsProto.MinedSoloBlock, *apiModels.MinedSoloBlock],
+) *BlockchainHandler {
+	return &BlockchainHandler{
+		blockchainService:        blockchainService,
+		minedBlockSerializer:     minedBlockSerializer,
+		minedSoloBlockSerializer: minedSoloBlockSerializer,
+	}
+}

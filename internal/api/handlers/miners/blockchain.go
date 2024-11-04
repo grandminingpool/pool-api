@@ -83,3 +83,15 @@ func (h *BlockchainHandler) GetMinerWorkers(
 		Workers: minerWorkersResponse,
 	}
 }
+
+func NewBlockchainHandler(
+	blockchainService *minersServices.BlockchainService,
+	minerSerializer serializers.BaseSerializer[*poolMinersProto.Miner, *apiModels.Miner],
+	minerWorkerSerializer serializers.BaseSerializer[*poolMinersProto.MinerWorker, *apiModels.MinerWorker],
+) *BlockchainHandler {
+	return &BlockchainHandler{
+		blockchainService:     blockchainService,
+		minerSerializer:       minerSerializer,
+		minerWorkerSerializer: minerWorkerSerializer,
+	}
+}

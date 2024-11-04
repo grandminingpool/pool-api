@@ -2,7 +2,7 @@ generator:
   features:
     disable:
       - 'paths/client'
-      - 'webhooks/client'
       - 'client/request/validation'
+      - 'webhooks/client'
       - 'ogen/otel'
   convenient_errors: 'off'

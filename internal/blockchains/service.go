@@ -4,7 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"time"
 
+	appConfig "github.com/grandminingpool/pool-api/configs/app"
 	poolAPIClient "github.com/grandminingpool/pool-api/internal/clients/pool_api"
 	"github.com/jmoiron/sqlx"
 	"google.golang.org/grpc"
@@ -48,6 +50,7 @@ func (b *Blockchain) GetConnection() *grpc.ClientConn {
 type Service struct {
 	pgConn      *sqlx.DB
 	blockchains map[string]Blockchain
+	config      *appConfig.PoolAPIConfig
 }
 
 func (s *Service) getBlockchainsFromDB(ctx context.Context) ([]BlockchainDB, error) {
@@ -85,7 +88,13 @@ func (s *Service) Start(ctx context.Context, certsPath string) error {
 	}
 
 	for _, b := range blockchains {
-		conn, err := poolAPIClient.NewClient(b.PoolAPIDB.URL, certsPath, b.PoolAPIDB.TLSCA, b.PoolAPIDB.ServerName)
+		conn, err := poolAPIClient.NewClient(
+			b.PoolAPIDB.URL,
+			certsPath,
+			b.PoolAPIDB.TLSCA,
+			b.PoolAPIDB.ServerName,
+			time.Duration(s.config.RequestTimeout)*time.Second,
+		)
 		if err != nil {
 			s.Close()
 
@@ -114,9 +123,10 @@ func (s *Service) Close() {
 	clear(s.blockchains)
 }
 
-func NewService(pgConn *sqlx.DB) *Service {
+func NewService(pgConn *sqlx.DB, config *appConfig.PoolAPIConfig) *Service {
 	return &Service{
 		pgConn:      pgConn,
 		blockchains: make(map[string]Blockchain),
+		config:      config,
 	}
 }

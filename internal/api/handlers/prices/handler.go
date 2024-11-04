@@ -29,3 +29,13 @@ func (h *Handler) Get(ctx context.Context) apiModels.GetPricesRes {
 		Prices: pricesResponse,
 	}
 }
+
+func NewHandler(
+	pricesService *pricesServices.PricesService,
+	coinPriceSerializer serializers.BaseSerializer[*pricesServices.CoinPriceDB, *apiModels.CoinPrice],
+) *Handler {
+	return &Handler{
+		pricesService:       pricesService,
+		coinPriceSerializer: coinPriceSerializer,
+	}
+}

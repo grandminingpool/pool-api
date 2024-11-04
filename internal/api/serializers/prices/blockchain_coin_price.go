@@ -24,3 +24,9 @@ func (s *BlockchainCoinPriceSerializer) Serialize(ctx context.Context, blockchai
 		Markets:                  marketsResponse,
 	}
 }
+
+func NewBlockchainCoinPriceSerializer(marketPriceSerializer *MarkerPriceSerializer) *BlockchainCoinPriceSerializer {
+	return &BlockchainCoinPriceSerializer{
+		marketPriceSerializer: marketPriceSerializer,
+	}
+}

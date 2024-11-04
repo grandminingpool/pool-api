@@ -64,3 +64,13 @@ func (h *BlockchainHandler) GetMinerBalance(
 		Balance: *minerBalance,
 	}
 }
+
+func NewBlockchainHandler(
+	blockchainService *payoutsServices.BlockchainService,
+	payoutSerializer serializers.BaseSerializer[*poolPayoutsProto.Payout, *apiModels.Payout],
+) *BlockchainHandler {
+	return &BlockchainHandler{
+		blockchainService: blockchainService,
+		payoutSerializer:  payoutSerializer,
+	}
+}

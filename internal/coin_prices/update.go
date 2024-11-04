@@ -10,7 +10,6 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-	"go.uber.org/zap"
 )
 
 const apiURL = "https://tradeogre.com/api/v1"
@@ -120,12 +119,10 @@ func (s *UpdateService) updateRowsInDB(ctx context.Context, tx *sqlx.Tx, newPric
 	return nil
 }
 
-func (s *UpdateService) Update(ctx context.Context) {
+func (s *UpdateService) Update(ctx context.Context) error {
 	marketTickers, err := s.getMarketTickers(ctx)
 	if err != nil {
-		zap.L().Fatal("failed to get market tickers", zap.Error(err))
-
-		return
+		return err
 	}
 
 	errCh := make(chan error, len(marketTickers))
@@ -143,9 +140,7 @@ func (s *UpdateService) Update(ctx context.Context) {
 	for i := 0; i < len(marketTickers); i++ {
 		select {
 		case err := <-errCh:
-			zap.L().Fatal("failed to get coin price from api", zap.Error(err))
-
-			return
+			return err
 		case price := <-coinPricesCh:
 			newPrices = append(newPrices, price)
 		}
@@ -155,18 +150,26 @@ func (s *UpdateService) Update(ctx context.Context) {
 		Isolation: sql.LevelSerializable,
 	})
 	if err != nil {
-		zap.L().Fatal("failed to create transaction for update prices", zap.Error(err))
-
-		return
+		return fmt.Errorf("failed to create transaction for update prices: %w", err)
 	}
 
 	if err := s.updateRowsInDB(newCtx, tx, newPrices); err != nil {
-		zap.L().Fatal("failed to update database rows", zap.Error(err))
+		tx.Rollback()
 
-		return
+		return err
 	}
 
 	if err := tx.Commit(); err != nil {
-		zap.L().Fatal("failed to commit transaction with updated prices", zap.Error(err))
+		tx.Rollback()
+
+		return fmt.Errorf("failed to commit transaction with updated prices: %w", err)
+	}
+
+	return nil
+}
+
+func NewUpdateService(pgConn *sqlx.DB) *UpdateService {
+	return &UpdateService{
+		pgConn: pgConn,
 	}
 }

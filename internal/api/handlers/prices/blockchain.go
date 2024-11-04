@@ -24,3 +24,13 @@ func (h *BlockchainHandler) GetPrice(ctx context.Context, blockchainCoin string)
 
 	return h.blockchainCoinPriceSerializer.Serialize(ctx, price)
 }
+
+func NewBlockchainHandler(
+	pricesService *pricesServices.PricesService,
+	blockchainCoinPriceSerializer serializers.BaseSerializer[*pricesServices.BlockchainCoinPrice, *apiModels.BlockchainCoinPrice],
+) *BlockchainHandler {
+	return &BlockchainHandler{
+		pricesService:                 pricesService,
+		blockchainCoinPriceSerializer: blockchainCoinPriceSerializer,
+	}
+}

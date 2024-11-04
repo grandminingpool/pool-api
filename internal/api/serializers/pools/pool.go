@@ -25,3 +25,15 @@ func (s *PoolSerializer) Serialize(ctx context.Context, pool *poolsServices.Pool
 		Slaves: slaves,
 	}
 }
+
+func NewPoolSerializer(
+	poolInfoSerializer *PoolInfoSerializer,
+	poolStatsSerializer *PoolStatsSerializer,
+	poolSlaveSerializer *PoolSlaveSerialzier,
+) *PoolSerializer {
+	return &PoolSerializer{
+		poolInfoSerializer:  poolInfoSerializer,
+		poolStatsSerializer: poolStatsSerializer,
+		poolSlaveSerializer: poolSlaveSerializer,
+	}
+}

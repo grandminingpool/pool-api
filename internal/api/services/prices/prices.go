@@ -65,3 +65,9 @@ func (s *PricesService) GetBlockchainCoinPrice(ctx context.Context, coin string)
 		Markets: coinMarkets,
 	}, nil
 }
+
+func NewPricesService(pgConn *sqlx.DB) *PricesService {
+	return &PricesService{
+		pgConn: pgConn,
+	}
+}

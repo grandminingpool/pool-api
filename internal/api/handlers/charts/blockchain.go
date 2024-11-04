@@ -161,3 +161,21 @@ func (h *BlockchainHandler) GetMinerWorkerSharesChart(
 
 	return h.minerSharesResponse(ctx, minerWorkerSharesPoints)
 }
+
+func NewBlockchainHandler(
+	blockchainService *chartsServices.BlockchainService,
+	poolStatsPointSerializer serializers.BaseSerializer[*chartsProto.PoolStatsPoint, *apiModels.PoolStatsPoint],
+	poolDifficultiesPointSerializer serializers.BaseSerializer[*chartsProto.PoolDifficultiesPoint, *apiModels.PoolDifficultiesPoint],
+	roundsPointSerializer serializers.BaseSerializer[*chartsProto.RoundsPoint, *apiModels.RoundsPoint],
+	minerHashratesPointSerializer serializers.BaseSerializer[*chartsProto.MinerHashratesPoint, *apiModels.MinerHashratesPoint],
+	minerSharesPointSerializer serializers.BaseSerializer[*chartsProto.MinerSharesPoint, *apiModels.MinerSharesPoint],
+) *BlockchainHandler {
+	return &BlockchainHandler{
+		blockchainService:               blockchainService,
+		poolStatsPointSerializer:        poolStatsPointSerializer,
+		poolDifficultiesPointSerializer: poolDifficultiesPointSerializer,
+		roundsPointSerializer:           roundsPointSerializer,
+		minerHashratesPointSerializer:   minerHashratesPointSerializer,
+		minerSharesPointSerializer:      minerSharesPointSerializer,
+	}
+}

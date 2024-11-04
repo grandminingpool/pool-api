@@ -24,3 +24,13 @@ func (h *Handler) Get(ctx context.Context) *apiModels.BlockchainsList {
 		Blockchains: blockchainsResponse,
 	}
 }
+
+func NewHandler(
+	blockchainsService *blockchains.Service,
+	blockchainSerializer serializers.BaseSerializer[*blockchains.BlockchainInfo, *apiModels.Blockchain],
+) *Handler {
+	return &Handler{
+		blockchainsService:   blockchainsService,
+		blockchainSerializer: blockchainSerializer,
+	}
+}

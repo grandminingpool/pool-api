@@ -61,3 +61,19 @@ func (h *BlockchainHandler) GetPoolSlaves(ctx context.Context, blockchain *block
 		Slaves: poolSlavesResponse,
 	}
 }
+
+func NewBlockchainHandler(
+	blockchainService *poolsServices.BlockchainService,
+	poolSerializer serializers.BaseSerializer[*poolsServices.Pool, *apiModels.Pool],
+	poolInfoSerializer serializers.BaseSerializer[*poolProto.PoolInfo, *apiModels.PoolInfo],
+	poolStatsSerializer serializers.BaseSerializer[*poolProto.PoolStats, *apiModels.PoolStats],
+	poolSlaveSerializer serializers.BaseSerializer[*poolProto.PoolSlave, *apiModels.PoolSlave],
+) *BlockchainHandler {
+	return &BlockchainHandler{
+		blockchainService:   blockchainService,
+		poolSerializer:      poolSerializer,
+		poolInfoSerializer:  poolInfoSerializer,
+		poolStatsSerializer: poolStatsSerializer,
+		poolSlaveSerializer: poolSlaveSerializer,
+	}
+}
