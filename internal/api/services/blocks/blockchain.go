@@ -13,6 +13,10 @@ import (
 
 type BlockchainService struct{}
 
+func (s *BlockchainService) getProtoClient(blockchain *blockchains.Blockchain) poolPayoutsProto.PoolPayoutsServiceClient {
+	return poolPayoutsProto.NewPoolPayoutsServiceClient(blockchain.GetConnection())
+}
+
 func (s *BlockchainService) GetBlocks(
 	ctx context.Context,
 	blockchain *blockchains.Blockchain,
@@ -43,7 +47,7 @@ func (s *BlockchainService) GetSoloBlocks(
 	filters *poolPayoutsProto.MinedSoloBlocksFilters,
 	limit, offset uint32,
 ) (*poolPayoutsProto.MinedSoloBlocksList, error) {
-	client := poolPayoutsProto.NewPoolPayoutsServiceClient(blockchain.GetConnection())
+	client := s.getProtoClient(blockchain)
 	soloBlocksList, err := client.GetSoloBlocks(ctx, &poolPayoutsProto.GetSoloBlocksRequest{
 		Filters: filters,
 		Sorts:   sorts,

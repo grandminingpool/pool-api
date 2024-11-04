@@ -9,7 +9,6 @@ import (
 	poolsServices "github.com/grandminingpool/pool-api/internal/api/services/pools"
 	"github.com/grandminingpool/pool-api/internal/blockchains"
 	"github.com/grandminingpool/pool-api/internal/common/serializers"
-	serverErrors "github.com/grandminingpool/pool-api/internal/common/server/errors"
 )
 
 type BlockchainHandler struct {
@@ -20,43 +19,45 @@ type BlockchainHandler struct {
 	poolSlaveSerializer serializers.BaseSerializer[*poolProto.PoolSlave, *apiModels.PoolSlave]
 }
 
-func (h *BlockchainHandler) GetPool(ctx context.Context, blockchain *blockchains.Blockchain) (*apiModels.Pool, error) {
+func (h *BlockchainHandler) GetPool(ctx context.Context, blockchain *blockchains.Blockchain) apiModels.GetBlockchainPoolRes {
 	pool, err := h.blockchainService.GetPool(ctx, blockchain)
 	if err != nil {
-		return nil, serverErrors.CreateInternalServerError(poolsErrors.GetPoolDataError, err)
+		return poolsErrors.CreateGetPoolDataError(err)
 	}
 
-	return h.poolSerializer.Serialize(ctx, pool), nil
+	return h.poolSerializer.Serialize(ctx, pool)
 }
 
-func (h *BlockchainHandler) GetPoolInfo(ctx context.Context, blockchain *blockchains.Blockchain) (*apiModels.PoolInfo, error) {
+func (h *BlockchainHandler) GetPoolInfo(ctx context.Context, blockchain *blockchains.Blockchain) apiModels.GetBlockchainPoolInfoRes {
 	poolInfo, err := h.blockchainService.GetPoolInfo(ctx, blockchain)
 	if err != nil {
-		return nil, serverErrors.CreateInternalServerError(poolsErrors.GetPoolInfoError, err)
+		return poolsErrors.CreateGetPoolInfoError(err)
 	}
 
-	return h.poolInfoSerializer.Serialize(ctx, poolInfo), nil
+	return h.poolInfoSerializer.Serialize(ctx, poolInfo)
 }
 
-func (h *BlockchainHandler) GetPoolStats(ctx context.Context, blockchain *blockchains.Blockchain) (*apiModels.PoolStats, error) {
+func (h *BlockchainHandler) GetPoolStats(ctx context.Context, blockchain *blockchains.Blockchain) apiModels.GetBlockchainPoolStatsRes {
 	poolStats, err := h.blockchainService.GetPoolStats(ctx, blockchain)
 	if err != nil {
-		return nil, serverErrors.CreateInternalServerError(poolsErrors.GetPoolStatsError, err)
+		return poolsErrors.CreateGetPoolStatsError(err)
 	}
 
-	return h.poolStatsSerializer.Serialize(ctx, poolStats), nil
+	return h.poolStatsSerializer.Serialize(ctx, poolStats)
 }
 
-func (h *BlockchainHandler) GetPoolSlaves(ctx context.Context, blockchain *blockchains.Blockchain) ([]apiModels.PoolSlave, error) {
+func (h *BlockchainHandler) GetPoolSlaves(ctx context.Context, blockchain *blockchains.Blockchain) apiModels.GetBlockchainPoolSlavesRes {
 	poolSlaves, err := h.blockchainService.GetPoolSlaves(ctx, blockchain)
 	if err != nil {
-		return nil, serverErrors.CreateInternalServerError(poolsErrors.GetPoolStatsError, err)
+		return poolsErrors.CreateGetPoolSlavesError(err)
 	}
 
-	response := make([]apiModels.PoolSlave, 0, len(poolSlaves))
+	poolSlavesResponse := make([]apiModels.PoolSlave, 0, len(poolSlaves))
 	for _, poolSlave := range poolSlaves {
-		response = append(response, *h.poolSlaveSerializer.Serialize(ctx, poolSlave))
+		poolSlavesResponse = append(poolSlavesResponse, *h.poolSlaveSerializer.Serialize(ctx, poolSlave))
 	}
 
-	return response, nil
+	return &apiModels.PoolSlavesList{
+		Slaves: poolSlavesResponse,
+	}
 }

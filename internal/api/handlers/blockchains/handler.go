@@ -13,13 +13,14 @@ type Handler struct {
 	blockchainSerializer serializers.BaseSerializer[*blockchains.BlockchainInfo, *apiModels.Blockchain]
 }
 
-func (h *Handler) Get(ctx context.Context) ([]apiModels.Blockchain, error) {
+func (h *Handler) Get(ctx context.Context) *apiModels.BlockchainsList {
 	blockchainsInfo := h.blockchainsService.GetBlockchainsInfo()
-	response := make([]apiModels.Blockchain, 0, len(blockchainsInfo))
-
+	blockchainsResponse := make([]apiModels.Blockchain, 0, len(blockchainsInfo))
 	for _, blockchainInfo := range blockchainsInfo {
-		response = append(response, *h.blockchainSerializer.Serialize(ctx, &blockchainInfo))
+		blockchainsResponse = append(blockchainsResponse, *h.blockchainSerializer.Serialize(ctx, &blockchainInfo))
 	}
 
-	return response, nil
+	return &apiModels.BlockchainsList{
+		Blockchains: blockchainsResponse,
+	}
 }

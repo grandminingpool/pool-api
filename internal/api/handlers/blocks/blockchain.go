@@ -9,7 +9,6 @@ import (
 	blocksServices "github.com/grandminingpool/pool-api/internal/api/services/blocks"
 	"github.com/grandminingpool/pool-api/internal/blockchains"
 	"github.com/grandminingpool/pool-api/internal/common/serializers"
-	serverErrors "github.com/grandminingpool/pool-api/internal/common/server/errors"
 )
 
 type BlockchainHandler struct {
@@ -24,7 +23,7 @@ func (h *BlockchainHandler) GetBlocks(
 	sorts *poolPayoutsProto.MinedBlocksSorts,
 	filters *poolPayoutsProto.MinedBlocksFilters,
 	limit, offset uint32,
-) (*apiModels.MinedBlocksList, error) {
+) apiModels.GetBlockchainBlocksRes {
 	blocksList, err := h.blockchainService.GetBlocks(
 		ctx,
 		blockchain,
@@ -34,7 +33,7 @@ func (h *BlockchainHandler) GetBlocks(
 		offset,
 	)
 	if err != nil {
-		return nil, serverErrors.CreateInternalServerError(blocksErrors.GetBlocksError, err)
+		return blocksErrors.CreateGetBlocksError(err)
 	}
 
 	blocksResponse := make([]apiModels.MinedBlock, 0, len(blocksList.Blocks))
@@ -47,7 +46,7 @@ func (h *BlockchainHandler) GetBlocks(
 		Limit:  blocksList.Pagination.Limit,
 		Offset: blocksList.Pagination.Offset,
 		Total:  blocksList.Pagination.Total,
-	}, nil
+	}
 }
 
 func (h *BlockchainHandler) GetSoloBlocks(
@@ -56,7 +55,7 @@ func (h *BlockchainHandler) GetSoloBlocks(
 	sorts *poolPayoutsProto.MinedSoloBlocksSorts,
 	filters *poolPayoutsProto.MinedSoloBlocksFilters,
 	limit, offset uint32,
-) (apiModels.GetBlockchainSoloBlocksRes, error) {
+) apiModels.GetBlockchainSoloBlocksRes {
 	soloBlocksList, err := h.blockchainService.GetSoloBlocks(
 		ctx,
 		blockchain,
@@ -66,9 +65,9 @@ func (h *BlockchainHandler) GetSoloBlocks(
 		offset,
 	)
 	if err != nil {
-
+		return blocksErrors.CreateGetSoloBlocksError(err)
 	} else if soloBlocksList == nil {
-
+		return blocksErrors.CreateGetSoloBlocksNotImplementedError()
 	}
 
 	soloBlocksResponse := make([]apiModels.MinedSoloBlock, 0, len(soloBlocksList.Blocks.Blocks))
@@ -81,5 +80,5 @@ func (h *BlockchainHandler) GetSoloBlocks(
 		Limit:  soloBlocksList.Pagination.Limit,
 		Offset: soloBlocksList.Pagination.Offset,
 		Total:  soloBlocksList.Pagination.Total,
-	}, nil
+	}
 }

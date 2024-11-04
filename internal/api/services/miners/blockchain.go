@@ -56,11 +56,16 @@ func (s *BlockchainService) GetMiner(ctx context.Context, blockchain *blockchain
 
 func (s *BlockchainService) GetMinerWorkers(ctx context.Context, blockchain *blockchains.Blockchain, miner string) ([]*poolMinersProto.MinerWorker, error) {
 	client := poolMinersProto.NewPoolMinersServiceClient(blockchain.GetConnection())
-	minerWorkers, err := client.GetMinerWorkers(ctx, &poolMinersProto.MinerAddressRequest{
-		Address: miner,
+	minersWorkersMap, err := client.GetMinersWorkersFromList(ctx, &poolMinersProto.MinerAddressesRequest{
+		Addresses: []string{miner},
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to get blockchain (coin: %s) miner (address: %s) workers: %w", blockchain.GetInfo().Coin, miner, err)
+	}
+
+	minerWorkers, ok := minersWorkersMap.Workers[miner]
+	if !ok {
+		return nil, nil
 	}
 
 	return minerWorkers.Workers, nil

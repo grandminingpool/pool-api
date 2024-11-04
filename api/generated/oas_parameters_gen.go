@@ -546,6 +546,72 @@ func decodeGetBlockchainBlocksParams(args [1]string, argsEscaped bool, r *http.R
 	return params, nil
 }
 
+// GetBlockchainCoinPriceParams is parameters of getBlockchainCoinPrice operation.
+type GetBlockchainCoinPriceParams struct {
+	// Pool blockchain.
+	Blockchain string
+}
+
+func unpackGetBlockchainCoinPriceParams(packed middleware.Parameters) (params GetBlockchainCoinPriceParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	return params
+}
+
+func decodeGetBlockchainCoinPriceParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainCoinPriceParams, _ error) {
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
 // GetBlockchainMinerParams is parameters of getBlockchainMiner operation.
 type GetBlockchainMinerParams struct {
 	// Pool blockchain.
@@ -780,6 +846,914 @@ func decodeGetBlockchainMinerBalanceParams(args [2]string, argsEscaped bool, r *
 		return params, &ogenerrors.DecodeParamError{
 			Name: "miner",
 			In:   "path",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetBlockchainMinerHashratesChartParams is parameters of getBlockchainMinerHashratesChart operation.
+type GetBlockchainMinerHashratesChartParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// Pool miner.
+	Miner string
+	// Chart period.
+	Period ChartPeriod
+	// Show miner solo hashrates points (if pool supports solo mining)?.
+	Solo OptBool
+}
+
+func unpackGetBlockchainMinerHashratesChartParams(packed middleware.Parameters) (params GetBlockchainMinerHashratesChartParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "miner",
+			In:   "path",
+		}
+		params.Miner = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "period",
+			In:   "query",
+		}
+		params.Period = packed[key].(ChartPeriod)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "solo",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Solo = v.(OptBool)
+		}
+	}
+	return params
+}
+
+func decodeGetBlockchainMinerHashratesChartParams(args [2]string, argsEscaped bool, r *http.Request) (params GetBlockchainMinerHashratesChartParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: miner.
+	if err := func() error {
+		param := args[1]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[1])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "miner",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Miner = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "miner",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: period.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "period",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Period = ChartPeriod(c)
+				return nil
+			}); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := params.Period.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "period",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: solo.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "solo",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSoloVal bool
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToBool(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotSoloVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Solo.SetTo(paramsDotSoloVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "solo",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetBlockchainMinerSharesChartParams is parameters of getBlockchainMinerSharesChart operation.
+type GetBlockchainMinerSharesChartParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// Pool miner.
+	Miner string
+	// Chart period.
+	Period ChartPeriod
+	// Show miner solo shares points (if pool supports solo mining)?.
+	Solo OptBool
+}
+
+func unpackGetBlockchainMinerSharesChartParams(packed middleware.Parameters) (params GetBlockchainMinerSharesChartParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "miner",
+			In:   "path",
+		}
+		params.Miner = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "period",
+			In:   "query",
+		}
+		params.Period = packed[key].(ChartPeriod)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "solo",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Solo = v.(OptBool)
+		}
+	}
+	return params
+}
+
+func decodeGetBlockchainMinerSharesChartParams(args [2]string, argsEscaped bool, r *http.Request) (params GetBlockchainMinerSharesChartParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: miner.
+	if err := func() error {
+		param := args[1]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[1])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "miner",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Miner = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "miner",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: period.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "period",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Period = ChartPeriod(c)
+				return nil
+			}); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := params.Period.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "period",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: solo.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "solo",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSoloVal bool
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToBool(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotSoloVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Solo.SetTo(paramsDotSoloVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "solo",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetBlockchainMinerWorkerHashratesChartParams is parameters of getBlockchainMinerWorkerHashratesChart operation.
+type GetBlockchainMinerWorkerHashratesChartParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// Pool miner.
+	Miner string
+	// Pool worker.
+	Worker string
+	// Chart period.
+	Period ChartPeriod
+}
+
+func unpackGetBlockchainMinerWorkerHashratesChartParams(packed middleware.Parameters) (params GetBlockchainMinerWorkerHashratesChartParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "miner",
+			In:   "path",
+		}
+		params.Miner = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "worker",
+			In:   "path",
+		}
+		params.Worker = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "period",
+			In:   "query",
+		}
+		params.Period = packed[key].(ChartPeriod)
+	}
+	return params
+}
+
+func decodeGetBlockchainMinerWorkerHashratesChartParams(args [3]string, argsEscaped bool, r *http.Request) (params GetBlockchainMinerWorkerHashratesChartParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: miner.
+	if err := func() error {
+		param := args[1]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[1])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "miner",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Miner = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "miner",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: worker.
+	if err := func() error {
+		param := args[2]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[2])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "worker",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Worker = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "worker",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: period.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "period",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Period = ChartPeriod(c)
+				return nil
+			}); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := params.Period.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "period",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetBlockchainMinerWorkerSharesChartParams is parameters of getBlockchainMinerWorkerSharesChart operation.
+type GetBlockchainMinerWorkerSharesChartParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// Pool miner.
+	Miner string
+	// Pool worker.
+	Worker string
+	// Chart period.
+	Period ChartPeriod
+}
+
+func unpackGetBlockchainMinerWorkerSharesChartParams(packed middleware.Parameters) (params GetBlockchainMinerWorkerSharesChartParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "miner",
+			In:   "path",
+		}
+		params.Miner = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "worker",
+			In:   "path",
+		}
+		params.Worker = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "period",
+			In:   "query",
+		}
+		params.Period = packed[key].(ChartPeriod)
+	}
+	return params
+}
+
+func decodeGetBlockchainMinerWorkerSharesChartParams(args [3]string, argsEscaped bool, r *http.Request) (params GetBlockchainMinerWorkerSharesChartParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: miner.
+	if err := func() error {
+		param := args[1]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[1])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "miner",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Miner = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "miner",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: worker.
+	if err := func() error {
+		param := args[2]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[2])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "worker",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Worker = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "worker",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: period.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "period",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Period = ChartPeriod(c)
+				return nil
+			}); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := params.Period.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "period",
+			In:   "query",
 			Err:  err,
 		}
 	}
@@ -1930,6 +2904,178 @@ func decodeGetBlockchainPoolParams(args [1]string, argsEscaped bool, r *http.Req
 	return params, nil
 }
 
+// GetBlockchainPoolDifficultiesChartParams is parameters of getBlockchainPoolDifficultiesChart operation.
+type GetBlockchainPoolDifficultiesChartParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// Chart period.
+	Period ChartPeriod
+	// Show pool solo difficulties points (if pool supports solo mining)?.
+	Solo OptBool
+}
+
+func unpackGetBlockchainPoolDifficultiesChartParams(packed middleware.Parameters) (params GetBlockchainPoolDifficultiesChartParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "period",
+			In:   "query",
+		}
+		params.Period = packed[key].(ChartPeriod)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "solo",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Solo = v.(OptBool)
+		}
+	}
+	return params
+}
+
+func decodeGetBlockchainPoolDifficultiesChartParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainPoolDifficultiesChartParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: period.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "period",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Period = ChartPeriod(c)
+				return nil
+			}); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := params.Period.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "period",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: solo.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "solo",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSoloVal bool
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToBool(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotSoloVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Solo.SetTo(paramsDotSoloVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "solo",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
 // GetBlockchainPoolInfoParams is parameters of getBlockchainPoolInfo operation.
 type GetBlockchainPoolInfoParams struct {
 	// Pool blockchain.
@@ -2128,13 +3274,17 @@ func decodeGetBlockchainPoolStatsParams(args [1]string, argsEscaped bool, r *htt
 	return params, nil
 }
 
-// GetBlockchainPriceParams is parameters of getBlockchainPrice operation.
-type GetBlockchainPriceParams struct {
+// GetBlockchainPoolStatsChartParams is parameters of getBlockchainPoolStatsChart operation.
+type GetBlockchainPoolStatsChartParams struct {
 	// Pool blockchain.
 	Blockchain string
+	// Chart period.
+	Period ChartPeriod
+	// Show pool solo stats points (if pool supports solo mining)?.
+	Solo OptBool
 }
 
-func unpackGetBlockchainPriceParams(packed middleware.Parameters) (params GetBlockchainPriceParams) {
+func unpackGetBlockchainPoolStatsChartParams(packed middleware.Parameters) (params GetBlockchainPoolStatsChartParams) {
 	{
 		key := middleware.ParameterKey{
 			Name: "blockchain",
@@ -2142,10 +3292,27 @@ func unpackGetBlockchainPriceParams(packed middleware.Parameters) (params GetBlo
 		}
 		params.Blockchain = packed[key].(string)
 	}
+	{
+		key := middleware.ParameterKey{
+			Name: "period",
+			In:   "query",
+		}
+		params.Period = packed[key].(ChartPeriod)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "solo",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Solo = v.(OptBool)
+		}
+	}
 	return params
 }
 
-func decodeGetBlockchainPriceParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainPriceParams, _ error) {
+func decodeGetBlockchainPoolStatsChartParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainPoolStatsChartParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
 	// Decode path: blockchain.
 	if err := func() error {
 		param := args[0]
@@ -2188,6 +3355,211 @@ func decodeGetBlockchainPriceParams(args [1]string, argsEscaped bool, r *http.Re
 		return params, &ogenerrors.DecodeParamError{
 			Name: "blockchain",
 			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: period.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "period",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Period = ChartPeriod(c)
+				return nil
+			}); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := params.Period.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "period",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: solo.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "solo",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSoloVal bool
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToBool(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotSoloVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Solo.SetTo(paramsDotSoloVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "solo",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetBlockchainRoundsChartParams is parameters of getBlockchainRoundsChart operation.
+type GetBlockchainRoundsChartParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// Chart period.
+	Period ChartPeriod
+}
+
+func unpackGetBlockchainRoundsChartParams(packed middleware.Parameters) (params GetBlockchainRoundsChartParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "period",
+			In:   "query",
+		}
+		params.Period = packed[key].(ChartPeriod)
+	}
+	return params
+}
+
+func decodeGetBlockchainRoundsChartParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainRoundsChartParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: period.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "period",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Period = ChartPeriod(c)
+				return nil
+			}); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := params.Period.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "period",
+			In:   "query",
 			Err:  err,
 		}
 	}

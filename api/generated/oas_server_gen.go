@@ -13,67 +13,109 @@ type Handler interface {
 	// Get blocks list on blockchain.
 	//
 	// GET /blocks/{blockchain}
-	GetBlockchainBlocks(ctx context.Context, params GetBlockchainBlocksParams) (*MinedBlocksList, error)
+	GetBlockchainBlocks(ctx context.Context, params GetBlockchainBlocksParams) (GetBlockchainBlocksRes, error)
+	// GetBlockchainCoinPrice implements getBlockchainCoinPrice operation.
+	//
+	// Get blockchain coin price and markets.
+	//
+	// GET /prices/{blockchain}
+	GetBlockchainCoinPrice(ctx context.Context, params GetBlockchainCoinPriceParams) (GetBlockchainCoinPriceRes, error)
 	// GetBlockchainMiner implements getBlockchainMiner operation.
 	//
 	// Get miner info on blockchain.
 	//
 	// GET /miners/{blockchain}/miner/{miner}
-	GetBlockchainMiner(ctx context.Context, params GetBlockchainMinerParams) (*Miner, error)
+	GetBlockchainMiner(ctx context.Context, params GetBlockchainMinerParams) (GetBlockchainMinerRes, error)
 	// GetBlockchainMinerBalance implements getBlockchainMinerBalance operation.
 	//
 	// Get miner balance on blockchain.
 	//
 	// GET /payouts/{blockchain}/balance/{miner}
-	GetBlockchainMinerBalance(ctx context.Context, params GetBlockchainMinerBalanceParams) (*MinerBalance, error)
+	GetBlockchainMinerBalance(ctx context.Context, params GetBlockchainMinerBalanceParams) (GetBlockchainMinerBalanceRes, error)
+	// GetBlockchainMinerHashratesChart implements getBlockchainMinerHashratesChart operation.
+	//
+	// Get miner hashrates chart points.
+	//
+	// GET /charts/{blockchain}/miner/{miner}/hashrates
+	GetBlockchainMinerHashratesChart(ctx context.Context, params GetBlockchainMinerHashratesChartParams) (GetBlockchainMinerHashratesChartRes, error)
+	// GetBlockchainMinerSharesChart implements getBlockchainMinerSharesChart operation.
+	//
+	// Get miner shares chart points.
+	//
+	// GET /charts/{blockchain}/miner/{miner}/shares
+	GetBlockchainMinerSharesChart(ctx context.Context, params GetBlockchainMinerSharesChartParams) (GetBlockchainMinerSharesChartRes, error)
+	// GetBlockchainMinerWorkerHashratesChart implements getBlockchainMinerWorkerHashratesChart operation.
+	//
+	// Get miner worker hashrates chart points.
+	//
+	// GET /charts/{blockchain}/miner/{miner}/worker/{worker}/hashrates
+	GetBlockchainMinerWorkerHashratesChart(ctx context.Context, params GetBlockchainMinerWorkerHashratesChartParams) (GetBlockchainMinerWorkerHashratesChartRes, error)
+	// GetBlockchainMinerWorkerSharesChart implements getBlockchainMinerWorkerSharesChart operation.
+	//
+	// Get miner worker shares chart points.
+	//
+	// GET /charts/{blockchain}/miner/{miner}/worker/{worker}/shares
+	GetBlockchainMinerWorkerSharesChart(ctx context.Context, params GetBlockchainMinerWorkerSharesChartParams) (GetBlockchainMinerWorkerSharesChartRes, error)
 	// GetBlockchainMinerWorkers implements getBlockchainMinerWorkers operation.
 	//
 	// Get miner workers list on blockchain.
 	//
 	// GET /miners/{blockchain}/workers/{miner}
-	GetBlockchainMinerWorkers(ctx context.Context, params GetBlockchainMinerWorkersParams) ([]MinerWorker, error)
+	GetBlockchainMinerWorkers(ctx context.Context, params GetBlockchainMinerWorkersParams) (GetBlockchainMinerWorkersRes, error)
 	// GetBlockchainMiners implements getBlockchainMiners operation.
 	//
 	// Get miners list on blockchain.
 	//
 	// GET /miners/{blockchain}
-	GetBlockchainMiners(ctx context.Context, params GetBlockchainMinersParams) (*MinersList, error)
+	GetBlockchainMiners(ctx context.Context, params GetBlockchainMinersParams) (GetBlockchainMinersRes, error)
 	// GetBlockchainPayouts implements getBlockchainPayouts operation.
 	//
 	// Get payouts list on blockchain.
 	//
 	// GET /payouts/{blockchain}
-	GetBlockchainPayouts(ctx context.Context, params GetBlockchainPayoutsParams) (*PayoutsList, error)
+	GetBlockchainPayouts(ctx context.Context, params GetBlockchainPayoutsParams) (GetBlockchainPayoutsRes, error)
 	// GetBlockchainPool implements getBlockchainPool operation.
 	//
 	// Get full pool data on blockchain.
 	//
 	// GET /pools/{blockchain}
-	GetBlockchainPool(ctx context.Context, params GetBlockchainPoolParams) (*Pool, error)
+	GetBlockchainPool(ctx context.Context, params GetBlockchainPoolParams) (GetBlockchainPoolRes, error)
+	// GetBlockchainPoolDifficultiesChart implements getBlockchainPoolDifficultiesChart operation.
+	//
+	// Get pool difficulties chart points.
+	//
+	// GET /charts/{blockchain}/pool_difficulties
+	GetBlockchainPoolDifficultiesChart(ctx context.Context, params GetBlockchainPoolDifficultiesChartParams) (GetBlockchainPoolDifficultiesChartRes, error)
 	// GetBlockchainPoolInfo implements getBlockchainPoolInfo operation.
 	//
 	// Get pool info on blockchain.
 	//
 	// GET /pools/{blockchain}/info
-	GetBlockchainPoolInfo(ctx context.Context, params GetBlockchainPoolInfoParams) (*PoolInfo, error)
+	GetBlockchainPoolInfo(ctx context.Context, params GetBlockchainPoolInfoParams) (GetBlockchainPoolInfoRes, error)
 	// GetBlockchainPoolSlaves implements getBlockchainPoolSlaves operation.
 	//
 	// Get pool locations on blockchain.
 	//
 	// GET /pools/{blockchain}/slaves
-	GetBlockchainPoolSlaves(ctx context.Context, params GetBlockchainPoolSlavesParams) ([]PoolSlave, error)
+	GetBlockchainPoolSlaves(ctx context.Context, params GetBlockchainPoolSlavesParams) (GetBlockchainPoolSlavesRes, error)
 	// GetBlockchainPoolStats implements getBlockchainPoolStats operation.
 	//
 	// Get pool statistics on blockchain.
 	//
 	// GET /pools/{blockchain}/stats
-	GetBlockchainPoolStats(ctx context.Context, params GetBlockchainPoolStatsParams) (*PoolStats, error)
-	// GetBlockchainPrice implements getBlockchainPrice operation.
+	GetBlockchainPoolStats(ctx context.Context, params GetBlockchainPoolStatsParams) (GetBlockchainPoolStatsRes, error)
+	// GetBlockchainPoolStatsChart implements getBlockchainPoolStatsChart operation.
 	//
-	// Get blockchain coin price and markets.
+	// Get pool stats chart points.
 	//
-	// GET /prices/{blockchain}
-	GetBlockchainPrice(ctx context.Context, params GetBlockchainPriceParams) (*BlockchainCoinPrice, error)
+	// GET /charts/{blockchain}/pool_stats
+	GetBlockchainPoolStatsChart(ctx context.Context, params GetBlockchainPoolStatsChartParams) (GetBlockchainPoolStatsChartRes, error)
+	// GetBlockchainRoundsChart implements getBlockchainRoundsChart operation.
+	//
+	// Get rounds chart points.
+	//
+	// GET /charts/{blockchain}/rounds
+	GetBlockchainRoundsChart(ctx context.Context, params GetBlockchainRoundsChartParams) (GetBlockchainRoundsChartRes, error)
 	// GetBlockchainSoloBlocks implements getBlockchainSoloBlocks operation.
 	//
 	// Get solo blocks list on blockchain.
@@ -85,13 +127,13 @@ type Handler interface {
 	// Get available blockchains list.
 	//
 	// GET /blockchains
-	GetBlockchains(ctx context.Context) ([]Blockchain, error)
+	GetBlockchains(ctx context.Context) (*BlockchainsList, error)
 	// GetPrices implements getPrices operation.
 	//
 	// Get pool blockchain coin price list.
 	//
 	// GET /prices
-	GetPrices(ctx context.Context) ([]CoinPrice, error)
+	GetPrices(ctx context.Context) (GetPricesRes, error)
 }
 
 // Server implements http server based on OpenAPI v3 specification and

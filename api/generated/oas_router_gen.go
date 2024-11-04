@@ -40,7 +40,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.notFound(w, r)
 		return
 	}
-	args := [2]string{}
+	args := [3]string{}
 
 	// Static code generated router with unwrapped path search.
 	switch {
@@ -137,6 +137,305 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							switch r.Method {
 							case "GET":
 								s.handleGetBlockchainSoloBlocksRequest([1]string{
+									args[0],
+								}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "GET")
+							}
+
+							return
+						}
+
+						elem = origElem
+					}
+
+					elem = origElem
+				}
+
+				elem = origElem
+			case 'c': // Prefix: "charts/"
+				origElem := elem
+				if l := len("charts/"); len(elem) >= l && elem[0:l] == "charts/" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				// Param: "blockchain"
+				// Match until "/"
+				idx := strings.IndexByte(elem, '/')
+				if idx < 0 {
+					idx = len(elem)
+				}
+				args[0] = elem[:idx]
+				elem = elem[idx:]
+
+				if len(elem) == 0 {
+					break
+				}
+				switch elem[0] {
+				case '/': // Prefix: "/"
+					origElem := elem
+					if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						break
+					}
+					switch elem[0] {
+					case 'm': // Prefix: "miner/"
+						origElem := elem
+						if l := len("miner/"); len(elem) >= l && elem[0:l] == "miner/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						// Param: "miner"
+						// Match until "/"
+						idx := strings.IndexByte(elem, '/')
+						if idx < 0 {
+							idx = len(elem)
+						}
+						args[1] = elem[:idx]
+						elem = elem[idx:]
+
+						if len(elem) == 0 {
+							break
+						}
+						switch elem[0] {
+						case '/': // Prefix: "/"
+							origElem := elem
+							if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								break
+							}
+							switch elem[0] {
+							case 'h': // Prefix: "hashrates"
+								origElem := elem
+								if l := len("hashrates"); len(elem) >= l && elem[0:l] == "hashrates" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "GET":
+										s.handleGetBlockchainMinerHashratesChartRequest([2]string{
+											args[0],
+											args[1],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET")
+									}
+
+									return
+								}
+
+								elem = origElem
+							case 's': // Prefix: "shares"
+								origElem := elem
+								if l := len("shares"); len(elem) >= l && elem[0:l] == "shares" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "GET":
+										s.handleGetBlockchainMinerSharesChartRequest([2]string{
+											args[0],
+											args[1],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET")
+									}
+
+									return
+								}
+
+								elem = origElem
+							case 'w': // Prefix: "worker/"
+								origElem := elem
+								if l := len("worker/"); len(elem) >= l && elem[0:l] == "worker/" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								// Param: "worker"
+								// Match until "/"
+								idx := strings.IndexByte(elem, '/')
+								if idx < 0 {
+									idx = len(elem)
+								}
+								args[2] = elem[:idx]
+								elem = elem[idx:]
+
+								if len(elem) == 0 {
+									break
+								}
+								switch elem[0] {
+								case '/': // Prefix: "/"
+									origElem := elem
+									if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										break
+									}
+									switch elem[0] {
+									case 'h': // Prefix: "hashrates"
+										origElem := elem
+										if l := len("hashrates"); len(elem) >= l && elem[0:l] == "hashrates" {
+											elem = elem[l:]
+										} else {
+											break
+										}
+
+										if len(elem) == 0 {
+											// Leaf node.
+											switch r.Method {
+											case "GET":
+												s.handleGetBlockchainMinerWorkerHashratesChartRequest([3]string{
+													args[0],
+													args[1],
+													args[2],
+												}, elemIsEscaped, w, r)
+											default:
+												s.notAllowed(w, r, "GET")
+											}
+
+											return
+										}
+
+										elem = origElem
+									case 's': // Prefix: "shares"
+										origElem := elem
+										if l := len("shares"); len(elem) >= l && elem[0:l] == "shares" {
+											elem = elem[l:]
+										} else {
+											break
+										}
+
+										if len(elem) == 0 {
+											// Leaf node.
+											switch r.Method {
+											case "GET":
+												s.handleGetBlockchainMinerWorkerSharesChartRequest([3]string{
+													args[0],
+													args[1],
+													args[2],
+												}, elemIsEscaped, w, r)
+											default:
+												s.notAllowed(w, r, "GET")
+											}
+
+											return
+										}
+
+										elem = origElem
+									}
+
+									elem = origElem
+								}
+
+								elem = origElem
+							}
+
+							elem = origElem
+						}
+
+						elem = origElem
+					case 'p': // Prefix: "pool_"
+						origElem := elem
+						if l := len("pool_"); len(elem) >= l && elem[0:l] == "pool_" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							break
+						}
+						switch elem[0] {
+						case 'd': // Prefix: "difficulties"
+							origElem := elem
+							if l := len("difficulties"); len(elem) >= l && elem[0:l] == "difficulties" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch r.Method {
+								case "GET":
+									s.handleGetBlockchainPoolDifficultiesChartRequest([1]string{
+										args[0],
+									}, elemIsEscaped, w, r)
+								default:
+									s.notAllowed(w, r, "GET")
+								}
+
+								return
+							}
+
+							elem = origElem
+						case 's': // Prefix: "stats"
+							origElem := elem
+							if l := len("stats"); len(elem) >= l && elem[0:l] == "stats" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch r.Method {
+								case "GET":
+									s.handleGetBlockchainPoolStatsChartRequest([1]string{
+										args[0],
+									}, elemIsEscaped, w, r)
+								default:
+									s.notAllowed(w, r, "GET")
+								}
+
+								return
+							}
+
+							elem = origElem
+						}
+
+						elem = origElem
+					case 'r': // Prefix: "rounds"
+						origElem := elem
+						if l := len("rounds"); len(elem) >= l && elem[0:l] == "rounds" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch r.Method {
+							case "GET":
+								s.handleGetBlockchainRoundsChartRequest([1]string{
 									args[0],
 								}, elemIsEscaped, w, r)
 							default:
@@ -501,7 +800,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 							// Leaf node.
 							switch r.Method {
 							case "GET":
-								s.handleGetBlockchainPriceRequest([1]string{
+								s.handleGetBlockchainCoinPriceRequest([1]string{
 									args[0],
 								}, elemIsEscaped, w, r)
 							default:
@@ -533,7 +832,7 @@ type Route struct {
 	operationID string
 	pathPattern string
 	count       int
-	args        [2]string
+	args        [3]string
 }
 
 // Name returns ogen operation name.
@@ -698,6 +997,313 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								r.summary = "Get solo blocks list on blockchain"
 								r.operationID = "getBlockchainSoloBlocks"
 								r.pathPattern = "/blocks/{blockchain}/solo"
+								r.args = args
+								r.count = 1
+								return r, true
+							default:
+								return
+							}
+						}
+
+						elem = origElem
+					}
+
+					elem = origElem
+				}
+
+				elem = origElem
+			case 'c': // Prefix: "charts/"
+				origElem := elem
+				if l := len("charts/"); len(elem) >= l && elem[0:l] == "charts/" {
+					elem = elem[l:]
+				} else {
+					break
+				}
+
+				// Param: "blockchain"
+				// Match until "/"
+				idx := strings.IndexByte(elem, '/')
+				if idx < 0 {
+					idx = len(elem)
+				}
+				args[0] = elem[:idx]
+				elem = elem[idx:]
+
+				if len(elem) == 0 {
+					break
+				}
+				switch elem[0] {
+				case '/': // Prefix: "/"
+					origElem := elem
+					if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+						elem = elem[l:]
+					} else {
+						break
+					}
+
+					if len(elem) == 0 {
+						break
+					}
+					switch elem[0] {
+					case 'm': // Prefix: "miner/"
+						origElem := elem
+						if l := len("miner/"); len(elem) >= l && elem[0:l] == "miner/" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						// Param: "miner"
+						// Match until "/"
+						idx := strings.IndexByte(elem, '/')
+						if idx < 0 {
+							idx = len(elem)
+						}
+						args[1] = elem[:idx]
+						elem = elem[idx:]
+
+						if len(elem) == 0 {
+							break
+						}
+						switch elem[0] {
+						case '/': // Prefix: "/"
+							origElem := elem
+							if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								break
+							}
+							switch elem[0] {
+							case 'h': // Prefix: "hashrates"
+								origElem := elem
+								if l := len("hashrates"); len(elem) >= l && elem[0:l] == "hashrates" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "GET":
+										r.name = "GetBlockchainMinerHashratesChart"
+										r.summary = "Get miner hashrates chart points"
+										r.operationID = "getBlockchainMinerHashratesChart"
+										r.pathPattern = "/charts/{blockchain}/miner/{miner}/hashrates"
+										r.args = args
+										r.count = 2
+										return r, true
+									default:
+										return
+									}
+								}
+
+								elem = origElem
+							case 's': // Prefix: "shares"
+								origElem := elem
+								if l := len("shares"); len(elem) >= l && elem[0:l] == "shares" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "GET":
+										r.name = "GetBlockchainMinerSharesChart"
+										r.summary = "Get miner shares chart points"
+										r.operationID = "getBlockchainMinerSharesChart"
+										r.pathPattern = "/charts/{blockchain}/miner/{miner}/shares"
+										r.args = args
+										r.count = 2
+										return r, true
+									default:
+										return
+									}
+								}
+
+								elem = origElem
+							case 'w': // Prefix: "worker/"
+								origElem := elem
+								if l := len("worker/"); len(elem) >= l && elem[0:l] == "worker/" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								// Param: "worker"
+								// Match until "/"
+								idx := strings.IndexByte(elem, '/')
+								if idx < 0 {
+									idx = len(elem)
+								}
+								args[2] = elem[:idx]
+								elem = elem[idx:]
+
+								if len(elem) == 0 {
+									break
+								}
+								switch elem[0] {
+								case '/': // Prefix: "/"
+									origElem := elem
+									if l := len("/"); len(elem) >= l && elem[0:l] == "/" {
+										elem = elem[l:]
+									} else {
+										break
+									}
+
+									if len(elem) == 0 {
+										break
+									}
+									switch elem[0] {
+									case 'h': // Prefix: "hashrates"
+										origElem := elem
+										if l := len("hashrates"); len(elem) >= l && elem[0:l] == "hashrates" {
+											elem = elem[l:]
+										} else {
+											break
+										}
+
+										if len(elem) == 0 {
+											// Leaf node.
+											switch method {
+											case "GET":
+												r.name = "GetBlockchainMinerWorkerHashratesChart"
+												r.summary = "Get miner worker hashrates chart points"
+												r.operationID = "getBlockchainMinerWorkerHashratesChart"
+												r.pathPattern = "/charts/{blockchain}/miner/{miner}/worker/{worker}/hashrates"
+												r.args = args
+												r.count = 3
+												return r, true
+											default:
+												return
+											}
+										}
+
+										elem = origElem
+									case 's': // Prefix: "shares"
+										origElem := elem
+										if l := len("shares"); len(elem) >= l && elem[0:l] == "shares" {
+											elem = elem[l:]
+										} else {
+											break
+										}
+
+										if len(elem) == 0 {
+											// Leaf node.
+											switch method {
+											case "GET":
+												r.name = "GetBlockchainMinerWorkerSharesChart"
+												r.summary = "Get miner worker shares chart points"
+												r.operationID = "getBlockchainMinerWorkerSharesChart"
+												r.pathPattern = "/charts/{blockchain}/miner/{miner}/worker/{worker}/shares"
+												r.args = args
+												r.count = 3
+												return r, true
+											default:
+												return
+											}
+										}
+
+										elem = origElem
+									}
+
+									elem = origElem
+								}
+
+								elem = origElem
+							}
+
+							elem = origElem
+						}
+
+						elem = origElem
+					case 'p': // Prefix: "pool_"
+						origElem := elem
+						if l := len("pool_"); len(elem) >= l && elem[0:l] == "pool_" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							break
+						}
+						switch elem[0] {
+						case 'd': // Prefix: "difficulties"
+							origElem := elem
+							if l := len("difficulties"); len(elem) >= l && elem[0:l] == "difficulties" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch method {
+								case "GET":
+									r.name = "GetBlockchainPoolDifficultiesChart"
+									r.summary = "Get pool difficulties chart points"
+									r.operationID = "getBlockchainPoolDifficultiesChart"
+									r.pathPattern = "/charts/{blockchain}/pool_difficulties"
+									r.args = args
+									r.count = 1
+									return r, true
+								default:
+									return
+								}
+							}
+
+							elem = origElem
+						case 's': // Prefix: "stats"
+							origElem := elem
+							if l := len("stats"); len(elem) >= l && elem[0:l] == "stats" {
+								elem = elem[l:]
+							} else {
+								break
+							}
+
+							if len(elem) == 0 {
+								// Leaf node.
+								switch method {
+								case "GET":
+									r.name = "GetBlockchainPoolStatsChart"
+									r.summary = "Get pool stats chart points"
+									r.operationID = "getBlockchainPoolStatsChart"
+									r.pathPattern = "/charts/{blockchain}/pool_stats"
+									r.args = args
+									r.count = 1
+									return r, true
+								default:
+									return
+								}
+							}
+
+							elem = origElem
+						}
+
+						elem = origElem
+					case 'r': // Prefix: "rounds"
+						origElem := elem
+						if l := len("rounds"); len(elem) >= l && elem[0:l] == "rounds" {
+							elem = elem[l:]
+						} else {
+							break
+						}
+
+						if len(elem) == 0 {
+							// Leaf node.
+							switch method {
+							case "GET":
+								r.name = "GetBlockchainRoundsChart"
+								r.summary = "Get rounds chart points"
+								r.operationID = "getBlockchainRoundsChart"
+								r.pathPattern = "/charts/{blockchain}/rounds"
 								r.args = args
 								r.count = 1
 								return r, true
@@ -1080,9 +1686,9 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf node.
 							switch method {
 							case "GET":
-								r.name = "GetBlockchainPrice"
+								r.name = "GetBlockchainCoinPrice"
 								r.summary = "Get blockchain coin price and markets"
-								r.operationID = "getBlockchainPrice"
+								r.operationID = "getBlockchainCoinPrice"
 								r.pathPattern = "/prices/{blockchain}"
 								r.args = args
 								r.count = 1

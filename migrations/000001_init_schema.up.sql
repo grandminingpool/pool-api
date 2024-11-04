@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS coin_prices (
     market_ticker VARCHAR(32) NOT NULL PRIMARY KEY,
     blockchain_coin VARCHAR(32) NOT NULL,
     price DECIMAL(12, 2) NOT NULL,
-    price_usd_24h_ago DECIMAL(12, 2) NOT NULL,
+    price_24h_ago DECIMAL(12, 2) NOT NULL,
     usdt BOOLEAN NOT NULL
 );
 

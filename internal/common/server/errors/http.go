@@ -49,16 +49,8 @@ func CreateNotFoundError(code ServerErrorCode, err error) *HttpError {
 	return CreateHttpError(http.StatusNotFound, code, err)
 }
 
-func CreateForbiddenError(code ServerErrorCode, err error) *HttpError {
-	return CreateHttpError(http.StatusForbidden, code, err)
-}
-
 func CreateInternalServerError(code ServerErrorCode, err error) *HttpError {
 	return CreateHttpError(http.StatusInternalServerError, code, err)
-}
-
-func CreateUnauthorizedError(code ServerErrorCode, err error) *HttpError {
-	return CreateHttpError(http.StatusUnauthorized, code, err)
 }
 
 func CreateNotAllowedError(code ServerErrorCode, err error) *HttpError {

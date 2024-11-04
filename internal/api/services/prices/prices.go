@@ -10,7 +10,7 @@ import (
 
 type PriceDB struct {
 	Price       float64 `db:"price"`
-	Price24hAgo float64 `db:"price_usd_24h_ago"`
+	Price24hAgo float64 `db:"price_24h_ago"`
 }
 
 type CoinPriceDB struct {
@@ -34,7 +34,7 @@ type PricesService struct {
 
 func (s *PricesService) GetPrices(ctx context.Context) ([]CoinPriceDB, error) {
 	coinPrices := []CoinPriceDB{}
-	err := s.pgConn.SelectContext(ctx, &coinPrices, `SELECT blockchain_coin, price, price_usd_24h_ago
+	err := s.pgConn.SelectContext(ctx, &coinPrices, `SELECT blockchain_coin, price, price_24h_ago
 		FROM coin_prices WHERE usdt = true`)
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -47,7 +47,7 @@ func (s *PricesService) GetPrices(ctx context.Context) ([]CoinPriceDB, error) {
 
 func (s *PricesService) GetBlockchainCoinPrice(ctx context.Context, coin string) (*BlockchainCoinPrice, error) {
 	marketPrices := []MarketPriceDB{}
-	err := s.pgConn.SelectContext(ctx, &marketPrices, `SELECT market_ticker, price, price_usd_24h_ago
+	err := s.pgConn.SelectContext(ctx, &marketPrices, `SELECT market_ticker, price, price_24h_ago
 		FROM coin_prices WHERE blockchain_coin = $1 ORDER BY usdt DESC`)
 	if err == sql.ErrNoRows {
 		return nil, nil

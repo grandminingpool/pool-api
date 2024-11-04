@@ -2,7 +2,6 @@ package minersHandlers
 
 import (
 	"context"
-	"fmt"
 
 	poolMinersProto "github.com/grandminingpool/pool-api-proto/generated/pool_miners"
 	apiModels "github.com/grandminingpool/pool-api/api/generated"
@@ -10,7 +9,6 @@ import (
 	minersServices "github.com/grandminingpool/pool-api/internal/api/services/miners"
 	"github.com/grandminingpool/pool-api/internal/blockchains"
 	"github.com/grandminingpool/pool-api/internal/common/serializers"
-	serverErrors "github.com/grandminingpool/pool-api/internal/common/server/errors"
 )
 
 type BlockchainHandler struct {
@@ -25,7 +23,7 @@ func (h *BlockchainHandler) GetMiners(
 	sorts *poolMinersProto.MinersSorts,
 	filters *poolMinersProto.MinersFilters,
 	limit, offset uint32,
-) (*apiModels.MinersList, error) {
+) apiModels.GetBlockchainMinersRes {
 	minersList, err := h.blockchainService.GetMiners(
 		ctx,
 		blockchain,
@@ -35,7 +33,7 @@ func (h *BlockchainHandler) GetMiners(
 		offset,
 	)
 	if err != nil {
-		return nil, serverErrors.CreateInternalServerError(minersErrors.GetMinersError, err)
+		return minersErrors.CreateGetMinersError(err)
 	}
 
 	minersResponse := make([]apiModels.Miner, 0, len(minersList.Miners))
@@ -48,38 +46,40 @@ func (h *BlockchainHandler) GetMiners(
 		Limit:  minersList.Pagination.Limit,
 		Offset: minersList.Pagination.Offset,
 		Total:  minersList.Pagination.Total,
-	}, nil
+	}
 }
 
 func (h *BlockchainHandler) GetMiner(
 	ctx context.Context,
 	blockchain *blockchains.Blockchain,
 	miner string,
-) (*apiModels.Miner, error) {
+) apiModels.GetBlockchainMinerRes {
 	minerInfo, err := h.blockchainService.GetMiner(ctx, blockchain, miner)
 	if err != nil {
-		return nil, serverErrors.CreateInternalServerError(minersErrors.GetMinerError, err)
+		return minersErrors.CreateGetMinerError(err)
 	} else if minerInfo == nil {
-		return nil, serverErrors.CreateNotFoundError(minersErrors.MinerNotFoundError, fmt.Errorf("miner '%s' not found", miner))
+		return minersErrors.CreateMinerNotFoundError(miner)
 	}
 
-	return h.minerSerializer.Serialize(ctx, minerInfo), nil
+	return h.minerSerializer.Serialize(ctx, minerInfo)
 }
 
 func (h *BlockchainHandler) GetMinerWorkers(
 	ctx context.Context,
 	blockchain *blockchains.Blockchain,
 	miner string,
-) ([]apiModels.MinerWorker, error) {
+) apiModels.GetBlockchainMinerWorkersRes {
 	minerWorkers, err := h.blockchainService.GetMinerWorkers(ctx, blockchain, miner)
 	if err != nil {
-		return nil, serverErrors.CreateInternalServerError(minersErrors.GetMinerWorkersError, err)
+		return minersErrors.CreateGetMinerWorkersError(err)
 	}
 
-	response := make([]apiModels.MinerWorker, 0, len(minerWorkers))
+	minerWorkersResponse := make([]apiModels.MinerWorker, 0, len(minerWorkers))
 	for _, mw := range minerWorkers {
-		response = append(response, *h.minerWorkerSerializer.Serialize(ctx, mw))
+		minerWorkersResponse = append(minerWorkersResponse, *h.minerWorkerSerializer.Serialize(ctx, mw))
 	}
 
-	return response, nil
+	return &apiModels.MinerWorkersList{
+		Workers: minerWorkersResponse,
+	}
 }

@@ -18,7 +18,16 @@ var _ Handler = UnimplementedHandler{}
 // Get blocks list on blockchain.
 //
 // GET /blocks/{blockchain}
-func (UnimplementedHandler) GetBlockchainBlocks(ctx context.Context, params GetBlockchainBlocksParams) (r *MinedBlocksList, _ error) {
+func (UnimplementedHandler) GetBlockchainBlocks(ctx context.Context, params GetBlockchainBlocksParams) (r GetBlockchainBlocksRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchainCoinPrice implements getBlockchainCoinPrice operation.
+//
+// Get blockchain coin price and markets.
+//
+// GET /prices/{blockchain}
+func (UnimplementedHandler) GetBlockchainCoinPrice(ctx context.Context, params GetBlockchainCoinPriceParams) (r GetBlockchainCoinPriceRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -27,7 +36,7 @@ func (UnimplementedHandler) GetBlockchainBlocks(ctx context.Context, params GetB
 // Get miner info on blockchain.
 //
 // GET /miners/{blockchain}/miner/{miner}
-func (UnimplementedHandler) GetBlockchainMiner(ctx context.Context, params GetBlockchainMinerParams) (r *Miner, _ error) {
+func (UnimplementedHandler) GetBlockchainMiner(ctx context.Context, params GetBlockchainMinerParams) (r GetBlockchainMinerRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -36,7 +45,43 @@ func (UnimplementedHandler) GetBlockchainMiner(ctx context.Context, params GetBl
 // Get miner balance on blockchain.
 //
 // GET /payouts/{blockchain}/balance/{miner}
-func (UnimplementedHandler) GetBlockchainMinerBalance(ctx context.Context, params GetBlockchainMinerBalanceParams) (r *MinerBalance, _ error) {
+func (UnimplementedHandler) GetBlockchainMinerBalance(ctx context.Context, params GetBlockchainMinerBalanceParams) (r GetBlockchainMinerBalanceRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchainMinerHashratesChart implements getBlockchainMinerHashratesChart operation.
+//
+// Get miner hashrates chart points.
+//
+// GET /charts/{blockchain}/miner/{miner}/hashrates
+func (UnimplementedHandler) GetBlockchainMinerHashratesChart(ctx context.Context, params GetBlockchainMinerHashratesChartParams) (r GetBlockchainMinerHashratesChartRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchainMinerSharesChart implements getBlockchainMinerSharesChart operation.
+//
+// Get miner shares chart points.
+//
+// GET /charts/{blockchain}/miner/{miner}/shares
+func (UnimplementedHandler) GetBlockchainMinerSharesChart(ctx context.Context, params GetBlockchainMinerSharesChartParams) (r GetBlockchainMinerSharesChartRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchainMinerWorkerHashratesChart implements getBlockchainMinerWorkerHashratesChart operation.
+//
+// Get miner worker hashrates chart points.
+//
+// GET /charts/{blockchain}/miner/{miner}/worker/{worker}/hashrates
+func (UnimplementedHandler) GetBlockchainMinerWorkerHashratesChart(ctx context.Context, params GetBlockchainMinerWorkerHashratesChartParams) (r GetBlockchainMinerWorkerHashratesChartRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchainMinerWorkerSharesChart implements getBlockchainMinerWorkerSharesChart operation.
+//
+// Get miner worker shares chart points.
+//
+// GET /charts/{blockchain}/miner/{miner}/worker/{worker}/shares
+func (UnimplementedHandler) GetBlockchainMinerWorkerSharesChart(ctx context.Context, params GetBlockchainMinerWorkerSharesChartParams) (r GetBlockchainMinerWorkerSharesChartRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -45,7 +90,7 @@ func (UnimplementedHandler) GetBlockchainMinerBalance(ctx context.Context, param
 // Get miner workers list on blockchain.
 //
 // GET /miners/{blockchain}/workers/{miner}
-func (UnimplementedHandler) GetBlockchainMinerWorkers(ctx context.Context, params GetBlockchainMinerWorkersParams) (r []MinerWorker, _ error) {
+func (UnimplementedHandler) GetBlockchainMinerWorkers(ctx context.Context, params GetBlockchainMinerWorkersParams) (r GetBlockchainMinerWorkersRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -54,7 +99,7 @@ func (UnimplementedHandler) GetBlockchainMinerWorkers(ctx context.Context, param
 // Get miners list on blockchain.
 //
 // GET /miners/{blockchain}
-func (UnimplementedHandler) GetBlockchainMiners(ctx context.Context, params GetBlockchainMinersParams) (r *MinersList, _ error) {
+func (UnimplementedHandler) GetBlockchainMiners(ctx context.Context, params GetBlockchainMinersParams) (r GetBlockchainMinersRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -63,7 +108,7 @@ func (UnimplementedHandler) GetBlockchainMiners(ctx context.Context, params GetB
 // Get payouts list on blockchain.
 //
 // GET /payouts/{blockchain}
-func (UnimplementedHandler) GetBlockchainPayouts(ctx context.Context, params GetBlockchainPayoutsParams) (r *PayoutsList, _ error) {
+func (UnimplementedHandler) GetBlockchainPayouts(ctx context.Context, params GetBlockchainPayoutsParams) (r GetBlockchainPayoutsRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -72,7 +117,16 @@ func (UnimplementedHandler) GetBlockchainPayouts(ctx context.Context, params Get
 // Get full pool data on blockchain.
 //
 // GET /pools/{blockchain}
-func (UnimplementedHandler) GetBlockchainPool(ctx context.Context, params GetBlockchainPoolParams) (r *Pool, _ error) {
+func (UnimplementedHandler) GetBlockchainPool(ctx context.Context, params GetBlockchainPoolParams) (r GetBlockchainPoolRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchainPoolDifficultiesChart implements getBlockchainPoolDifficultiesChart operation.
+//
+// Get pool difficulties chart points.
+//
+// GET /charts/{blockchain}/pool_difficulties
+func (UnimplementedHandler) GetBlockchainPoolDifficultiesChart(ctx context.Context, params GetBlockchainPoolDifficultiesChartParams) (r GetBlockchainPoolDifficultiesChartRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -81,7 +135,7 @@ func (UnimplementedHandler) GetBlockchainPool(ctx context.Context, params GetBlo
 // Get pool info on blockchain.
 //
 // GET /pools/{blockchain}/info
-func (UnimplementedHandler) GetBlockchainPoolInfo(ctx context.Context, params GetBlockchainPoolInfoParams) (r *PoolInfo, _ error) {
+func (UnimplementedHandler) GetBlockchainPoolInfo(ctx context.Context, params GetBlockchainPoolInfoParams) (r GetBlockchainPoolInfoRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -90,7 +144,7 @@ func (UnimplementedHandler) GetBlockchainPoolInfo(ctx context.Context, params Ge
 // Get pool locations on blockchain.
 //
 // GET /pools/{blockchain}/slaves
-func (UnimplementedHandler) GetBlockchainPoolSlaves(ctx context.Context, params GetBlockchainPoolSlavesParams) (r []PoolSlave, _ error) {
+func (UnimplementedHandler) GetBlockchainPoolSlaves(ctx context.Context, params GetBlockchainPoolSlavesParams) (r GetBlockchainPoolSlavesRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -99,16 +153,25 @@ func (UnimplementedHandler) GetBlockchainPoolSlaves(ctx context.Context, params 
 // Get pool statistics on blockchain.
 //
 // GET /pools/{blockchain}/stats
-func (UnimplementedHandler) GetBlockchainPoolStats(ctx context.Context, params GetBlockchainPoolStatsParams) (r *PoolStats, _ error) {
+func (UnimplementedHandler) GetBlockchainPoolStats(ctx context.Context, params GetBlockchainPoolStatsParams) (r GetBlockchainPoolStatsRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
-// GetBlockchainPrice implements getBlockchainPrice operation.
+// GetBlockchainPoolStatsChart implements getBlockchainPoolStatsChart operation.
 //
-// Get blockchain coin price and markets.
+// Get pool stats chart points.
 //
-// GET /prices/{blockchain}
-func (UnimplementedHandler) GetBlockchainPrice(ctx context.Context, params GetBlockchainPriceParams) (r *BlockchainCoinPrice, _ error) {
+// GET /charts/{blockchain}/pool_stats
+func (UnimplementedHandler) GetBlockchainPoolStatsChart(ctx context.Context, params GetBlockchainPoolStatsChartParams) (r GetBlockchainPoolStatsChartRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// GetBlockchainRoundsChart implements getBlockchainRoundsChart operation.
+//
+// Get rounds chart points.
+//
+// GET /charts/{blockchain}/rounds
+func (UnimplementedHandler) GetBlockchainRoundsChart(ctx context.Context, params GetBlockchainRoundsChartParams) (r GetBlockchainRoundsChartRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -126,7 +189,7 @@ func (UnimplementedHandler) GetBlockchainSoloBlocks(ctx context.Context, params 
 // Get available blockchains list.
 //
 // GET /blockchains
-func (UnimplementedHandler) GetBlockchains(ctx context.Context) (r []Blockchain, _ error) {
+func (UnimplementedHandler) GetBlockchains(ctx context.Context) (r *BlockchainsList, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -135,6 +198,6 @@ func (UnimplementedHandler) GetBlockchains(ctx context.Context) (r []Blockchain,
 // Get pool blockchain coin price list.
 //
 // GET /prices
-func (UnimplementedHandler) GetPrices(ctx context.Context) (r []CoinPrice, _ error) {
+func (UnimplementedHandler) GetPrices(ctx context.Context) (r GetPricesRes, _ error) {
 	return r, ht.ErrNotImplemented
 }

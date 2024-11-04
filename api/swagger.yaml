@@ -12,13 +12,11 @@ paths:
       operationId: getBlockchains
       responses:
         '200':
-          description: Blockchains list response
+          description: 'Blockchains list response'
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Blockchain'
+                $ref: '#/components/schemas/BlockchainsList'
   /prices:
     get:
       tags:
@@ -27,19 +25,28 @@ paths:
       operationId: getPrices
       responses:
         '200':
-          description: Price list response
+          description: 'Prices list response'
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CoinPrice'
+                $ref: '#/components/schemas/CoinPricesList'
+        '500':
+          description: 'Get prices error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_prices_error'
   /prices/{blockchain}:
     get:
       tags:
         - prices
       summary: Get blockchain coin price and markets
-      operationId: getBlockchainPrice
+      operationId: getBlockchainCoinPrice
       parameters:
         - $ref: "#/components/parameters/Blockchain"
       responses:
@@ -49,6 +56,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BlockchainCoinPrice'
+        '404':
+          description: 'Blockchain coin price not found error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'blockchain_coin_price_not_found'
+        '500':
+          description: 'Get blockchain coin price error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_blockchain_coin_price_error'
   /pools/{blockchain}:
     get:
       tags:
@@ -64,6 +93,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pool'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get pool data error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_pool_data_error'
   /pools/{blockchain}/info:
     get:
       tags:
@@ -79,6 +121,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PoolInfo'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get pool info error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_pool_info_error'
   /pools/{blockchain}/stats:
     get:
       tags:
@@ -94,6 +149,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PoolStats'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get pool statistics error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_pool_stats_error'
   /pools/{blockchain}/slaves:
     get:
       tags:
@@ -104,13 +172,24 @@ paths:
         - $ref: "#/components/parameters/Blockchain"
       responses:
         '200':
-          description: 'Pool location response'
+          description: 'Pool slaves list response'
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PoolSlave'
+                $ref: '#/components/schemas/PoolSlavesList'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get pool slaves error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_pool_slaves_error'
   /miners/{blockchain}:
     get:
       tags:
@@ -169,6 +248,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MinersList'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get miners list error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_miners_error'
   /miners/{blockchain}/miner/{miner}:
     get:
       tags:
@@ -185,6 +277,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Miner'
+        '400':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '404':
+          description: 'Miner not found error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'miner_not_found'
+        '500':
+          description: 'Get miner info error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_miner_error'
   /miners/{blockchain}/workers/{miner}:
     get:
       tags:
@@ -200,9 +316,31 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MinerWorker'
+                $ref: '#/components/schemas/MinerWorkersList'
+        '400':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '404':
+          description: 'Miner workers not found error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'miner_workers_not_found'
+        '500':
+          description: 'Get miner workers error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_miner_workers_error'
   /payouts/{blockchain}:
     get:
       tags:
@@ -248,6 +386,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PayoutsList'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get payouts list error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_payouts_error'
   /payouts/{blockchain}/balance/{miner}:
     get:
       tags:
@@ -264,6 +415,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MinerBalance'
+        '500':
+          description: 'Get miner balance error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_miner_balance_error'
+        '400':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '404':
+          description: 'Miner balance not found error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'miner_balance_not_found'
   /blocks/{blockchain}:
     get:
       tags:
@@ -321,6 +496,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MinedBlocksList'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get blocks list error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_blocks_error'
   /blocks/{blockchain}/solo:
     get:
       tags:
@@ -383,13 +571,272 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MinedSoloBlocksList'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
         '405':
-          description: 'Solo blocks list not allowed on blockchain'
+          description: 'Getting solo blocks list is not implemented on blockchain'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_solo_blocks_not_implemented'
+        '500':
+          description: 'Get solo blocks list error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_solo_blocks_error'
+  /charts/{blockchain}/pool_stats:
+    get:
+      tags:
+        - charts
+      summary: Get pool stats chart points
+      operationId: getBlockchainPoolStatsChart
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/ChartPeriod"
+        - description: Show pool solo stats points (if pool supports solo mining)?
+          in: query
+          name: solo
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: 'Pool stats chart response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolStatsPoints'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get pool stats chart error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_pool_stats_chart_error'
+  /charts/{blockchain}/pool_difficulties:
+    get:
+      tags:
+        - charts
+      summary: Get pool difficulties chart points
+      operationId: getBlockchainPoolDifficultiesChart
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/ChartPeriod"
+        - description: Show pool solo difficulties points (if pool supports solo mining)?
+          in: query
+          name: solo
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: 'Pool difficulties chart response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolDifficultiesPoints'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get pool difficulties chart error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_pool_difficulties_chart_error'
+  /charts/{blockchain}/rounds:
+    get:
+      tags:
+        - charts
+      summary: Get rounds chart points
+      operationId: getBlockchainRoundsChart
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/ChartPeriod"
+      responses:
+        '200':
+          description: 'Rounds chart response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoundsPoints'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get rounds chart error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_rounds_chart_error'
+  /charts/{blockchain}/miner/{miner}/hashrates:
+    get:
+      tags:
+        - charts
+      summary: Get miner hashrates chart points
+      operationId: getBlockchainMinerHashratesChart
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/Miner"
+        - $ref: "#/components/parameters/ChartPeriod"
+        - description: Show miner solo hashrates points (if pool supports solo mining)?
+          in: query
+          name: solo
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: 'Miner hashrates chart response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinerHashratesPoints'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get miner hashrates chart error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_miner_hashrates_chart_error'
+  /charts/{blockchain}/miner/{miner}/shares:
+    get:
+      tags:
+        - charts
+      summary: Get miner shares chart points
+      operationId: getBlockchainMinerSharesChart
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/Miner"
+        - $ref: "#/components/parameters/ChartPeriod"
+        - description: Show miner solo shares points (if pool supports solo mining)?
+          in: query
+          name: solo
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: 'Miner shares chart response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinerSharesPoints'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get miner shares chart error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_miner_shares_chart_error'
+  /charts/{blockchain}/miner/{miner}/worker/{worker}/hashrates:
+    get:
+      tags:
+        - charts
+      summary: Get miner worker hashrates chart points
+      operationId: getBlockchainMinerWorkerHashratesChart
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/Miner"
+        - $ref: "#/components/parameters/Worker"
+        - $ref: "#/components/parameters/ChartPeriod"
+      responses:
+        '200':
+          description: 'Miner worker hashrates chart response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinerHashratesPoints'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get miner worker hashrates chart error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_miner_worker_hashrates_chart_error'
+  /charts/{blockchain}/miner/{miner}/worker/{worker}/shares:
+    get:
+      tags:
+        - charts
+      summary: Get miner worker shares chart points
+      operationId: getBlockchainMinerWorkerSharesChart
+      parameters:
+        - $ref: "#/components/parameters/Blockchain"
+        - $ref: "#/components/parameters/Miner"
+        - $ref: "#/components/parameters/Worker"
+        - $ref: "#/components/parameters/ChartPeriod"
+      responses:
+        '200':
+          description: 'Miner worker shares chart response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MinerSharesPoints'
+        '404':
+          $ref: '#/components/responses/BlockchainNotFound'
+        '500':
+          description: 'Get miner worker shares chart error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_miner_worker_shares_chart_error'
 components:
+  responses:
+    BlockchainNotFound:
+      description: 'Blockchain not found error'
+      content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/Error'
+              - type: object
+                properties:
+                  code:
+                    example: 'blockchain_not_found'
   parameters:
     Blockchain:
       name: blockchain
@@ -402,6 +849,13 @@ components:
       name: miner
       in: path
       description: Pool miner
+      required: true
+      schema:
+        type: string
+    Worker:
+      name: worker
+      in: path
+      description: Pool worker
       required: true
       schema:
         type: string
@@ -423,6 +877,13 @@ components:
         default: 0
         format: uint32
         type: integer
+    ChartPeriod:
+      description: Chart period
+      in: query
+      name: period
+      required: true
+      schema:
+        $ref: "#/components/schemas/ChartPeriod"
   schemas:
     Error:
       type: object
@@ -467,6 +928,22 @@ components:
         atomic_unit:
           format: uint16
           type: integer
+    BlockchainsList:
+      type: object
+      required:
+        - blockchains
+      properties:
+        blockchains:
+          type: array
+          items:
+            $ref: '#/components/schemas/Blockchain'
+    ChartPeriod:
+      type: string
+      enum:
+        - 'hour'
+        - 'day'
+        - 'week'
+        - 'month'
     Price:
       type: object
       required:
@@ -497,6 +974,15 @@ components:
           properties:
             coin:
               type: string
+    CoinPricesList:
+      type: object
+      required:
+        - prices
+      properties:
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/CoinPrice'
     BlockchainCoinPrice:
       allOf:
         - $ref: '#/components/schemas/Price'
@@ -620,6 +1106,15 @@ components:
           type: integer
         connected_at:
           type: string
+    PoolSlavesList:
+      type: object
+      required:
+        - slaves
+      properties:
+        slaves:
+          type: array
+          items:
+            $ref: '#/components/schemas/PoolSlave'
     Pool:
       type: object
       required:
@@ -724,6 +1219,15 @@ components:
           type: string
         connected_at:
           type: string
+    MinerWorkersList:
+      type: object
+      required:
+        - workers
+      properties:
+        workers:
+          type: array
+          items:
+            $ref: '#/components/schemas/MinerWorker'
     MinerBalance:
       type: object
       required:
@@ -805,4 +1309,129 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/MinedSoloBlock'
+    PoolStatsPoint:
+      type: object
+      required:
+        - hashrate
+        - avg_hashrate
+        - miners_count
+        - date
+      properties:
+        hashrate:
+          type: string
+        avg_hashrate:
+          type: string
+        miners_count:
+          format: uint32
+          type: integer
+        date:
+          type: string
+    PoolStatsPoints:
+      type: object
+      required:
+        - points
+      properties:
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/PoolStatsPoint'
+    PoolDifficultiesPoint:
+      type: object
+      required:
+        - share_difficulty
+        - date
+      properties:
+        share_difficulty:
+          format: uint64
+          type: integer
+        date:
+          type: string
+    PoolDifficultiesPoints:
+      type: object
+      required:
+        - points
+      properties:
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/PoolDifficultiesPoint'
+    RoundsPoint:
+      type: object
+      required:
+        - rounds_count
+        - miners_count
+        - avg_round_interval
+        - date
+      properties:
+        rounds_count:
+          format: uint32
+          type: integer
+        miners_count:
+          format: uint32
+          type: integer
+        avg_round_interval:
+          type: number
+          format: double
+        date:
+          type: string
+    RoundsPoints:
+      type: object
+      required:
+        - points
+      properties:
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoundsPoint'
+    MinerHashratesPoint:
+      type: object
+      required:
+        - hashrate
+        - date
+      properties:
+        hashrate:
+          type: string
+        date:
+          type: string
+    MinerHashratesPoints:
+      type: object
+      required:
+        - points
+      properties:
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/MinerHashratesPoint'
+    MinerSharesPoint:
+      type: object
+      required:
+        - accepted_shares_count
+        - rejected_shares_count
+        - stale_shares_count
+        - valid_block_shares_count
+        - date
+      properties:
+        accepted_shares_count:
+          format: uint32
+          type: string
+        rejected_shares_count:
+          format: uint32
+          type: string
+        stale_shares_count:
+          format: uint32
+          type: string
+        valid_block_shares_count:
+          format: uint32
+          type: string
+        date:
+          type: string
+    MinerSharesPoints:
+      type: object
+      required:
+        - points
+      properties:
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/MinerSharesPoint'
 

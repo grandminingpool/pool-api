@@ -7,6 +7,7 @@ import (
 	blockchainsHandlers "github.com/grandminingpool/pool-api/internal/api/handlers/blockchains"
 	blocksHandlers "github.com/grandminingpool/pool-api/internal/api/handlers/blocks"
 	blocksQuery "github.com/grandminingpool/pool-api/internal/api/handlers/blocks/query"
+	chartsHandlers "github.com/grandminingpool/pool-api/internal/api/handlers/charts"
 	minersHandlers "github.com/grandminingpool/pool-api/internal/api/handlers/miners"
 	minersQuery "github.com/grandminingpool/pool-api/internal/api/handlers/miners/query"
 	payoutsHandlers "github.com/grandminingpool/pool-api/internal/api/handlers/payouts"
@@ -15,7 +16,6 @@ import (
 	pricesHandlers "github.com/grandminingpool/pool-api/internal/api/handlers/prices"
 	apiServerErrors "github.com/grandminingpool/pool-api/internal/api/server/errors"
 	"github.com/grandminingpool/pool-api/internal/blockchains"
-	serverErrors "github.com/grandminingpool/pool-api/internal/common/server/errors"
 )
 
 type ServerHandler struct {
@@ -26,137 +26,186 @@ type ServerHandler struct {
 	minersBlockchainHandler  *minersHandlers.BlockchainHandler
 	payoutsBlockchainHandler *payoutsHandlers.BlockchainHandler
 	blocksBlockchainHandler  *blocksHandlers.BlockchainHandler
+	chartsBlockchainHandler  *chartsHandlers.BlockchainHandler
 	blockchainService        *blockchains.Service
 }
 
-func (h *ServerHandler) GetBlockchains(ctx context.Context) ([]apiModels.Blockchain, error) {
-	return h.blockchainsHandler.Get(ctx)
+func (h *ServerHandler) GetBlockchains(ctx context.Context) (*apiModels.BlockchainsList, error) {
+	return h.blockchainsHandler.Get(ctx), nil
 }
 
-func (h *ServerHandler) getBlockchain(coin string) (*blockchains.Blockchain, error) {
+func (h *ServerHandler) getBlockchain(coin string) (*blockchains.Blockchain, *apiModels.BlockchainNotFound) {
 	blockchain, err := h.blockchainService.GetBlockchain(coin)
 	if err != nil {
-		return nil, serverErrors.CreateNotFoundError(apiServerErrors.BlockchainNotFound, err)
+		return nil, &apiModels.BlockchainNotFound{
+			Code:    string(apiServerErrors.BlockchainNotFoundError),
+			Message: err.Error(),
+		}
 	}
 
 	return blockchain, nil
 }
 
-func (h *ServerHandler) GetBlockchainPool(ctx context.Context, params apiModels.GetBlockchainPoolParams) (*apiModels.Pool, error) {
-	blockchain, err := h.getBlockchain(params.Blockchain)
-	if err != nil {
-		return nil, err
+func (h *ServerHandler) GetBlockchainPool(ctx context.Context, params apiModels.GetBlockchainPoolParams) (apiModels.GetBlockchainPoolRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
 	}
 
-	return h.poolsBlockchainHandler.GetPool(ctx, blockchain)
+	return h.poolsBlockchainHandler.GetPool(ctx, blockchain), nil
 }
 
-func (h *ServerHandler) GetBlockchainPoolInfo(ctx context.Context, params apiModels.GetBlockchainPoolInfoParams) (*apiModels.PoolInfo, error) {
-	blockchain, err := h.getBlockchain(params.Blockchain)
-	if err != nil {
-		return nil, err
+func (h *ServerHandler) GetBlockchainPoolInfo(ctx context.Context, params apiModels.GetBlockchainPoolInfoParams) (apiModels.GetBlockchainPoolInfoRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
 	}
 
-	return h.poolsBlockchainHandler.GetPoolInfo(ctx, blockchain)
+	return h.poolsBlockchainHandler.GetPoolInfo(ctx, blockchain), nil
 }
 
-func (h *ServerHandler) GetBlockchainPoolStats(ctx context.Context, params apiModels.GetBlockchainPoolStatsParams) (*apiModels.PoolStats, error) {
-	blockchain, err := h.getBlockchain(params.Blockchain)
-	if err != nil {
-		return nil, err
+func (h *ServerHandler) GetBlockchainPoolStats(ctx context.Context, params apiModels.GetBlockchainPoolStatsParams) (apiModels.GetBlockchainPoolStatsRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
 	}
 
-	return h.poolsBlockchainHandler.GetPoolStats(ctx, blockchain)
+	return h.poolsBlockchainHandler.GetPoolStats(ctx, blockchain), nil
 }
 
-func (h *ServerHandler) GetBlockchainPoolSlaves(ctx context.Context, params apiModels.GetBlockchainPoolStatsParams) ([]apiModels.PoolSlave, error) {
-	blockchain, err := h.getBlockchain(params.Blockchain)
-	if err != nil {
-		return nil, err
+func (h *ServerHandler) GetBlockchainPoolSlaves(ctx context.Context, params apiModels.GetBlockchainPoolStatsParams) (apiModels.GetBlockchainPoolSlavesRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
 	}
 
-	return h.poolsBlockchainHandler.GetPoolSlaves(ctx, blockchain)
+	return h.poolsBlockchainHandler.GetPoolSlaves(ctx, blockchain), nil
 }
 
-func (h *ServerHandler) GetBlockchainPrice(ctx context.Context, params apiModels.GetBlockchainPriceParams) (*apiModels.BlockchainCoinPrice, error) {
-	return h.pricesBlockchainHandler.GetPrice(ctx, params.Blockchain)
+func (h *ServerHandler) GetBlockchainPrice(ctx context.Context, params apiModels.GetBlockchainCoinPriceParams) (apiModels.GetBlockchainCoinPriceRes, error) {
+	return h.pricesBlockchainHandler.GetPrice(ctx, params.Blockchain), nil
 }
 
-func (h *ServerHandler) GetPrices(ctx context.Context) ([]apiModels.CoinPrice, error) {
-	return h.pricesHandler.Get(ctx)
+func (h *ServerHandler) GetPrices(ctx context.Context) (apiModels.GetPricesRes, error) {
+	return h.pricesHandler.Get(ctx), nil
 }
 
-func (h *ServerHandler) GetBlockchainMiners(ctx context.Context, params apiModels.GetBlockchainMinersParams) (*apiModels.MinersList, error) {
-	blockchain, err := h.getBlockchain(params.Blockchain)
-	if err != nil {
-		return nil, err
+func (h *ServerHandler) GetBlockchainMiners(ctx context.Context, params apiModels.GetBlockchainMinersParams) (apiModels.GetBlockchainMinersRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
 	}
 
 	sorts := minersQuery.ParseMinersSortsInQuery(&params.Sorts)
 	filters := minersQuery.ParseMinersFiltersInQueryParams(&params)
 
-	return h.minersBlockchainHandler.GetMiners(ctx, blockchain, sorts, filters, params.Limit, params.Offset)
+	return h.minersBlockchainHandler.GetMiners(ctx, blockchain, sorts, filters, params.Limit, params.Offset), nil
 }
 
-func (h *ServerHandler) GetBlockchainMiner(ctx context.Context, params apiModels.GetBlockchainMinerParams) (*apiModels.Miner, error) {
-	blockchain, err := h.getBlockchain(params.Blockchain)
-	if err != nil {
-		return nil, err
+func (h *ServerHandler) GetBlockchainMiner(ctx context.Context, params apiModels.GetBlockchainMinerParams) (apiModels.GetBlockchainMinerRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
 	}
 
-	return h.minersBlockchainHandler.GetMiner(ctx, blockchain, params.Miner)
+	return h.minersBlockchainHandler.GetMiner(ctx, blockchain, params.Miner), nil
 }
 
-func (h *ServerHandler) GetBlockchainMinerWorkers(ctx context.Context, params apiModels.GetBlockchainMinerWorkersParams) ([]apiModels.MinerWorker, error) {
-	blockchain, err := h.getBlockchain(params.Blockchain)
-	if err != nil {
-		return nil, err
+func (h *ServerHandler) GetBlockchainMinerWorkers(ctx context.Context, params apiModels.GetBlockchainMinerWorkersParams) (apiModels.GetBlockchainMinerWorkersRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
 	}
 
-	return h.minersBlockchainHandler.GetMinerWorkers(ctx, blockchain, params.Miner)
+	return h.minersBlockchainHandler.GetMinerWorkers(ctx, blockchain, params.Miner), nil
 }
 
-func (h *ServerHandler) GetBlockchainPayouts(ctx context.Context, params apiModels.GetBlockchainPayoutsParams) (*apiModels.PayoutsList, error) {
-	blockchain, err := h.getBlockchain(params.Blockchain)
-	if err != nil {
-		return nil, err
+func (h *ServerHandler) GetBlockchainPayouts(ctx context.Context, params apiModels.GetBlockchainPayoutsParams) (apiModels.GetBlockchainPayoutsRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
 	}
 
 	sorts := payoutsQuery.ParsePayoutsSortsInQuery(&params.Sorts)
 	filters := payoutsQuery.ParsePayoutsFiltersInQueryParams(&params)
 
-	return h.payoutsBlockchainHandler.GetPayouts(ctx, blockchain, sorts, filters, params.Limit, params.Offset)
+	return h.payoutsBlockchainHandler.GetPayouts(ctx, blockchain, sorts, filters, params.Limit, params.Offset), nil
 }
 
-func (h *ServerHandler) GetBlockchainMinerBalance(ctx context.Context, params apiModels.GetBlockchainMinerBalanceParams) (*apiModels.MinerBalance, error) {
-	blockchain, err := h.getBlockchain(params.Blockchain)
-	if err != nil {
-		return nil, err
+func (h *ServerHandler) GetBlockchainMinerBalance(ctx context.Context, params apiModels.GetBlockchainMinerBalanceParams) (apiModels.GetBlockchainMinerBalanceRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
 	}
 
-	return h.payoutsBlockchainHandler.GetMinerBalance(ctx, blockchain, params.Miner)
+	return h.payoutsBlockchainHandler.GetMinerBalance(ctx, blockchain, params.Miner), nil
 }
 
-func (h *ServerHandler) GetBlockchainBlocks(ctx context.Context, params apiModels.GetBlockchainBlocksParams) (*apiModels.MinedBlocksList, error) {
-	blockchain, err := h.getBlockchain(params.Blockchain)
-	if err != nil {
-		return nil, err
+func (h *ServerHandler) GetBlockchainBlocks(ctx context.Context, params apiModels.GetBlockchainBlocksParams) (apiModels.GetBlockchainBlocksRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
 	}
 
 	sorts := blocksQuery.ParseBlocksSortsInQuery(&params.Sorts)
 	filters := blocksQuery.ParseBlocksFiltersInQueryParams(&params)
 
-	return h.blocksBlockchainHandler.GetBlocks(ctx, blockchain, sorts, filters, params.Limit, params.Offset)
+	return h.blocksBlockchainHandler.GetBlocks(ctx, blockchain, sorts, filters, params.Limit, params.Offset), nil
 }
 
 func (h *ServerHandler) GetBlockchainSoloBlocks(ctx context.Context, params apiModels.GetBlockchainSoloBlocksParams) (apiModels.GetBlockchainSoloBlocksRes, error) {
-	blockchain, err := h.getBlockchain(params.Blockchain)
-	if err != nil {
-		return nil, err
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
 	}
 
 	sorts := blocksQuery.ParseSoloBlocksSortsInQuery(&params.Sorts)
 	filters := blocksQuery.ParseSoloBlocksFiltersInQueryParams(&params)
 
-	return h.blocksBlockchainHandler.GetSoloBlocks(ctx, blockchain, sorts, filters, params.Limit, params.Offset)
+	return h.blocksBlockchainHandler.GetSoloBlocks(ctx, blockchain, sorts, filters, params.Limit, params.Offset), nil
+}
+
+func (h *ServerHandler) GetBlockchainPoolStatsChart(ctx context.Context, params apiModels.GetBlockchainPoolStatsChartParams) (apiModels.GetBlockchainPoolStatsChartRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
+	}
+
+	return h.chartsBlockchainHandler.GetPoolStatsChart(ctx, blockchain, &params.Period, &params.Solo), nil
+}
+
+func (h *ServerHandler) GetBlockchainPoolDifficultiesChart(ctx context.Context, params apiModels.GetBlockchainPoolDifficultiesChartParams) (apiModels.GetBlockchainPoolDifficultiesChartRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
+	}
+
+	return h.chartsBlockchainHandler.GetPoolDifficultiesChart(ctx, blockchain, &params.Period, &params.Solo), nil
+}
+
+func (h *ServerHandler) GetBlockchainRoundsChart(ctx context.Context, params apiModels.GetBlockchainRoundsChartParams) (apiModels.GetBlockchainRoundsChartRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
+	}
+
+	return h.chartsBlockchainHandler.GetRoundsChart(ctx, blockchain, &params.Period), nil
+}
+
+func (h *ServerHandler) GetBlockchainMinerHashratesChart(ctx context.Context, params apiModels.GetBlockchainMinerHashratesChartParams) (apiModels.GetBlockchainMinerHashratesChartRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
+	}
+
+	return h.chartsBlockchainHandler.GetMinerHashratesChart(ctx, blockchain, &params.Period, params.Miner, &params.Solo), nil
+}
+
+func (h *ServerHandler) GetBlockchainMinerWorkerHashratesChart(ctx context.Context, params apiModels.GetBlockchainMinerWorkerHashratesChartParams) (apiModels.GetBlockchainMinerWorkerHashratesChartRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
+	}
+
+	return h.chartsBlockchainHandler.GetMinerWorkerHashratesChart(ctx, blockchain, &params.Period, params.Miner, params.Worker), nil
 }

@@ -2,7 +2,6 @@ package payoutsHandlers
 
 import (
 	"context"
-	"fmt"
 
 	poolPayoutsProto "github.com/grandminingpool/pool-api-proto/generated/pool_payouts"
 	apiModels "github.com/grandminingpool/pool-api/api/generated"
@@ -10,7 +9,6 @@ import (
 	payoutsServices "github.com/grandminingpool/pool-api/internal/api/services/payouts"
 	"github.com/grandminingpool/pool-api/internal/blockchains"
 	"github.com/grandminingpool/pool-api/internal/common/serializers"
-	serverErrors "github.com/grandminingpool/pool-api/internal/common/server/errors"
 )
 
 type BlockchainHandler struct {
@@ -24,7 +22,7 @@ func (h *BlockchainHandler) GetPayouts(
 	sorts *poolPayoutsProto.PayoutsSorts,
 	filters *poolPayoutsProto.PayoutsFilters,
 	limit, offset uint32,
-) (*apiModels.PayoutsList, error) {
+) apiModels.GetBlockchainPayoutsRes {
 	payoutsList, err := h.blockchainService.GetPayouts(
 		ctx,
 		blockchain,
@@ -34,7 +32,7 @@ func (h *BlockchainHandler) GetPayouts(
 		offset,
 	)
 	if err != nil {
-		return nil, serverErrors.CreateInternalServerError(payoutsErrors.GetPayoutsError, err)
+		return payoutsErrors.CreateGetPayoutsError(err)
 	}
 
 	payoutsResponse := make([]apiModels.Payout, 0, len(payoutsList.Payouts.Payouts))
@@ -47,18 +45,22 @@ func (h *BlockchainHandler) GetPayouts(
 		Limit:   payoutsList.Pagination.Limit,
 		Offset:  payoutsList.Pagination.Offset,
 		Total:   payoutsList.Pagination.Total,
-	}, nil
+	}
 }
 
-func (h *BlockchainHandler) GetMinerBalance(ctx context.Context, blockchain *blockchains.Blockchain, miner string) (*apiModels.MinerBalance, error) {
+func (h *BlockchainHandler) GetMinerBalance(
+	ctx context.Context,
+	blockchain *blockchains.Blockchain,
+	miner string,
+) apiModels.GetBlockchainMinerBalanceRes {
 	minerBalance, err := h.blockchainService.GetMinerBalance(ctx, blockchain, miner)
 	if err != nil {
-		return nil, serverErrors.CreateInternalServerError(payoutsErrors.GetMinerBalanceError, err)
+		return payoutsErrors.CreateGetMinerBalanceError(err)
 	} else if minerBalance == nil {
-		return nil, serverErrors.CreateNotFoundError(payoutsErrors.MinerBalanceNotFoundError, fmt.Errorf("miner '%s' balance not found", miner))
+		return payoutsErrors.CreateMinerBalanceNotFoundError(miner)
 	}
 
 	return &apiModels.MinerBalance{
 		Balance: *minerBalance,
-	}, nil
+	}
 }

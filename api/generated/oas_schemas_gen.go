@@ -92,6 +92,125 @@ func (s *BlockchainCoinPrice) SetMarkets(val []MarketPrice) {
 	s.Markets = val
 }
 
+func (*BlockchainCoinPrice) getBlockchainCoinPriceRes() {}
+
+// Merged schema.
+type BlockchainNotFound struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *BlockchainNotFound) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *BlockchainNotFound) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *BlockchainNotFound) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *BlockchainNotFound) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*BlockchainNotFound) getBlockchainBlocksRes()                    {}
+func (*BlockchainNotFound) getBlockchainMinerBalanceRes()              {}
+func (*BlockchainNotFound) getBlockchainMinerHashratesChartRes()       {}
+func (*BlockchainNotFound) getBlockchainMinerRes()                     {}
+func (*BlockchainNotFound) getBlockchainMinerSharesChartRes()          {}
+func (*BlockchainNotFound) getBlockchainMinerWorkerHashratesChartRes() {}
+func (*BlockchainNotFound) getBlockchainMinerWorkerSharesChartRes()    {}
+func (*BlockchainNotFound) getBlockchainMinerWorkersRes()              {}
+func (*BlockchainNotFound) getBlockchainMinersRes()                    {}
+func (*BlockchainNotFound) getBlockchainPayoutsRes()                   {}
+func (*BlockchainNotFound) getBlockchainPoolDifficultiesChartRes()     {}
+func (*BlockchainNotFound) getBlockchainPoolInfoRes()                  {}
+func (*BlockchainNotFound) getBlockchainPoolRes()                      {}
+func (*BlockchainNotFound) getBlockchainPoolSlavesRes()                {}
+func (*BlockchainNotFound) getBlockchainPoolStatsChartRes()            {}
+func (*BlockchainNotFound) getBlockchainPoolStatsRes()                 {}
+func (*BlockchainNotFound) getBlockchainRoundsChartRes()               {}
+func (*BlockchainNotFound) getBlockchainSoloBlocksRes()                {}
+
+// Ref: #/components/schemas/BlockchainsList
+type BlockchainsList struct {
+	Blockchains []Blockchain `json:"blockchains"`
+}
+
+// GetBlockchains returns the value of Blockchains.
+func (s *BlockchainsList) GetBlockchains() []Blockchain {
+	return s.Blockchains
+}
+
+// SetBlockchains sets the value of Blockchains.
+func (s *BlockchainsList) SetBlockchains(val []Blockchain) {
+	s.Blockchains = val
+}
+
+// Ref: #/components/schemas/ChartPeriod
+type ChartPeriod string
+
+const (
+	ChartPeriodHour  ChartPeriod = "hour"
+	ChartPeriodDay   ChartPeriod = "day"
+	ChartPeriodWeek  ChartPeriod = "week"
+	ChartPeriodMonth ChartPeriod = "month"
+)
+
+// AllValues returns all ChartPeriod values.
+func (ChartPeriod) AllValues() []ChartPeriod {
+	return []ChartPeriod{
+		ChartPeriodHour,
+		ChartPeriodDay,
+		ChartPeriodWeek,
+		ChartPeriodMonth,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s ChartPeriod) MarshalText() ([]byte, error) {
+	switch s {
+	case ChartPeriodHour:
+		return []byte(s), nil
+	case ChartPeriodDay:
+		return []byte(s), nil
+	case ChartPeriodWeek:
+		return []byte(s), nil
+	case ChartPeriodMonth:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *ChartPeriod) UnmarshalText(data []byte) error {
+	switch ChartPeriod(data) {
+	case ChartPeriodHour:
+		*s = ChartPeriodHour
+		return nil
+	case ChartPeriodDay:
+		*s = ChartPeriodDay
+		return nil
+	case ChartPeriodWeek:
+		*s = ChartPeriodWeek
+		return nil
+	case ChartPeriodMonth:
+		*s = ChartPeriodMonth
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
 // Merged schema.
 // Ref: #/components/schemas/CoinPrice
 type CoinPrice struct {
@@ -130,33 +249,750 @@ func (s *CoinPrice) SetCoin(val string) {
 	s.Coin = val
 }
 
-// Ref: #/components/schemas/Error
-type Error struct {
+// Ref: #/components/schemas/CoinPricesList
+type CoinPricesList struct {
+	Prices []CoinPrice `json:"prices"`
+}
+
+// GetPrices returns the value of Prices.
+func (s *CoinPricesList) GetPrices() []CoinPrice {
+	return s.Prices
+}
+
+// SetPrices sets the value of Prices.
+func (s *CoinPricesList) SetPrices(val []CoinPrice) {
+	s.Prices = val
+}
+
+func (*CoinPricesList) getPricesRes() {}
+
+// Merged schema.
+type GetBlockchainBlocksInternalServerError struct {
+	// Merged property.
 	Code    string `json:"code"`
 	Message string `json:"message"`
 }
 
 // GetCode returns the value of Code.
-func (s *Error) GetCode() string {
+func (s *GetBlockchainBlocksInternalServerError) GetCode() string {
 	return s.Code
 }
 
 // GetMessage returns the value of Message.
-func (s *Error) GetMessage() string {
+func (s *GetBlockchainBlocksInternalServerError) GetMessage() string {
 	return s.Message
 }
 
 // SetCode sets the value of Code.
-func (s *Error) SetCode(val string) {
+func (s *GetBlockchainBlocksInternalServerError) SetCode(val string) {
 	s.Code = val
 }
 
 // SetMessage sets the value of Message.
-func (s *Error) SetMessage(val string) {
+func (s *GetBlockchainBlocksInternalServerError) SetMessage(val string) {
 	s.Message = val
 }
 
-func (*Error) getBlockchainSoloBlocksRes() {}
+func (*GetBlockchainBlocksInternalServerError) getBlockchainBlocksRes() {}
+
+// Merged schema.
+type GetBlockchainCoinPriceInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainCoinPriceInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainCoinPriceInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainCoinPriceInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainCoinPriceInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainCoinPriceInternalServerError) getBlockchainCoinPriceRes() {}
+
+// Merged schema.
+type GetBlockchainCoinPriceNotFound struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainCoinPriceNotFound) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainCoinPriceNotFound) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainCoinPriceNotFound) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainCoinPriceNotFound) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainCoinPriceNotFound) getBlockchainCoinPriceRes() {}
+
+// Merged schema.
+type GetBlockchainMinerBalanceInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainMinerBalanceInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainMinerBalanceInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainMinerBalanceInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainMinerBalanceInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainMinerBalanceInternalServerError) getBlockchainMinerBalanceRes() {}
+
+// Merged schema.
+type GetBlockchainMinerBalanceNotFound struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainMinerBalanceNotFound) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainMinerBalanceNotFound) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainMinerBalanceNotFound) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainMinerBalanceNotFound) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainMinerBalanceNotFound) getBlockchainMinerBalanceRes() {}
+
+// Merged schema.
+type GetBlockchainMinerHashratesChartInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainMinerHashratesChartInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainMinerHashratesChartInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainMinerHashratesChartInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainMinerHashratesChartInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainMinerHashratesChartInternalServerError) getBlockchainMinerHashratesChartRes() {}
+
+// Merged schema.
+type GetBlockchainMinerInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainMinerInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainMinerInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainMinerInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainMinerInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainMinerInternalServerError) getBlockchainMinerRes() {}
+
+// Merged schema.
+type GetBlockchainMinerNotFound struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainMinerNotFound) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainMinerNotFound) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainMinerNotFound) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainMinerNotFound) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainMinerNotFound) getBlockchainMinerRes() {}
+
+// Merged schema.
+type GetBlockchainMinerSharesChartInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainMinerSharesChartInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainMinerSharesChartInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainMinerSharesChartInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainMinerSharesChartInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainMinerSharesChartInternalServerError) getBlockchainMinerSharesChartRes() {}
+
+// Merged schema.
+type GetBlockchainMinerWorkerHashratesChartInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainMinerWorkerHashratesChartInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainMinerWorkerHashratesChartInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainMinerWorkerHashratesChartInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainMinerWorkerHashratesChartInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainMinerWorkerHashratesChartInternalServerError) getBlockchainMinerWorkerHashratesChartRes() {
+}
+
+// Merged schema.
+type GetBlockchainMinerWorkerSharesChartInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainMinerWorkerSharesChartInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainMinerWorkerSharesChartInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainMinerWorkerSharesChartInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainMinerWorkerSharesChartInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainMinerWorkerSharesChartInternalServerError) getBlockchainMinerWorkerSharesChartRes() {
+}
+
+// Merged schema.
+type GetBlockchainMinerWorkersInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainMinerWorkersInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainMinerWorkersInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainMinerWorkersInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainMinerWorkersInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainMinerWorkersInternalServerError) getBlockchainMinerWorkersRes() {}
+
+// Merged schema.
+type GetBlockchainMinerWorkersNotFound struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainMinerWorkersNotFound) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainMinerWorkersNotFound) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainMinerWorkersNotFound) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainMinerWorkersNotFound) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainMinerWorkersNotFound) getBlockchainMinerWorkersRes() {}
+
+// Merged schema.
+type GetBlockchainMinersInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainMinersInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainMinersInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainMinersInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainMinersInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainMinersInternalServerError) getBlockchainMinersRes() {}
+
+// Merged schema.
+type GetBlockchainPayoutsInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainPayoutsInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainPayoutsInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainPayoutsInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainPayoutsInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainPayoutsInternalServerError) getBlockchainPayoutsRes() {}
+
+// Merged schema.
+type GetBlockchainPoolDifficultiesChartInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainPoolDifficultiesChartInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainPoolDifficultiesChartInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainPoolDifficultiesChartInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainPoolDifficultiesChartInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainPoolDifficultiesChartInternalServerError) getBlockchainPoolDifficultiesChartRes() {
+}
+
+// Merged schema.
+type GetBlockchainPoolInfoInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainPoolInfoInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainPoolInfoInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainPoolInfoInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainPoolInfoInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainPoolInfoInternalServerError) getBlockchainPoolInfoRes() {}
+
+// Merged schema.
+type GetBlockchainPoolInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainPoolInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainPoolInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainPoolInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainPoolInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainPoolInternalServerError) getBlockchainPoolRes() {}
+
+// Merged schema.
+type GetBlockchainPoolSlavesInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainPoolSlavesInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainPoolSlavesInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainPoolSlavesInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainPoolSlavesInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainPoolSlavesInternalServerError) getBlockchainPoolSlavesRes() {}
+
+// Merged schema.
+type GetBlockchainPoolStatsChartInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainPoolStatsChartInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainPoolStatsChartInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainPoolStatsChartInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainPoolStatsChartInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainPoolStatsChartInternalServerError) getBlockchainPoolStatsChartRes() {}
+
+// Merged schema.
+type GetBlockchainPoolStatsInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainPoolStatsInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainPoolStatsInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainPoolStatsInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainPoolStatsInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainPoolStatsInternalServerError) getBlockchainPoolStatsRes() {}
+
+// Merged schema.
+type GetBlockchainRoundsChartInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainRoundsChartInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainRoundsChartInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainRoundsChartInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainRoundsChartInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainRoundsChartInternalServerError) getBlockchainRoundsChartRes() {}
+
+// Merged schema.
+type GetBlockchainSoloBlocksInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainSoloBlocksInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainSoloBlocksInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainSoloBlocksInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainSoloBlocksInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainSoloBlocksInternalServerError) getBlockchainSoloBlocksRes() {}
+
+// Merged schema.
+type GetBlockchainSoloBlocksMethodNotAllowed struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainSoloBlocksMethodNotAllowed) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainSoloBlocksMethodNotAllowed) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainSoloBlocksMethodNotAllowed) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainSoloBlocksMethodNotAllowed) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainSoloBlocksMethodNotAllowed) getBlockchainSoloBlocksRes() {}
+
+// Merged schema.
+type GetPricesInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetPricesInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetPricesInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetPricesInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetPricesInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetPricesInternalServerError) getPricesRes() {}
 
 // Merged schema.
 // Ref: #/components/schemas/MarketPrice
@@ -314,6 +1150,8 @@ func (s *MinedBlocksList) SetTotal(val uint32) {
 func (s *MinedBlocksList) SetBlocks(val []MinedBlock) {
 	s.Blocks = val
 }
+
+func (*MinedBlocksList) getBlockchainBlocksRes() {}
 
 // Ref: #/components/schemas/MinedSoloBlock
 type MinedSoloBlock struct {
@@ -528,6 +1366,8 @@ func (s *Miner) SetLastActivity(val string) {
 	s.LastActivity = val
 }
 
+func (*Miner) getBlockchainMinerRes() {}
+
 // Ref: #/components/schemas/MinerBalance
 type MinerBalance struct {
 	Balance uint64 `json:"balance"`
@@ -542,6 +1382,129 @@ func (s *MinerBalance) GetBalance() uint64 {
 func (s *MinerBalance) SetBalance(val uint64) {
 	s.Balance = val
 }
+
+func (*MinerBalance) getBlockchainMinerBalanceRes() {}
+
+// Ref: #/components/schemas/MinerHashratesPoint
+type MinerHashratesPoint struct {
+	Hashrate string `json:"hashrate"`
+	Date     string `json:"date"`
+}
+
+// GetHashrate returns the value of Hashrate.
+func (s *MinerHashratesPoint) GetHashrate() string {
+	return s.Hashrate
+}
+
+// GetDate returns the value of Date.
+func (s *MinerHashratesPoint) GetDate() string {
+	return s.Date
+}
+
+// SetHashrate sets the value of Hashrate.
+func (s *MinerHashratesPoint) SetHashrate(val string) {
+	s.Hashrate = val
+}
+
+// SetDate sets the value of Date.
+func (s *MinerHashratesPoint) SetDate(val string) {
+	s.Date = val
+}
+
+// Ref: #/components/schemas/MinerHashratesPoints
+type MinerHashratesPoints struct {
+	Points []MinerHashratesPoint `json:"points"`
+}
+
+// GetPoints returns the value of Points.
+func (s *MinerHashratesPoints) GetPoints() []MinerHashratesPoint {
+	return s.Points
+}
+
+// SetPoints sets the value of Points.
+func (s *MinerHashratesPoints) SetPoints(val []MinerHashratesPoint) {
+	s.Points = val
+}
+
+func (*MinerHashratesPoints) getBlockchainMinerHashratesChartRes()       {}
+func (*MinerHashratesPoints) getBlockchainMinerWorkerHashratesChartRes() {}
+
+// Ref: #/components/schemas/MinerSharesPoint
+type MinerSharesPoint struct {
+	AcceptedSharesCount   uint32 `json:"accepted_shares_count"`
+	RejectedSharesCount   uint32 `json:"rejected_shares_count"`
+	StaleSharesCount      uint32 `json:"stale_shares_count"`
+	ValidBlockSharesCount uint32 `json:"valid_block_shares_count"`
+	Date                  string `json:"date"`
+}
+
+// GetAcceptedSharesCount returns the value of AcceptedSharesCount.
+func (s *MinerSharesPoint) GetAcceptedSharesCount() uint32 {
+	return s.AcceptedSharesCount
+}
+
+// GetRejectedSharesCount returns the value of RejectedSharesCount.
+func (s *MinerSharesPoint) GetRejectedSharesCount() uint32 {
+	return s.RejectedSharesCount
+}
+
+// GetStaleSharesCount returns the value of StaleSharesCount.
+func (s *MinerSharesPoint) GetStaleSharesCount() uint32 {
+	return s.StaleSharesCount
+}
+
+// GetValidBlockSharesCount returns the value of ValidBlockSharesCount.
+func (s *MinerSharesPoint) GetValidBlockSharesCount() uint32 {
+	return s.ValidBlockSharesCount
+}
+
+// GetDate returns the value of Date.
+func (s *MinerSharesPoint) GetDate() string {
+	return s.Date
+}
+
+// SetAcceptedSharesCount sets the value of AcceptedSharesCount.
+func (s *MinerSharesPoint) SetAcceptedSharesCount(val uint32) {
+	s.AcceptedSharesCount = val
+}
+
+// SetRejectedSharesCount sets the value of RejectedSharesCount.
+func (s *MinerSharesPoint) SetRejectedSharesCount(val uint32) {
+	s.RejectedSharesCount = val
+}
+
+// SetStaleSharesCount sets the value of StaleSharesCount.
+func (s *MinerSharesPoint) SetStaleSharesCount(val uint32) {
+	s.StaleSharesCount = val
+}
+
+// SetValidBlockSharesCount sets the value of ValidBlockSharesCount.
+func (s *MinerSharesPoint) SetValidBlockSharesCount(val uint32) {
+	s.ValidBlockSharesCount = val
+}
+
+// SetDate sets the value of Date.
+func (s *MinerSharesPoint) SetDate(val string) {
+	s.Date = val
+}
+
+// Ref: #/components/schemas/MinerSharesPoints
+type MinerSharesPoints struct {
+	Points []MinerSharesPoint `json:"points"`
+}
+
+// GetPoints returns the value of Points.
+func (s *MinerSharesPoints) GetPoints() []MinerSharesPoint {
+	return s.Points
+}
+
+// SetPoints sets the value of Points.
+func (s *MinerSharesPoints) SetPoints(val []MinerSharesPoint) {
+	s.Points = val
+}
+
+func (*MinerSharesPoints) getBlockchainMinerSharesChartRes()       {}
+func (*MinerSharesPoints) getBlockchainMinerWorkerSharesChartRes() {}
 
 // Ref: #/components/schemas/MinerWorker
 type MinerWorker struct {
@@ -613,6 +1576,23 @@ func (s *MinerWorker) SetConnectedAt(val string) {
 	s.ConnectedAt = val
 }
 
+// Ref: #/components/schemas/MinerWorkersList
+type MinerWorkersList struct {
+	Workers []MinerWorker `json:"workers"`
+}
+
+// GetWorkers returns the value of Workers.
+func (s *MinerWorkersList) GetWorkers() []MinerWorker {
+	return s.Workers
+}
+
+// SetWorkers sets the value of Workers.
+func (s *MinerWorkersList) SetWorkers(val []MinerWorker) {
+	s.Workers = val
+}
+
+func (*MinerWorkersList) getBlockchainMinerWorkersRes() {}
+
 // Merged schema.
 // Ref: #/components/schemas/MinersList
 type MinersList struct {
@@ -660,6 +1640,54 @@ func (s *MinersList) SetTotal(val uint32) {
 // SetMiners sets the value of Miners.
 func (s *MinersList) SetMiners(val []Miner) {
 	s.Miners = val
+}
+
+func (*MinersList) getBlockchainMinersRes() {}
+
+// NewOptBool returns new OptBool with value set to v.
+func NewOptBool(v bool) OptBool {
+	return OptBool{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptBool is optional bool.
+type OptBool struct {
+	Value bool
+	Set   bool
+}
+
+// IsSet returns true if OptBool was set.
+func (o OptBool) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptBool) Reset() {
+	var v bool
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptBool) SetTo(v bool) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptBool) Get() (v bool, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptBool) Or(d bool) bool {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
 }
 
 // NewOptFloat64 returns new OptFloat64 with value set to v.
@@ -1022,6 +2050,8 @@ func (s *PayoutsList) SetPayouts(val []Payout) {
 	s.Payouts = val
 }
 
+func (*PayoutsList) getBlockchainPayoutsRes() {}
+
 // Ref: #/components/schemas/Pool
 type Pool struct {
 	Info   PoolInfo    `json:"info"`
@@ -1058,6 +2088,51 @@ func (s *Pool) SetStats(val PoolStats) {
 func (s *Pool) SetSlaves(val []PoolSlave) {
 	s.Slaves = val
 }
+
+func (*Pool) getBlockchainPoolRes() {}
+
+// Ref: #/components/schemas/PoolDifficultiesPoint
+type PoolDifficultiesPoint struct {
+	ShareDifficulty uint64 `json:"share_difficulty"`
+	Date            string `json:"date"`
+}
+
+// GetShareDifficulty returns the value of ShareDifficulty.
+func (s *PoolDifficultiesPoint) GetShareDifficulty() uint64 {
+	return s.ShareDifficulty
+}
+
+// GetDate returns the value of Date.
+func (s *PoolDifficultiesPoint) GetDate() string {
+	return s.Date
+}
+
+// SetShareDifficulty sets the value of ShareDifficulty.
+func (s *PoolDifficultiesPoint) SetShareDifficulty(val uint64) {
+	s.ShareDifficulty = val
+}
+
+// SetDate sets the value of Date.
+func (s *PoolDifficultiesPoint) SetDate(val string) {
+	s.Date = val
+}
+
+// Ref: #/components/schemas/PoolDifficultiesPoints
+type PoolDifficultiesPoints struct {
+	Points []PoolDifficultiesPoint `json:"points"`
+}
+
+// GetPoints returns the value of Points.
+func (s *PoolDifficultiesPoints) GetPoints() []PoolDifficultiesPoint {
+	return s.Points
+}
+
+// SetPoints sets the value of Points.
+func (s *PoolDifficultiesPoints) SetPoints(val []PoolDifficultiesPoint) {
+	s.Points = val
+}
+
+func (*PoolDifficultiesPoints) getBlockchainPoolDifficultiesChartRes() {}
 
 // Ref: #/components/schemas/PoolFee
 type PoolFee struct {
@@ -1177,6 +2252,8 @@ func (s *PoolInfo) SetAgents(val []string) {
 	s.Agents = val
 }
 
+func (*PoolInfo) getBlockchainPoolInfoRes() {}
+
 // Ref: #/components/schemas/PoolSlave
 type PoolSlave struct {
 	Region      string    `json:"region"`
@@ -1246,6 +2323,23 @@ func (s *PoolSlave) SetSoloPort(val OptUint32) {
 func (s *PoolSlave) SetConnectedAt(val string) {
 	s.ConnectedAt = val
 }
+
+// Ref: #/components/schemas/PoolSlavesList
+type PoolSlavesList struct {
+	Slaves []PoolSlave `json:"slaves"`
+}
+
+// GetSlaves returns the value of Slaves.
+func (s *PoolSlavesList) GetSlaves() []PoolSlave {
+	return s.Slaves
+}
+
+// SetSlaves sets the value of Slaves.
+func (s *PoolSlavesList) SetSlaves(val []PoolSlave) {
+	s.Slaves = val
+}
+
+func (*PoolSlavesList) getBlockchainPoolSlavesRes() {}
 
 // Ref: #/components/schemas/PoolStats
 type PoolStats struct {
@@ -1338,3 +2432,135 @@ func (s *PoolStats) SetShareDifficulty(val uint64) {
 func (s *PoolStats) SetSoloShareDifficulty(val OptUint64) {
 	s.SoloShareDifficulty = val
 }
+
+func (*PoolStats) getBlockchainPoolStatsRes() {}
+
+// Ref: #/components/schemas/PoolStatsPoint
+type PoolStatsPoint struct {
+	Hashrate    string `json:"hashrate"`
+	AvgHashrate string `json:"avg_hashrate"`
+	MinersCount uint32 `json:"miners_count"`
+	Date        string `json:"date"`
+}
+
+// GetHashrate returns the value of Hashrate.
+func (s *PoolStatsPoint) GetHashrate() string {
+	return s.Hashrate
+}
+
+// GetAvgHashrate returns the value of AvgHashrate.
+func (s *PoolStatsPoint) GetAvgHashrate() string {
+	return s.AvgHashrate
+}
+
+// GetMinersCount returns the value of MinersCount.
+func (s *PoolStatsPoint) GetMinersCount() uint32 {
+	return s.MinersCount
+}
+
+// GetDate returns the value of Date.
+func (s *PoolStatsPoint) GetDate() string {
+	return s.Date
+}
+
+// SetHashrate sets the value of Hashrate.
+func (s *PoolStatsPoint) SetHashrate(val string) {
+	s.Hashrate = val
+}
+
+// SetAvgHashrate sets the value of AvgHashrate.
+func (s *PoolStatsPoint) SetAvgHashrate(val string) {
+	s.AvgHashrate = val
+}
+
+// SetMinersCount sets the value of MinersCount.
+func (s *PoolStatsPoint) SetMinersCount(val uint32) {
+	s.MinersCount = val
+}
+
+// SetDate sets the value of Date.
+func (s *PoolStatsPoint) SetDate(val string) {
+	s.Date = val
+}
+
+// Ref: #/components/schemas/PoolStatsPoints
+type PoolStatsPoints struct {
+	Points []PoolStatsPoint `json:"points"`
+}
+
+// GetPoints returns the value of Points.
+func (s *PoolStatsPoints) GetPoints() []PoolStatsPoint {
+	return s.Points
+}
+
+// SetPoints sets the value of Points.
+func (s *PoolStatsPoints) SetPoints(val []PoolStatsPoint) {
+	s.Points = val
+}
+
+func (*PoolStatsPoints) getBlockchainPoolStatsChartRes() {}
+
+// Ref: #/components/schemas/RoundsPoint
+type RoundsPoint struct {
+	RoundsCount      uint32  `json:"rounds_count"`
+	MinersCount      uint32  `json:"miners_count"`
+	AvgRoundInterval float64 `json:"avg_round_interval"`
+	Date             string  `json:"date"`
+}
+
+// GetRoundsCount returns the value of RoundsCount.
+func (s *RoundsPoint) GetRoundsCount() uint32 {
+	return s.RoundsCount
+}
+
+// GetMinersCount returns the value of MinersCount.
+func (s *RoundsPoint) GetMinersCount() uint32 {
+	return s.MinersCount
+}
+
+// GetAvgRoundInterval returns the value of AvgRoundInterval.
+func (s *RoundsPoint) GetAvgRoundInterval() float64 {
+	return s.AvgRoundInterval
+}
+
+// GetDate returns the value of Date.
+func (s *RoundsPoint) GetDate() string {
+	return s.Date
+}
+
+// SetRoundsCount sets the value of RoundsCount.
+func (s *RoundsPoint) SetRoundsCount(val uint32) {
+	s.RoundsCount = val
+}
+
+// SetMinersCount sets the value of MinersCount.
+func (s *RoundsPoint) SetMinersCount(val uint32) {
+	s.MinersCount = val
+}
+
+// SetAvgRoundInterval sets the value of AvgRoundInterval.
+func (s *RoundsPoint) SetAvgRoundInterval(val float64) {
+	s.AvgRoundInterval = val
+}
+
+// SetDate sets the value of Date.
+func (s *RoundsPoint) SetDate(val string) {
+	s.Date = val
+}
+
+// Ref: #/components/schemas/RoundsPoints
+type RoundsPoints struct {
+	Points []RoundsPoint `json:"points"`
+}
+
+// GetPoints returns the value of Points.
+func (s *RoundsPoints) GetPoints() []RoundsPoint {
+	return s.Points
+}
+
+// SetPoints sets the value of Points.
+func (s *RoundsPoints) SetPoints(val []RoundsPoint) {
+	s.Points = val
+}
+
+func (*RoundsPoints) getBlockchainRoundsChartRes() {}
