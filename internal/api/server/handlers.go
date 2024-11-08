@@ -29,6 +29,7 @@ import (
 func CreateHandler(
 	blockchainsService *blockchains.Service,
 	poolsBlockchainService *poolsServices.BlockchainService,
+	poolsService *poolsServices.PoolsService,
 	pricesService *pricesServices.PricesService,
 	minersBlockchainService *minersServices.BlockchainService,
 	payoutsBlockchainService *payoutsServices.BlockchainService,
@@ -36,8 +37,8 @@ func CreateHandler(
 	chartsBlockchainService *chartsServices.BlockchainService,
 ) apiModels.Handler {
 	//	Init blockchains handlers
-	blockchainSerializer := &blockchainsSerializers.BlockchainSerializer{}
-	blockchainsHandler := blockchainsHandlers.NewHandler(blockchainsService, blockchainSerializer)
+	blockchainInfoSerializer := &blockchainsSerializers.BlockchainInfoSerializer{}
+	blockchainsHandler := blockchainsHandlers.NewHandler(blockchainsService, blockchainInfoSerializer)
 
 	//	Init pools handlers
 	poolInfoSerializer := &poolsSerializers.PoolInfoSerializer{}
@@ -51,13 +52,15 @@ func CreateHandler(
 		poolStatsSerializer,
 		poolSlaveSerializer,
 	)
+	blockchainPoolStatsSerializer := poolsSerializers.NewBlockchainPoolStatsSerializer(poolStatsSerializer)
+	poolsHandler := poolsHandlers.NewHandler(poolsService, blockchainPoolStatsSerializer)
 
 	//	Init prices handlers
 	marketPriceSerializer := &pricesSerializer.MarkerPriceSerializer{}
-	blockchainCoinPriceSerializer := pricesSerializer.NewBlockchainCoinPriceSerializer(marketPriceSerializer)
-	pricesBlockchainHandler := pricesHandlers.NewBlockchainHandler(pricesService, blockchainCoinPriceSerializer)
-	coinPriceSerializer := &pricesSerializer.CoinPriceSerializer{}
-	pricesHandler := pricesHandlers.NewHandler(pricesService, coinPriceSerializer)
+	blockchainMarketsSerializer := pricesSerializer.NewBlockchainMarketsSerializer(marketPriceSerializer)
+	pricesBlockchainHandler := pricesHandlers.NewBlockchainHandler(pricesService, blockchainMarketsSerializer)
+	blockchainPriceSerializer := &pricesSerializer.BlockchainPriceSerializer{}
+	pricesHandler := pricesHandlers.NewHandler(pricesService, blockchainPriceSerializer)
 
 	//	Init miners handlers
 	minerSerializer := &minersSerializer.MinerSerializer{}
@@ -91,6 +94,7 @@ func CreateHandler(
 	return apiServerHandlers.NewServerHandler(
 		blockchainsHandler,
 		poolsBlockchainHandler,
+		poolsHandler,
 		pricesBlockchainHandler,
 		pricesHandler,
 		minersBlockchainHandler,

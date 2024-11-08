@@ -21,6 +21,7 @@ import (
 type ServerHandler struct {
 	blockchainsHandler       *blockchainsHandlers.Handler
 	poolsBlockchainHandler   *poolsHandlers.BlockchainHandler
+	poolsHandler             *poolsHandlers.Handler
 	pricesBlockchainHandler  *pricesHandlers.BlockchainHandler
 	pricesHandler            *pricesHandlers.Handler
 	minersBlockchainHandler  *minersHandlers.BlockchainHandler
@@ -44,6 +45,10 @@ func (h *ServerHandler) getBlockchain(coin string) (*blockchains.Blockchain, *ap
 	}
 
 	return blockchain, nil
+}
+
+func (h *ServerHandler) GetPoolsStats(ctx context.Context) (apiModels.GetPoolsStatsRes, error) {
+	return h.poolsHandler.GetStats(ctx), nil
 }
 
 func (h *ServerHandler) GetBlockchainPool(ctx context.Context, params apiModels.GetBlockchainPoolParams) (apiModels.GetBlockchainPoolRes, error) {
@@ -82,8 +87,8 @@ func (h *ServerHandler) GetBlockchainPoolSlaves(ctx context.Context, params apiM
 	return h.poolsBlockchainHandler.GetPoolSlaves(ctx, blockchain), nil
 }
 
-func (h *ServerHandler) GetBlockchainCoinPrice(ctx context.Context, params apiModels.GetBlockchainCoinPriceParams) (apiModels.GetBlockchainCoinPriceRes, error) {
-	return h.pricesBlockchainHandler.GetPrice(ctx, params.Blockchain), nil
+func (h *ServerHandler) GetBlockchainMarkets(ctx context.Context, params apiModels.GetBlockchainMarketsParams) (apiModels.GetBlockchainMarketsRes, error) {
+	return h.pricesBlockchainHandler.GetMarkets(ctx, params.Blockchain), nil
 }
 
 func (h *ServerHandler) GetPrices(ctx context.Context) (apiModels.GetPricesRes, error) {
@@ -231,6 +236,7 @@ func (h *ServerHandler) GetBlockchainMinerWorkerSharesChart(ctx context.Context,
 func NewServerHandler(
 	blockchainsHandler *blockchainsHandlers.Handler,
 	poolsBlockchainHandler *poolsHandlers.BlockchainHandler,
+	poolsHandler *poolsHandlers.Handler,
 	pricesBlockchainHandler *pricesHandlers.BlockchainHandler,
 	pricesHandler *pricesHandlers.Handler,
 	minersBlockchainHandler *minersHandlers.BlockchainHandler,
@@ -242,6 +248,7 @@ func NewServerHandler(
 	return &ServerHandler{
 		blockchainsHandler:       blockchainsHandler,
 		poolsBlockchainHandler:   poolsBlockchainHandler,
+		poolsHandler:             poolsHandler,
 		pricesBlockchainHandler:  pricesBlockchainHandler,
 		pricesHandler:            pricesHandler,
 		minersBlockchainHandler:  minersBlockchainHandler,

@@ -28,7 +28,7 @@ func (s *BlockchainService) GetMiners(
 		},
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) miners: %w", blockchain.GetInfo().Coin, err)
+		return nil, fmt.Errorf("failed to get miners (blockchain: %s), error: %w", blockchain.GetInfo().Blockchain, err)
 	}
 
 	return minersList, nil
@@ -46,7 +46,7 @@ func (s *BlockchainService) GetMiner(ctx context.Context, blockchain *blockchain
 		},
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) miner (address: %s), error: %w", blockchain.GetInfo().Coin, miner, err)
+		return nil, fmt.Errorf("failed to get miner (blockchain: %s, address: %s), error: %w", blockchain.GetInfo().Blockchain, miner, err)
 	} else if len(minersList.Miners) == 0 {
 		return nil, nil
 	}
@@ -60,7 +60,7 @@ func (s *BlockchainService) GetMinerWorkers(ctx context.Context, blockchain *blo
 		Addresses: []string{miner},
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) miner (address: %s) workers: %w", blockchain.GetInfo().Coin, miner, err)
+		return nil, fmt.Errorf("failed to get miner (blockchain: %s, address: %s) workers: %w", blockchain.GetInfo().Blockchain, miner, err)
 	}
 
 	minerWorkers, ok := minersWorkersMap.Workers[miner]

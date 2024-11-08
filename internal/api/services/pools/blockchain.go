@@ -107,7 +107,7 @@ func (s *BlockchainService) GetPool(ctx context.Context, blockchain *blockchains
 	for i := 0; i < 3; i++ {
 		select {
 		case err := <-errCh:
-			return nil, fmt.Errorf("failed to get pool (blockchain: %s) data: %w", blockchain.GetInfo().Coin, err)
+			return nil, fmt.Errorf("failed to get pool (blockchain: %s) data: %w", blockchain.GetInfo().Blockchain, err)
 		case poolInfo := <-poolInfoCh:
 			pool.Info = poolInfo
 		case poolStats := <-poolStatsCh:
@@ -124,7 +124,7 @@ func (s *BlockchainService) GetPoolInfo(ctx context.Context, blockchain *blockch
 	client := poolProto.NewPoolServiceClient(blockchain.GetConnection())
 	poolInfo, err := client.GetPoolInfo(ctx, &emptypb.Empty{})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get pool (blockchain: %s) info: %w", blockchain.GetInfo().Coin, err)
+		return nil, fmt.Errorf("failed to get pool (blockchain: %s) info: %w", blockchain.GetInfo().Blockchain, err)
 	}
 
 	return poolInfo, nil
@@ -134,7 +134,7 @@ func (s *BlockchainService) GetPoolStats(ctx context.Context, blockchain *blockc
 	client := poolProto.NewPoolServiceClient(blockchain.GetConnection())
 	poolStats, err := client.GetPoolStats(ctx, &emptypb.Empty{})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get pool (blockchain: %s) stats: %w", blockchain.GetInfo().Coin, err)
+		return nil, fmt.Errorf("failed to get pool (blockchain: %s) stats: %w", blockchain.GetInfo().Blockchain, err)
 	}
 
 	return poolStats, nil
@@ -144,7 +144,7 @@ func (s *BlockchainService) GetPoolSlaves(ctx context.Context, blockchain *block
 	client := poolProto.NewPoolServiceClient(blockchain.GetConnection())
 	poolSlaves, err := client.GetPoolSlaves(ctx, &emptypb.Empty{})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get pool (blockchain: %s) slaves: %w", blockchain.GetInfo().Coin, err)
+		return nil, fmt.Errorf("failed to get pool (blockchain: %s) slaves: %w", blockchain.GetInfo().Blockchain, err)
 	}
 
 	return poolSlaves.Slaves, nil

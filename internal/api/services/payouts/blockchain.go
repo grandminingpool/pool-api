@@ -29,7 +29,7 @@ func (s *BlockchainService) GetPayouts(
 		},
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) payouts: %w", blockchain.GetInfo().Coin, err)
+		return nil, fmt.Errorf("failed to get payouts (blockchain: %s), error: %w", blockchain.GetInfo().Blockchain, err)
 	}
 
 	return payoutsList, nil
@@ -41,7 +41,7 @@ func (s *BlockchainService) GetMinerBalance(ctx context.Context, blockchain *blo
 		Addresses: []string{miner},
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) miner (address: %s) balance: %w", blockchain.GetInfo().Coin, miner, err)
+		return nil, fmt.Errorf("failed to get miner (blockchain: %s, address: %s) balance: %w", blockchain.GetInfo().Blockchain, miner, err)
 	}
 
 	minerBalance, ok := balancesMap.Balances[miner]

@@ -5,8 +5,8 @@ type GetBlockchainBlocksRes interface {
 	getBlockchainBlocksRes()
 }
 
-type GetBlockchainCoinPriceRes interface {
-	getBlockchainCoinPriceRes()
+type GetBlockchainMarketsRes interface {
+	getBlockchainMarketsRes()
 }
 
 type GetBlockchainMinerBalanceRes interface {
@@ -75,6 +75,10 @@ type GetBlockchainRoundsChartRes interface {
 
 type GetBlockchainSoloBlocksRes interface {
 	getBlockchainSoloBlocksRes()
+}
+
+type GetPoolsStatsRes interface {
+	getPoolsStatsRes()
 }
 
 type GetPricesRes interface {

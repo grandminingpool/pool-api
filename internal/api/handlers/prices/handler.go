@@ -10,8 +10,8 @@ import (
 )
 
 type Handler struct {
-	pricesService       *pricesServices.PricesService
-	coinPriceSerializer serializers.BaseSerializer[*pricesServices.CoinPriceDB, *apiModels.CoinPrice]
+	pricesService             *pricesServices.PricesService
+	blockchainPriceSerializer serializers.BaseSerializer[*pricesServices.BlockchainPriceDB, *apiModels.BlockchainPrice]
 }
 
 func (h *Handler) Get(ctx context.Context) apiModels.GetPricesRes {
@@ -20,22 +20,22 @@ func (h *Handler) Get(ctx context.Context) apiModels.GetPricesRes {
 		return pricesErrors.CreateGetPricesError(err)
 	}
 
-	pricesResponse := make([]apiModels.CoinPrice, 0, len(prices))
+	pricesResponse := make([]apiModels.BlockchainPrice, 0, len(prices))
 	for _, p := range prices {
-		pricesResponse = append(pricesResponse, *h.coinPriceSerializer.Serialize(ctx, &p))
+		pricesResponse = append(pricesResponse, *h.blockchainPriceSerializer.Serialize(ctx, &p))
 	}
 
-	return &apiModels.CoinPricesList{
+	return &apiModels.PricesList{
 		Prices: pricesResponse,
 	}
 }
 
 func NewHandler(
 	pricesService *pricesServices.PricesService,
-	coinPriceSerializer serializers.BaseSerializer[*pricesServices.CoinPriceDB, *apiModels.CoinPrice],
+	blockchainPriceSerializer serializers.BaseSerializer[*pricesServices.BlockchainPriceDB, *apiModels.BlockchainPrice],
 ) *Handler {
 	return &Handler{
-		pricesService:       pricesService,
-		coinPriceSerializer: coinPriceSerializer,
+		pricesService:             pricesService,
+		blockchainPriceSerializer: blockchainPriceSerializer,
 	}
 }

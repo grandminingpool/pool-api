@@ -52,9 +52,9 @@ func encodeGetBlockchainBlocksResponse(response GetBlockchainBlocksRes, w http.R
 	}
 }
 
-func encodeGetBlockchainCoinPriceResponse(response GetBlockchainCoinPriceRes, w http.ResponseWriter) error {
+func encodeGetBlockchainMarketsResponse(response GetBlockchainMarketsRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
-	case *BlockchainCoinPrice:
+	case *BlockchainMarkets:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(200)
 
@@ -66,7 +66,7 @@ func encodeGetBlockchainCoinPriceResponse(response GetBlockchainCoinPriceRes, w 
 
 		return nil
 
-	case *GetBlockchainCoinPriceNotFound:
+	case *GetBlockchainMarketsNotFound:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(404)
 
@@ -78,7 +78,7 @@ func encodeGetBlockchainCoinPriceResponse(response GetBlockchainCoinPriceRes, w 
 
 		return nil
 
-	case *GetBlockchainCoinPriceInternalServerError:
+	case *GetBlockchainMarketsInternalServerError:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 
@@ -887,9 +887,40 @@ func encodeGetBlockchainsResponse(response *BlockchainsList, w http.ResponseWrit
 	return nil
 }
 
+func encodeGetPoolsStatsResponse(response GetPoolsStatsRes, w http.ResponseWriter) error {
+	switch response := response.(type) {
+	case *PoolsStatsList:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(200)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	case *GetPoolsStatsInternalServerError:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(500)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	default:
+		return errors.Errorf("unexpected response type: %T", response)
+	}
+}
+
 func encodeGetPricesResponse(response GetPricesRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
-	case *CoinPricesList:
+	case *PricesList:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(200)
 

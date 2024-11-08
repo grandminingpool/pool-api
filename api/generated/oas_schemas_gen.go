@@ -6,93 +6,93 @@ import (
 	"github.com/go-faster/errors"
 )
 
-// Ref: #/components/schemas/Blockchain
-type Blockchain struct {
-	Coin       string `json:"coin"`
+// Ref: #/components/schemas/BlockchainInfo
+type BlockchainInfo struct {
+	Blockchain string `json:"blockchain"`
 	Name       string `json:"name"`
 	Ticker     string `json:"ticker"`
 	AtomicUnit uint16 `json:"atomic_unit"`
 }
 
-// GetCoin returns the value of Coin.
-func (s *Blockchain) GetCoin() string {
-	return s.Coin
+// GetBlockchain returns the value of Blockchain.
+func (s *BlockchainInfo) GetBlockchain() string {
+	return s.Blockchain
 }
 
 // GetName returns the value of Name.
-func (s *Blockchain) GetName() string {
+func (s *BlockchainInfo) GetName() string {
 	return s.Name
 }
 
 // GetTicker returns the value of Ticker.
-func (s *Blockchain) GetTicker() string {
+func (s *BlockchainInfo) GetTicker() string {
 	return s.Ticker
 }
 
 // GetAtomicUnit returns the value of AtomicUnit.
-func (s *Blockchain) GetAtomicUnit() uint16 {
+func (s *BlockchainInfo) GetAtomicUnit() uint16 {
 	return s.AtomicUnit
 }
 
-// SetCoin sets the value of Coin.
-func (s *Blockchain) SetCoin(val string) {
-	s.Coin = val
+// SetBlockchain sets the value of Blockchain.
+func (s *BlockchainInfo) SetBlockchain(val string) {
+	s.Blockchain = val
 }
 
 // SetName sets the value of Name.
-func (s *Blockchain) SetName(val string) {
+func (s *BlockchainInfo) SetName(val string) {
 	s.Name = val
 }
 
 // SetTicker sets the value of Ticker.
-func (s *Blockchain) SetTicker(val string) {
+func (s *BlockchainInfo) SetTicker(val string) {
 	s.Ticker = val
 }
 
 // SetAtomicUnit sets the value of AtomicUnit.
-func (s *Blockchain) SetAtomicUnit(val uint16) {
+func (s *BlockchainInfo) SetAtomicUnit(val uint16) {
 	s.AtomicUnit = val
 }
 
 // Merged schema.
-// Ref: #/components/schemas/BlockchainCoinPrice
-type BlockchainCoinPrice struct {
+// Ref: #/components/schemas/BlockchainMarkets
+type BlockchainMarkets struct {
 	Price                    float64       `json:"price"`
 	PriceChange24hPercentage float64       `json:"price_change_24h_percentage"`
 	Markets                  []MarketPrice `json:"markets"`
 }
 
 // GetPrice returns the value of Price.
-func (s *BlockchainCoinPrice) GetPrice() float64 {
+func (s *BlockchainMarkets) GetPrice() float64 {
 	return s.Price
 }
 
 // GetPriceChange24hPercentage returns the value of PriceChange24hPercentage.
-func (s *BlockchainCoinPrice) GetPriceChange24hPercentage() float64 {
+func (s *BlockchainMarkets) GetPriceChange24hPercentage() float64 {
 	return s.PriceChange24hPercentage
 }
 
 // GetMarkets returns the value of Markets.
-func (s *BlockchainCoinPrice) GetMarkets() []MarketPrice {
+func (s *BlockchainMarkets) GetMarkets() []MarketPrice {
 	return s.Markets
 }
 
 // SetPrice sets the value of Price.
-func (s *BlockchainCoinPrice) SetPrice(val float64) {
+func (s *BlockchainMarkets) SetPrice(val float64) {
 	s.Price = val
 }
 
 // SetPriceChange24hPercentage sets the value of PriceChange24hPercentage.
-func (s *BlockchainCoinPrice) SetPriceChange24hPercentage(val float64) {
+func (s *BlockchainMarkets) SetPriceChange24hPercentage(val float64) {
 	s.PriceChange24hPercentage = val
 }
 
 // SetMarkets sets the value of Markets.
-func (s *BlockchainCoinPrice) SetMarkets(val []MarketPrice) {
+func (s *BlockchainMarkets) SetMarkets(val []MarketPrice) {
 	s.Markets = val
 }
 
-func (*BlockchainCoinPrice) getBlockchainCoinPriceRes() {}
+func (*BlockchainMarkets) getBlockchainMarketsRes() {}
 
 // Merged schema.
 type BlockchainNotFound struct {
@@ -140,18 +140,82 @@ func (*BlockchainNotFound) getBlockchainPoolStatsRes()                 {}
 func (*BlockchainNotFound) getBlockchainRoundsChartRes()               {}
 func (*BlockchainNotFound) getBlockchainSoloBlocksRes()                {}
 
+// Ref: #/components/schemas/BlockchainPoolStats
+type BlockchainPoolStats struct {
+	Blockchain string    `json:"blockchain"`
+	Stats      PoolStats `json:"stats"`
+}
+
+// GetBlockchain returns the value of Blockchain.
+func (s *BlockchainPoolStats) GetBlockchain() string {
+	return s.Blockchain
+}
+
+// GetStats returns the value of Stats.
+func (s *BlockchainPoolStats) GetStats() PoolStats {
+	return s.Stats
+}
+
+// SetBlockchain sets the value of Blockchain.
+func (s *BlockchainPoolStats) SetBlockchain(val string) {
+	s.Blockchain = val
+}
+
+// SetStats sets the value of Stats.
+func (s *BlockchainPoolStats) SetStats(val PoolStats) {
+	s.Stats = val
+}
+
+// Merged schema.
+// Ref: #/components/schemas/BlockchainPrice
+type BlockchainPrice struct {
+	Price                    float64 `json:"price"`
+	PriceChange24hPercentage float64 `json:"price_change_24h_percentage"`
+	Blockchain               string  `json:"blockchain"`
+}
+
+// GetPrice returns the value of Price.
+func (s *BlockchainPrice) GetPrice() float64 {
+	return s.Price
+}
+
+// GetPriceChange24hPercentage returns the value of PriceChange24hPercentage.
+func (s *BlockchainPrice) GetPriceChange24hPercentage() float64 {
+	return s.PriceChange24hPercentage
+}
+
+// GetBlockchain returns the value of Blockchain.
+func (s *BlockchainPrice) GetBlockchain() string {
+	return s.Blockchain
+}
+
+// SetPrice sets the value of Price.
+func (s *BlockchainPrice) SetPrice(val float64) {
+	s.Price = val
+}
+
+// SetPriceChange24hPercentage sets the value of PriceChange24hPercentage.
+func (s *BlockchainPrice) SetPriceChange24hPercentage(val float64) {
+	s.PriceChange24hPercentage = val
+}
+
+// SetBlockchain sets the value of Blockchain.
+func (s *BlockchainPrice) SetBlockchain(val string) {
+	s.Blockchain = val
+}
+
 // Ref: #/components/schemas/BlockchainsList
 type BlockchainsList struct {
-	Blockchains []Blockchain `json:"blockchains"`
+	Blockchains []BlockchainInfo `json:"blockchains"`
 }
 
 // GetBlockchains returns the value of Blockchains.
-func (s *BlockchainsList) GetBlockchains() []Blockchain {
+func (s *BlockchainsList) GetBlockchains() []BlockchainInfo {
 	return s.Blockchains
 }
 
 // SetBlockchains sets the value of Blockchains.
-func (s *BlockchainsList) SetBlockchains(val []Blockchain) {
+func (s *BlockchainsList) SetBlockchains(val []BlockchainInfo) {
 	s.Blockchains = val
 }
 
@@ -212,61 +276,6 @@ func (s *ChartPeriod) UnmarshalText(data []byte) error {
 }
 
 // Merged schema.
-// Ref: #/components/schemas/CoinPrice
-type CoinPrice struct {
-	Price                    float64 `json:"price"`
-	PriceChange24hPercentage float64 `json:"price_change_24h_percentage"`
-	Coin                     string  `json:"coin"`
-}
-
-// GetPrice returns the value of Price.
-func (s *CoinPrice) GetPrice() float64 {
-	return s.Price
-}
-
-// GetPriceChange24hPercentage returns the value of PriceChange24hPercentage.
-func (s *CoinPrice) GetPriceChange24hPercentage() float64 {
-	return s.PriceChange24hPercentage
-}
-
-// GetCoin returns the value of Coin.
-func (s *CoinPrice) GetCoin() string {
-	return s.Coin
-}
-
-// SetPrice sets the value of Price.
-func (s *CoinPrice) SetPrice(val float64) {
-	s.Price = val
-}
-
-// SetPriceChange24hPercentage sets the value of PriceChange24hPercentage.
-func (s *CoinPrice) SetPriceChange24hPercentage(val float64) {
-	s.PriceChange24hPercentage = val
-}
-
-// SetCoin sets the value of Coin.
-func (s *CoinPrice) SetCoin(val string) {
-	s.Coin = val
-}
-
-// Ref: #/components/schemas/CoinPricesList
-type CoinPricesList struct {
-	Prices []CoinPrice `json:"prices"`
-}
-
-// GetPrices returns the value of Prices.
-func (s *CoinPricesList) GetPrices() []CoinPrice {
-	return s.Prices
-}
-
-// SetPrices sets the value of Prices.
-func (s *CoinPricesList) SetPrices(val []CoinPrice) {
-	s.Prices = val
-}
-
-func (*CoinPricesList) getPricesRes() {}
-
-// Merged schema.
 type GetBlockchainBlocksInternalServerError struct {
 	// Merged property.
 	Code    string `json:"code"`
@@ -296,62 +305,62 @@ func (s *GetBlockchainBlocksInternalServerError) SetMessage(val string) {
 func (*GetBlockchainBlocksInternalServerError) getBlockchainBlocksRes() {}
 
 // Merged schema.
-type GetBlockchainCoinPriceInternalServerError struct {
+type GetBlockchainMarketsInternalServerError struct {
 	// Merged property.
 	Code    string `json:"code"`
 	Message string `json:"message"`
 }
 
 // GetCode returns the value of Code.
-func (s *GetBlockchainCoinPriceInternalServerError) GetCode() string {
+func (s *GetBlockchainMarketsInternalServerError) GetCode() string {
 	return s.Code
 }
 
 // GetMessage returns the value of Message.
-func (s *GetBlockchainCoinPriceInternalServerError) GetMessage() string {
+func (s *GetBlockchainMarketsInternalServerError) GetMessage() string {
 	return s.Message
 }
 
 // SetCode sets the value of Code.
-func (s *GetBlockchainCoinPriceInternalServerError) SetCode(val string) {
+func (s *GetBlockchainMarketsInternalServerError) SetCode(val string) {
 	s.Code = val
 }
 
 // SetMessage sets the value of Message.
-func (s *GetBlockchainCoinPriceInternalServerError) SetMessage(val string) {
+func (s *GetBlockchainMarketsInternalServerError) SetMessage(val string) {
 	s.Message = val
 }
 
-func (*GetBlockchainCoinPriceInternalServerError) getBlockchainCoinPriceRes() {}
+func (*GetBlockchainMarketsInternalServerError) getBlockchainMarketsRes() {}
 
 // Merged schema.
-type GetBlockchainCoinPriceNotFound struct {
+type GetBlockchainMarketsNotFound struct {
 	// Merged property.
 	Code    string `json:"code"`
 	Message string `json:"message"`
 }
 
 // GetCode returns the value of Code.
-func (s *GetBlockchainCoinPriceNotFound) GetCode() string {
+func (s *GetBlockchainMarketsNotFound) GetCode() string {
 	return s.Code
 }
 
 // GetMessage returns the value of Message.
-func (s *GetBlockchainCoinPriceNotFound) GetMessage() string {
+func (s *GetBlockchainMarketsNotFound) GetMessage() string {
 	return s.Message
 }
 
 // SetCode sets the value of Code.
-func (s *GetBlockchainCoinPriceNotFound) SetCode(val string) {
+func (s *GetBlockchainMarketsNotFound) SetCode(val string) {
 	s.Code = val
 }
 
 // SetMessage sets the value of Message.
-func (s *GetBlockchainCoinPriceNotFound) SetMessage(val string) {
+func (s *GetBlockchainMarketsNotFound) SetMessage(val string) {
 	s.Message = val
 }
 
-func (*GetBlockchainCoinPriceNotFound) getBlockchainCoinPriceRes() {}
+func (*GetBlockchainMarketsNotFound) getBlockchainMarketsRes() {}
 
 // Merged schema.
 type GetBlockchainMinerBalanceInternalServerError struct {
@@ -964,6 +973,35 @@ func (s *GetBlockchainSoloBlocksMethodNotAllowed) SetMessage(val string) {
 }
 
 func (*GetBlockchainSoloBlocksMethodNotAllowed) getBlockchainSoloBlocksRes() {}
+
+// Merged schema.
+type GetPoolsStatsInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetPoolsStatsInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetPoolsStatsInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetPoolsStatsInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetPoolsStatsInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetPoolsStatsInternalServerError) getPoolsStatsRes() {}
 
 // Merged schema.
 type GetPricesInternalServerError struct {
@@ -2499,6 +2537,40 @@ func (s *PoolStatsPoints) SetPoints(val []PoolStatsPoint) {
 }
 
 func (*PoolStatsPoints) getBlockchainPoolStatsChartRes() {}
+
+// Ref: #/components/schemas/PoolsStatsList
+type PoolsStatsList struct {
+	Stats []BlockchainPoolStats `json:"stats"`
+}
+
+// GetStats returns the value of Stats.
+func (s *PoolsStatsList) GetStats() []BlockchainPoolStats {
+	return s.Stats
+}
+
+// SetStats sets the value of Stats.
+func (s *PoolsStatsList) SetStats(val []BlockchainPoolStats) {
+	s.Stats = val
+}
+
+func (*PoolsStatsList) getPoolsStatsRes() {}
+
+// Ref: #/components/schemas/PricesList
+type PricesList struct {
+	Prices []BlockchainPrice `json:"prices"`
+}
+
+// GetPrices returns the value of Prices.
+func (s *PricesList) GetPrices() []BlockchainPrice {
+	return s.Prices
+}
+
+// SetPrices sets the value of Prices.
+func (s *PricesList) SetPrices(val []BlockchainPrice) {
+	s.Prices = val
+}
+
+func (*PricesList) getPricesRes() {}
 
 // Ref: #/components/schemas/RoundsPoint
 type RoundsPoint struct {

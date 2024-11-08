@@ -40,7 +40,7 @@ func (s *BlockchainService) GetPoolStatsChartPoints(
 		Solo:   solo.Value,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) pool stats chart: %w", blockchain.GetInfo().Coin, err)
+		return nil, fmt.Errorf("failed to get pool stats chart (blockchain: %s), error: %w", blockchain.GetInfo().Blockchain, err)
 	}
 
 	return poolStatsPoints.Points, nil
@@ -58,7 +58,7 @@ func (s *BlockchainService) GetPoolDifficultiesChartPoints(
 		Solo:   solo.Value,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) pool difficulties chart: %w", blockchain.GetInfo().Coin, err)
+		return nil, fmt.Errorf("failed to get pool difficulties chart (blockchain: %s), error: %w", blockchain.GetInfo().Blockchain, err)
 	}
 
 	return poolDifficultiesPoints.Points, nil
@@ -74,7 +74,7 @@ func (s *BlockchainService) GetRoundsChartPoints(
 		Period: *s.getChartPeriodProto(period),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) rounds chart: %w", blockchain.GetInfo().Coin, err)
+		return nil, fmt.Errorf("failed to get rounds chart (blockchain: %s), error: %w", blockchain.GetInfo().Blockchain, err)
 	}
 
 	return roundsPoints.Points, nil
@@ -94,7 +94,7 @@ func (s *BlockchainService) GetMinerHashratesChartPoints(
 		Period: *s.getChartPeriodProto(period),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) miner (address: %s) hashrates chart: %w", blockchain.GetInfo().Coin, miner, err)
+		return nil, fmt.Errorf("failed to get miner (address: %s) hashrates chart (blockchain: %s), error: %w", miner, blockchain.GetInfo().Blockchain, err)
 	}
 
 	return minerHashratesPoints.Points, nil
@@ -113,7 +113,7 @@ func (s *BlockchainService) GetMinerWorkerHashratesChartPoints(
 		Period: *s.getChartPeriodProto(period),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) miner (address: %s, worker: %s) hashrates chart: %w", blockchain.GetInfo().Coin, miner, worker, err)
+		return nil, fmt.Errorf("failed to get miner (address: %s, worker: %s) hashrates chart (blockchain: %s), error: %w", miner, worker, blockchain.GetInfo().Blockchain, err)
 	}
 
 	return minerWorkerHashratesPoints.Points, nil
@@ -133,7 +133,7 @@ func (s *BlockchainService) GetMinerSharesChartPoints(
 		Period: *s.getChartPeriodProto(period),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) miner (address: %s) shares chart: %w", blockchain.GetInfo().Coin, miner, err)
+		return nil, fmt.Errorf("failed to get miner (address: %s) shares chart (blockchain: %s), error: %w", miner, blockchain.GetInfo().Blockchain, err)
 	}
 
 	return minerSharesPoints.Points, nil
@@ -152,7 +152,7 @@ func (s *BlockchainService) GetMinerWorkerSharesChartPoints(
 		Period: *s.getChartPeriodProto(period),
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) miner (address: %s, worker: %s) shares chart: %w", blockchain.GetInfo().Coin, miner, worker, err)
+		return nil, fmt.Errorf("failed to get miner (address: %s, worker: %s) shares chart (blockchain: %s), error: %w", miner, worker, blockchain.GetInfo().Blockchain, err)
 	}
 
 	return minerWorkerSharesPoints.Points, nil

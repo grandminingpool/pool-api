@@ -34,7 +34,7 @@ func (s *BlockchainService) GetBlocks(
 		},
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) blocks: %w", blockchain.GetInfo().Coin, err)
+		return nil, fmt.Errorf("failed to get blocks (blockchain: %s), error: %w", blockchain.GetInfo().Blockchain, err)
 	}
 
 	return blocksList, nil
@@ -61,7 +61,7 @@ func (s *BlockchainService) GetSoloBlocks(
 		case codes.Unimplemented:
 			return nil, nil
 		default:
-			return nil, fmt.Errorf("failed to get blockchain (coin: %s) solo blocks: %w", blockchain.GetInfo().Coin, err)
+			return nil, fmt.Errorf("failed to get solo blocks (blockchain: %s), error: %w", blockchain.GetInfo().Blockchain, err)
 		}
 	}
 

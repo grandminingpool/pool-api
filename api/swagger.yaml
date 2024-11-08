@@ -21,7 +21,7 @@ paths:
     get:
       tags:
         - prices
-      summary: Get pool blockchain coin price list
+      summary: Get blockchains prices list
       operationId: getPrices
       responses:
         '200':
@@ -29,7 +29,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CoinPricesList'
+                $ref: '#/components/schemas/PricesList'
         '500':
           description: 'Get prices error'
           content:
@@ -45,19 +45,19 @@ paths:
     get:
       tags:
         - prices
-      summary: Get blockchain coin price and markets
-      operationId: getBlockchainCoinPrice
+      summary: Get blockchain markets
+      operationId: getBlockchainMarkets
       parameters:
         - $ref: "#/components/parameters/Blockchain"
       responses:
         '200':
-          description: Blockchain coin price response
+          description: Blockchain markets response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BlockchainCoinPrice'
+                $ref: '#/components/schemas/BlockchainMarkets'
         '404':
-          description: 'Blockchain coin price not found error'
+          description: 'Blockchain markets not found error'
           content:
             application/json:
               schema:
@@ -66,9 +66,9 @@ paths:
                 - type: object
                   properties:
                     code:
-                      example: 'blockchain_coin_price_not_found'
+                      example: 'blockchain_markets_not_found'
         '500':
-          description: 'Get blockchain coin price error'
+          description: 'Get blockchain markets error'
           content:
             application/json:
               schema:
@@ -77,7 +77,31 @@ paths:
                 - type: object
                   properties:
                     code:
-                      example: 'get_blockchain_coin_price_error'
+                      example: 'get_blockchain_markets_error'
+  /pools/stats:
+    get:
+      tags:
+        - pools
+      summary: Get pool statistics for all blockchains
+      operationId: getPoolsStats
+      responses:
+        '200':
+          description: 'Pool stats list response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolsStatsList'
+        '500':
+          description: 'Get pools stats error'
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    code:
+                      example: 'get_pools_stats_error'
   /pools/{blockchain}:
     get:
       tags:
@@ -911,15 +935,15 @@ components:
         total:
           format: uint32
           type: integer
-    Blockchain:
+    BlockchainInfo:
       type: object
       required:
-        - coin
+        - blockchain
         - name
         - ticker
         - atomic_unit
       properties:
-        coin:
+        blockchain:
           type: string
         name:
           type: string
@@ -936,7 +960,7 @@ components:
         blockchains:
           type: array
           items:
-            $ref: '#/components/schemas/Blockchain'
+            $ref: '#/components/schemas/BlockchainInfo'
     ChartPeriod:
       type: string
       enum:
@@ -965,16 +989,16 @@ components:
           properties:
             ticker:
               type: string
-    CoinPrice:
+    BlockchainPrice:
       allOf:
         - $ref: '#/components/schemas/Price'
         - type: object
           required:
-            - coin
+            - blockchain
           properties:
-            coin:
+            blockchain:
               type: string
-    CoinPricesList:
+    PricesList:
       type: object
       required:
         - prices
@@ -982,8 +1006,8 @@ components:
         prices:
           type: array
           items:
-            $ref: '#/components/schemas/CoinPrice'
-    BlockchainCoinPrice:
+            $ref: '#/components/schemas/BlockchainPrice'
+    BlockchainMarkets:
       allOf:
         - $ref: '#/components/schemas/Price'
         - type: object
@@ -1130,6 +1154,25 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PoolSlave'
+    BlockchainPoolStats:
+      type: object
+      required:
+        - blockchain
+        - stats
+      properties:
+        blockchain:
+          type: string
+        stats:
+          $ref: '#/components/schemas/PoolStats'
+    PoolsStatsList:
+      type: object
+      required:
+        - stats
+      properties:
+        stats:
+          type: array
+          items:
+            $ref: '#/components/schemas/BlockchainPoolStats'
     Miner:
       type: object
       required:

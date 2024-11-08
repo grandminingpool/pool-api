@@ -81,6 +81,7 @@ func main() {
 
 	//	Init api server
 	poolsBlockchainService := &poolsServices.BlockchainService{}
+	poolsService := poolsServices.NewPoolsService(blockchainsService)
 	pricesService := pricesServices.NewPricesService(pgConn)
 	minersBlockchainService := &minersServices.BlockchainService{}
 	payoutsBlockchainService := &payoutsServices.BlockchainService{}
@@ -89,6 +90,7 @@ func main() {
 	apiHandlers := apiServer.CreateHandler(
 		blockchainsService,
 		poolsBlockchainService,
+		poolsService,
 		pricesService,
 		minersBlockchainService,
 		payoutsBlockchainService,

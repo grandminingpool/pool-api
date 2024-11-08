@@ -546,13 +546,13 @@ func decodeGetBlockchainBlocksParams(args [1]string, argsEscaped bool, r *http.R
 	return params, nil
 }
 
-// GetBlockchainCoinPriceParams is parameters of getBlockchainCoinPrice operation.
-type GetBlockchainCoinPriceParams struct {
+// GetBlockchainMarketsParams is parameters of getBlockchainMarkets operation.
+type GetBlockchainMarketsParams struct {
 	// Pool blockchain.
 	Blockchain string
 }
 
-func unpackGetBlockchainCoinPriceParams(packed middleware.Parameters) (params GetBlockchainCoinPriceParams) {
+func unpackGetBlockchainMarketsParams(packed middleware.Parameters) (params GetBlockchainMarketsParams) {
 	{
 		key := middleware.ParameterKey{
 			Name: "blockchain",
@@ -563,7 +563,7 @@ func unpackGetBlockchainCoinPriceParams(packed middleware.Parameters) (params Ge
 	return params
 }
 
-func decodeGetBlockchainCoinPriceParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainCoinPriceParams, _ error) {
+func decodeGetBlockchainMarketsParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainMarketsParams, _ error) {
 	// Decode path: blockchain.
 	if err := func() error {
 		param := args[0]

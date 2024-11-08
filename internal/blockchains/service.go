@@ -19,7 +19,7 @@ type PoolAPIDB struct {
 }
 
 type BlockchainDB struct {
-	Coin       string `db:"coin"`
+	Blockchain string `db:"blockchain"`
 	Name       string `db:"name"`
 	Ticker     string `db:"ticker"`
 	AtomicUnit uint16 `db:"atomic_unit"`
@@ -27,8 +27,7 @@ type BlockchainDB struct {
 }
 
 type BlockchainInfo struct {
-	ID         int16
-	Coin       string
+	Blockchain string
 	Name       string
 	Ticker     string
 	AtomicUnit uint16
@@ -48,37 +47,44 @@ func (b *Blockchain) GetConnection() *grpc.ClientConn {
 }
 
 type Service struct {
-	pgConn      *sqlx.DB
-	blockchains map[string]Blockchain
-	config      *appConfig.PoolAPIConfig
+	pgConn         *sqlx.DB
+	blockchainsMap map[string]Blockchain
+	blockchains    []BlockchainInfo
+	config         *appConfig.PoolAPIConfig
 }
 
 func (s *Service) getBlockchainsFromDB(ctx context.Context) ([]BlockchainDB, error) {
 	blockchains := []BlockchainDB{}
-	if err := s.pgConn.SelectContext(ctx, &blockchains, "SELECT * FROM blockchains"); err != nil && err != sql.ErrNoRows {
+	if err := s.pgConn.SelectContext(ctx, &blockchains, "SELECT * FROM blockchains ORDER BY row_order"); err != nil && err != sql.ErrNoRows {
 		return nil, fmt.Errorf("failed to query blockchains: %w", err)
 	}
 
 	return blockchains, nil
 }
 
-func (s *Service) GetBlockchainsInfo() []BlockchainInfo {
-	blockchainsInfo := make([]BlockchainInfo, 0, len(s.blockchains))
-
+func (s *Service) GetBlockchains() []Blockchain {
+	blockchains := make([]Blockchain, 0, len(s.blockchains))
 	for _, b := range s.blockchains {
-		blockchainsInfo = append(blockchainsInfo, *b.info)
+		blockchain, ok := s.blockchainsMap[b.Blockchain]
+		if ok {
+			blockchains = append(blockchains, blockchain)
+		}
 	}
 
-	return blockchainsInfo
+	return blockchains
 }
 
-func (s *Service) GetBlockchain(coin string) (*Blockchain, error) {
-	blockchain, ok := s.blockchains[coin]
+func (s *Service) GetBlockchainsInfos() []BlockchainInfo {
+	return s.blockchains
+}
+
+func (s *Service) GetBlockchain(blockchain string) (*Blockchain, error) {
+	b, ok := s.blockchainsMap[blockchain]
 	if !ok {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s), error: not found", coin)
+		return nil, fmt.Errorf("failed to get blockchain: %s, error: not found", blockchain)
 	}
 
-	return &blockchain, nil
+	return &b, nil
 }
 
 func (s *Service) Start(ctx context.Context, certsPath string) error {
@@ -98,35 +104,39 @@ func (s *Service) Start(ctx context.Context, certsPath string) error {
 		if err != nil {
 			s.Close()
 
-			return fmt.Errorf("failed to create blockchain pool api client (coin: %s), error: %w", b.Coin, err)
+			return fmt.Errorf("failed to create blockchain pool api client (blockchain: %s), error: %w", b.Blockchain, err)
 		}
 
-		s.blockchains[b.Coin] = Blockchain{
-			info: &BlockchainInfo{
-				Coin:       b.Coin,
-				Name:       b.Name,
-				Ticker:     b.Ticker,
-				AtomicUnit: b.AtomicUnit,
-			},
+		blockchainInfo := BlockchainInfo{
+			Blockchain: b.Blockchain,
+			Name:       b.Name,
+			Ticker:     b.Ticker,
+			AtomicUnit: b.AtomicUnit,
+		}
+		s.blockchainsMap[b.Blockchain] = Blockchain{
+			info: &blockchainInfo,
 			conn: conn,
 		}
+		s.blockchains = append(s.blockchains, blockchainInfo)
 	}
 
 	return nil
 }
 
 func (s *Service) Close() {
-	for _, b := range s.blockchains {
+	for _, b := range s.blockchainsMap {
 		b.conn.Close()
 	}
 
 	clear(s.blockchains)
+	s.blockchains = nil
 }
 
 func NewService(pgConn *sqlx.DB, config *appConfig.PoolAPIConfig) *Service {
 	return &Service{
-		pgConn:      pgConn,
-		blockchains: make(map[string]Blockchain),
-		config:      config,
+		pgConn:         pgConn,
+		blockchainsMap: make(map[string]Blockchain),
+		blockchains:    []BlockchainInfo{},
+		config:         config,
 	}
 }

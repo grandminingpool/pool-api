@@ -14,12 +14,12 @@ type Handler interface {
 	//
 	// GET /blocks/{blockchain}
 	GetBlockchainBlocks(ctx context.Context, params GetBlockchainBlocksParams) (GetBlockchainBlocksRes, error)
-	// GetBlockchainCoinPrice implements getBlockchainCoinPrice operation.
+	// GetBlockchainMarkets implements getBlockchainMarkets operation.
 	//
-	// Get blockchain coin price and markets.
+	// Get blockchain markets.
 	//
 	// GET /prices/{blockchain}
-	GetBlockchainCoinPrice(ctx context.Context, params GetBlockchainCoinPriceParams) (GetBlockchainCoinPriceRes, error)
+	GetBlockchainMarkets(ctx context.Context, params GetBlockchainMarketsParams) (GetBlockchainMarketsRes, error)
 	// GetBlockchainMiner implements getBlockchainMiner operation.
 	//
 	// Get miner info on blockchain.
@@ -128,9 +128,15 @@ type Handler interface {
 	//
 	// GET /blockchains
 	GetBlockchains(ctx context.Context) (*BlockchainsList, error)
+	// GetPoolsStats implements getPoolsStats operation.
+	//
+	// Get pool statistics for all blockchains.
+	//
+	// GET /pools/stats
+	GetPoolsStats(ctx context.Context) (GetPoolsStatsRes, error)
 	// GetPrices implements getPrices operation.
 	//
-	// Get pool blockchain coin price list.
+	// Get blockchains prices list.
 	//
 	// GET /prices
 	GetPrices(ctx context.Context) (GetPricesRes, error)

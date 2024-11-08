@@ -130,22 +130,22 @@ func (s *Server) handleGetBlockchainBlocksRequest(args [1]string, argsEscaped bo
 	}
 }
 
-// handleGetBlockchainCoinPriceRequest handles getBlockchainCoinPrice operation.
+// handleGetBlockchainMarketsRequest handles getBlockchainMarkets operation.
 //
-// Get blockchain coin price and markets.
+// Get blockchain markets.
 //
 // GET /prices/{blockchain}
-func (s *Server) handleGetBlockchainCoinPriceRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+func (s *Server) handleGetBlockchainMarketsRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainCoinPrice",
-			ID:   "getBlockchainCoinPrice",
+			Name: "GetBlockchainMarkets",
+			ID:   "getBlockchainMarkets",
 		}
 	)
-	params, err := decodeGetBlockchainCoinPriceParams(args, argsEscaped, r)
+	params, err := decodeGetBlockchainMarketsParams(args, argsEscaped, r)
 	if err != nil {
 		err = &ogenerrors.DecodeParamsError{
 			OperationContext: opErrContext,
@@ -156,13 +156,13 @@ func (s *Server) handleGetBlockchainCoinPriceRequest(args [1]string, argsEscaped
 		return
 	}
 
-	var response GetBlockchainCoinPriceRes
+	var response GetBlockchainMarketsRes
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainCoinPrice",
-			OperationSummary: "Get blockchain coin price and markets",
-			OperationID:      "getBlockchainCoinPrice",
+			OperationName:    "GetBlockchainMarkets",
+			OperationSummary: "Get blockchain markets",
+			OperationID:      "getBlockchainMarkets",
 			Body:             nil,
 			Params: middleware.Parameters{
 				{
@@ -175,8 +175,8 @@ func (s *Server) handleGetBlockchainCoinPriceRequest(args [1]string, argsEscaped
 
 		type (
 			Request  = struct{}
-			Params   = GetBlockchainCoinPriceParams
-			Response = GetBlockchainCoinPriceRes
+			Params   = GetBlockchainMarketsParams
+			Response = GetBlockchainMarketsRes
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -185,14 +185,14 @@ func (s *Server) handleGetBlockchainCoinPriceRequest(args [1]string, argsEscaped
 		](
 			m,
 			mreq,
-			unpackGetBlockchainCoinPriceParams,
+			unpackGetBlockchainMarketsParams,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.GetBlockchainCoinPrice(ctx, params)
+				response, err = s.h.GetBlockchainMarkets(ctx, params)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.GetBlockchainCoinPrice(ctx, params)
+		response, err = s.h.GetBlockchainMarkets(ctx, params)
 	}
 	if err != nil {
 		defer recordError("Internal", err)
@@ -200,7 +200,7 @@ func (s *Server) handleGetBlockchainCoinPriceRequest(args [1]string, argsEscaped
 		return
 	}
 
-	if err := encodeGetBlockchainCoinPriceResponse(response, w); err != nil {
+	if err := encodeGetBlockchainMarketsResponse(response, w); err != nil {
 		defer recordError("EncodeResponse", err)
 		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
 			s.cfg.ErrorHandler(ctx, w, r, err)
@@ -1796,9 +1796,69 @@ func (s *Server) handleGetBlockchainsRequest(args [0]string, argsEscaped bool, w
 	}
 }
 
+// handleGetPoolsStatsRequest handles getPoolsStats operation.
+//
+// Get pool statistics for all blockchains.
+//
+// GET /pools/stats
+func (s *Server) handleGetPoolsStatsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	var (
+		err error
+	)
+
+	var response GetPoolsStatsRes
+	if m := s.cfg.Middleware; m != nil {
+		mreq := middleware.Request{
+			Context:          ctx,
+			OperationName:    "GetPoolsStats",
+			OperationSummary: "Get pool statistics for all blockchains",
+			OperationID:      "getPoolsStats",
+			Body:             nil,
+			Params:           middleware.Parameters{},
+			Raw:              r,
+		}
+
+		type (
+			Request  = struct{}
+			Params   = struct{}
+			Response = GetPoolsStatsRes
+		)
+		response, err = middleware.HookMiddleware[
+			Request,
+			Params,
+			Response,
+		](
+			m,
+			mreq,
+			nil,
+			func(ctx context.Context, request Request, params Params) (response Response, err error) {
+				response, err = s.h.GetPoolsStats(ctx)
+				return response, err
+			},
+		)
+	} else {
+		response, err = s.h.GetPoolsStats(ctx)
+	}
+	if err != nil {
+		defer recordError("Internal", err)
+		s.cfg.ErrorHandler(ctx, w, r, err)
+		return
+	}
+
+	if err := encodeGetPoolsStatsResponse(response, w); err != nil {
+		defer recordError("EncodeResponse", err)
+		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
+			s.cfg.ErrorHandler(ctx, w, r, err)
+		}
+		return
+	}
+}
+
 // handleGetPricesRequest handles getPrices operation.
 //
-// Get pool blockchain coin price list.
+// Get blockchains prices list.
 //
 // GET /prices
 func (s *Server) handleGetPricesRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
@@ -1813,7 +1873,7 @@ func (s *Server) handleGetPricesRequest(args [0]string, argsEscaped bool, w http
 		mreq := middleware.Request{
 			Context:          ctx,
 			OperationName:    "GetPrices",
-			OperationSummary: "Get pool blockchain coin price list",
+			OperationSummary: "Get blockchains prices list",
 			OperationID:      "getPrices",
 			Body:             nil,
 			Params:           middleware.Parameters{},

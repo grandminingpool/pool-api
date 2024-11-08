@@ -10,27 +10,27 @@ import (
 )
 
 type BlockchainHandler struct {
-	pricesService                 *pricesServices.PricesService
-	blockchainCoinPriceSerializer serializers.BaseSerializer[*pricesServices.BlockchainCoinPrice, *apiModels.BlockchainCoinPrice]
+	pricesService               *pricesServices.PricesService
+	blockchainMarketsSerializer serializers.BaseSerializer[*pricesServices.BlockchainMarkets, *apiModels.BlockchainMarkets]
 }
 
-func (h *BlockchainHandler) GetPrice(ctx context.Context, blockchainCoin string) apiModels.GetBlockchainCoinPriceRes {
-	price, err := h.pricesService.GetBlockchainCoinPrice(ctx, blockchainCoin)
+func (h *BlockchainHandler) GetMarkets(ctx context.Context, blockchainCoin string) apiModels.GetBlockchainMarketsRes {
+	blockchainMarkets, err := h.pricesService.GetBlockchainMarkets(ctx, blockchainCoin)
 	if err != nil {
-		return pricesErrors.CreateGetBlockchainCoinPriceError(err)
-	} else if price == nil {
-		return pricesErrors.CreateBlockchainCoinPriceNotFoundError(blockchainCoin)
+		return pricesErrors.CreateGetBlockchainMarketsError(err)
+	} else if blockchainMarkets == nil {
+		return pricesErrors.CreateBlockchainMarketsNotFoundError(blockchainCoin)
 	}
 
-	return h.blockchainCoinPriceSerializer.Serialize(ctx, price)
+	return h.blockchainMarketsSerializer.Serialize(ctx, blockchainMarkets)
 }
 
 func NewBlockchainHandler(
 	pricesService *pricesServices.PricesService,
-	blockchainCoinPriceSerializer serializers.BaseSerializer[*pricesServices.BlockchainCoinPrice, *apiModels.BlockchainCoinPrice],
+	blockchainMarketsSerializer serializers.BaseSerializer[*pricesServices.BlockchainMarkets, *apiModels.BlockchainMarkets],
 ) *BlockchainHandler {
 	return &BlockchainHandler{
-		pricesService:                 pricesService,
-		blockchainCoinPriceSerializer: blockchainCoinPriceSerializer,
+		pricesService:               pricesService,
+		blockchainMarketsSerializer: blockchainMarketsSerializer,
 	}
 }

@@ -13,9 +13,9 @@ type PriceDB struct {
 	Price24hAgo float64 `db:"price_24h_ago"`
 }
 
-type CoinPriceDB struct {
+type BlockchainPriceDB struct {
 	PriceDB
-	Coin string `db:"blockchain_coin"`
+	Blockchain string `db:"blockchain"`
 }
 
 type MarketPriceDB struct {
@@ -23,7 +23,7 @@ type MarketPriceDB struct {
 	MarketTicker string `db:"market_ticker"`
 }
 
-type BlockchainCoinPrice struct {
+type BlockchainMarkets struct {
 	PriceDB
 	Markets []MarketPriceDB
 }
@@ -32,37 +32,36 @@ type PricesService struct {
 	pgConn *sqlx.DB
 }
 
-func (s *PricesService) GetPrices(ctx context.Context) ([]CoinPriceDB, error) {
-	coinPrices := []CoinPriceDB{}
-	err := s.pgConn.SelectContext(ctx, &coinPrices, `SELECT blockchain_coin, price, price_24h_ago
-		FROM coin_prices WHERE usdt = true`)
+func (s *PricesService) GetPrices(ctx context.Context) ([]BlockchainPriceDB, error) {
+	prices := []BlockchainPriceDB{}
+	err := s.pgConn.SelectContext(ctx, &prices, `SELECT blockchain, price, price_24h_ago FROM prices WHERE usdt = true`)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	} else if err != nil {
-		return nil, fmt.Errorf("failed to get coin prices: %w", err)
+		return nil, fmt.Errorf("failed to get blockchains prices: %w", err)
 	}
 
-	return coinPrices, nil
+	return prices, nil
 }
 
-func (s *PricesService) GetBlockchainCoinPrice(ctx context.Context, coin string) (*BlockchainCoinPrice, error) {
+func (s *PricesService) GetBlockchainMarkets(ctx context.Context, blockchain string) (*BlockchainMarkets, error) {
 	marketPrices := []MarketPriceDB{}
 	err := s.pgConn.SelectContext(ctx, &marketPrices, `SELECT market_ticker, price, price_24h_ago
-		FROM coin_prices WHERE blockchain_coin = $1 ORDER BY usdt DESC`)
+		FROM prices WHERE blockchain = $1 ORDER BY usdt DESC`, blockchain)
 	if err == sql.ErrNoRows {
 		return nil, nil
 	} else if err != nil {
-		return nil, fmt.Errorf("failed to get blockchain (coin: %s) price: %w", coin, err)
+		return nil, fmt.Errorf("failed to get markets (blockchain: %s), error: %w", blockchain, err)
 	}
 
-	coinMarkets := marketPrices[1:]
+	markets := marketPrices[1:]
 
-	return &BlockchainCoinPrice{
+	return &BlockchainMarkets{
 		PriceDB: PriceDB{
 			Price:       marketPrices[0].Price,
 			Price24hAgo: marketPrices[0].Price24hAgo,
 		},
-		Markets: coinMarkets,
+		Markets: markets,
 	}, nil
 }
 
