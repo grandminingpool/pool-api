@@ -13,9 +13,8 @@ import (
 )
 
 type PoolAPIDB struct {
-	URL        string `db:"pool_api_url"`
-	TLSCA      string `db:"pool_api_tls_ca"`
-	ServerName string `db:"pool_api_server_name"`
+	URL   string `db:"pool_api_url"`
+	TLSCA string `db:"pool_api_tls_ca"`
 }
 
 type BlockchainDB struct {
@@ -23,6 +22,7 @@ type BlockchainDB struct {
 	Name       string `db:"name"`
 	Ticker     string `db:"ticker"`
 	AtomicUnit uint16 `db:"atomic_unit"`
+	RowOrder   int    `db:"row_order"`
 	PoolAPIDB
 }
 
@@ -98,7 +98,6 @@ func (s *Service) Start(ctx context.Context, certsPath string) error {
 			b.PoolAPIDB.URL,
 			certsPath,
 			b.PoolAPIDB.TLSCA,
-			b.PoolAPIDB.ServerName,
 			time.Duration(s.config.RequestTimeout)*time.Second,
 		)
 		if err != nil {

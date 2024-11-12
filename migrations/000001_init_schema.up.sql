@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS blockchains (
     atomic_unit SMALLINT NOT NULL,
     pool_api_url VARCHAR(64) NOT NULL,
     pool_api_tls_ca VARCHAR(64) NOT NULL,
-    pool_api_server_name VARCHAR(128) NOT NULL,
     row_order INTEGER NOT NULL
 );
 

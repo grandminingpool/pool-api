@@ -9,8 +9,8 @@ import (
 	"google.golang.org/grpc/credentials"
 )
 
-func NewClient(address, certsPath, caCertFile, serverName string, requestTimeout time.Duration) (*grpc.ClientConn, error) {
-	creds, err := credentials.NewClientTLSFromFile(fmt.Sprintf("%s/%s", caCertFile, certsPath), serverName)
+func NewClient(address, certsPath, caCertFile string, requestTimeout time.Duration) (*grpc.ClientConn, error) {
+	creds, err := credentials.NewClientTLSFromFile(fmt.Sprintf("%s/%s", caCertFile, certsPath), "")
 	if err != nil {
 		return nil, fmt.Errorf("failed to load pool api client certificate: %w", err)
 	}

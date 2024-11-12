@@ -30,7 +30,7 @@ func New(configsPath string, validate *validator.Validate) (*Config, error) {
 	appViper.SetConfigType("yaml")
 
 	appViper.SetDefault("host", "127.0.0.1")
-	appViper.SetDefault("port", 5432)
+	appViper.SetDefault("port", 3000)
 	appViper.SetDefault("poolAPI.requestTimeout", 2)
 
 	if err := configUtils.ReadConfig(appViper, configName); err != nil {
