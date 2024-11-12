@@ -22,5 +22,5 @@ CREATE TABLE IF NOT EXISTS prices (
     usdt BOOLEAN NOT NULL
 );
 
-ALTER TABLE pricess ADD CONSTRAINT prices_blockchain_fkey FOREIGN KEY (blockchain) REFERENCES blockchains(blockchain) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE prices ADD CONSTRAINT prices_blockchain_fkey FOREIGN KEY (blockchain) REFERENCES blockchains(blockchain) ON UPDATE CASCADE ON DELETE CASCADE;
 CREATE UNIQUE INDEX prices_unique_blockchain_usdt ON prices(blockchain) WHERE usdt = true;
