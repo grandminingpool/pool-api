@@ -32,14 +32,14 @@ type UpdateService struct {
 
 func (s *UpdateService) getMarketTickers(ctx context.Context) ([]string, error) {
 	marketTickers := []string{}
-	if err := s.pgConn.SelectContext(ctx, &marketTickers, `SELECT market_ticker FROM coin_prices`); err != nil {
+	if err := s.pgConn.SelectContext(ctx, &marketTickers, `SELECT market_ticker FROM prices`); err != nil {
 		return nil, fmt.Errorf("failed to get market tickers: %w", err)
 	}
 
 	return marketTickers, nil
 }
 
-func (s *UpdateService) parseCoinPriceFromTickerResponse(response *GetTickerResponse) (*CoinPrice, error) {
+func (s *UpdateService) parseCoinPriceFromTickerResponse(ticker string, response *GetTickerResponse) (*CoinPrice, error) {
 	if !response.Success {
 		return nil, fmt.Errorf("unsuccessful status in ticker response")
 	}
@@ -55,8 +55,9 @@ func (s *UpdateService) parseCoinPriceFromTickerResponse(response *GetTickerResp
 	}
 
 	return &CoinPrice{
-		Price:       price,
-		Price24hAgo: initialPrice,
+		MarketTicker: ticker,
+		Price:        price,
+		Price24hAgo:  initialPrice,
 	}, nil
 }
 
@@ -91,7 +92,7 @@ func (s *UpdateService) getTickerPrice(
 			return
 		}
 
-		coinPrice, err := s.parseCoinPriceFromTickerResponse(&response)
+		coinPrice, err := s.parseCoinPriceFromTickerResponse(ticker, &response)
 		if err != nil {
 			errCh <- fmt.Errorf("failed to parse coin price from response for ticker: %s", ticker)
 
@@ -104,12 +105,12 @@ func (s *UpdateService) getTickerPrice(
 
 func (s *UpdateService) updateRowsInDB(ctx context.Context, tx *sqlx.Tx, newPrices []*CoinPrice) error {
 	for _, coinPrice := range newPrices {
-		if _, err := tx.ExecContext(ctx, `UPDATE coin_prices SET price = ? WHERE market_ticker = ?`,
+		if _, err := tx.ExecContext(ctx, `UPDATE prices SET price = $1, price_24h_ago = $2 WHERE market_ticker = $3`,
 			coinPrice.Price,
+			coinPrice.Price24hAgo,
 			coinPrice.MarketTicker,
 		); err != nil {
-			return fmt.Errorf("failed to update price (value: %f) for ticker: %s, error: %w",
-				coinPrice.Price,
+			return fmt.Errorf("failed to update price for ticker: %s, error: %w",
 				coinPrice.MarketTicker,
 				err,
 			)

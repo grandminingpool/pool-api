@@ -6,6 +6,7 @@ import (
 
 	poolProto "github.com/grandminingpool/pool-api-proto/generated/pool"
 	"github.com/grandminingpool/pool-api/internal/blockchains"
+	"golang.org/x/sync/errgroup"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -17,69 +18,6 @@ type Pool struct {
 
 type BlockchainService struct{}
 
-func (s *BlockchainService) getPoolInfo(
-	ctx context.Context,
-	client poolProto.PoolServiceClient,
-	poolInfoCh chan<- *poolProto.PoolInfo,
-	errCh chan<- error,
-) {
-	select {
-	case <-ctx.Done():
-		return
-	default:
-		poolInfo, err := client.GetPoolInfo(ctx, &emptypb.Empty{})
-		if err != nil {
-			errCh <- fmt.Errorf("failed to get pool info: %w", err)
-
-			return
-		}
-
-		poolInfoCh <- poolInfo
-	}
-}
-
-func (s *BlockchainService) getPoolStats(
-	ctx context.Context,
-	client poolProto.PoolServiceClient,
-	poolStatsCh chan<- *poolProto.PoolStats,
-	errCh chan<- error,
-) {
-	select {
-	case <-ctx.Done():
-		return
-	default:
-		poolStats, err := client.GetPoolStats(ctx, &emptypb.Empty{})
-		if err != nil {
-			errCh <- fmt.Errorf("failed to get pool stats: %w", err)
-
-			return
-		}
-
-		poolStatsCh <- poolStats
-	}
-}
-
-func (s *BlockchainService) getPoolSlaves(
-	ctx context.Context,
-	client poolProto.PoolServiceClient,
-	poolSlavesCh chan<- []*poolProto.PoolSlave,
-	errCh chan<- error,
-) {
-	select {
-	case <-ctx.Done():
-		return
-	default:
-		poolSlaves, err := client.GetPoolSlaves(ctx, &emptypb.Empty{})
-		if err != nil {
-			errCh <- fmt.Errorf("failed to get pool slaves: %w", err)
-
-			return
-		}
-
-		poolSlavesCh <- poolSlaves.Slaves
-	}
-}
-
 func (s *BlockchainService) GetPool(ctx context.Context, blockchain *blockchains.Blockchain) (*Pool, error) {
 	client := poolProto.NewPoolServiceClient(blockchain.GetConnection())
 	pool := &Pool{
@@ -88,36 +26,39 @@ func (s *BlockchainService) GetPool(ctx context.Context, blockchain *blockchains
 		Slaves: nil,
 	}
 
-	poolInfoCh := make(chan *poolProto.PoolInfo, 1)
-	poolStatsCh := make(chan *poolProto.PoolStats, 1)
-	poolSlaves := make(chan []*poolProto.PoolSlave, 1)
-	errCh := make(chan error, 3)
-	defer close(poolInfoCh)
-	defer close(poolStatsCh)
-	defer close(poolSlaves)
-	defer close(errCh)
-
-	newCtx, cancel := context.WithCancel(ctx)
-	defer cancel()
-
-	go s.getPoolInfo(newCtx, client, poolInfoCh, errCh)
-	go s.getPoolStats(newCtx, client, poolStatsCh, errCh)
-	go s.getPoolSlaves(newCtx, client, poolSlaves, errCh)
-
-	for i := 0; i < 3; i++ {
-		select {
-		case err := <-errCh:
-			return nil, fmt.Errorf("failed to get pool (blockchain: %s) data: %w", blockchain.GetInfo().Blockchain, err)
-		case poolInfo := <-poolInfoCh:
+	g, gCtx := errgroup.WithContext(ctx)
+	g.Go(func() error {
+		poolInfo, err := client.GetPoolInfo(gCtx, &emptypb.Empty{})
+		if err == nil {
 			pool.Info = poolInfo
-		case poolStats := <-poolStatsCh:
-			pool.Stats = poolStats
-		case poolSlaves := <-poolSlaves:
-			pool.Slaves = poolSlaves
-		}
-	}
 
-	return pool, nil
+			return nil
+		}
+
+		return fmt.Errorf("failed to get pool info: %w", err)
+	})
+	g.Go(func() error {
+		poolStats, err := client.GetPoolStats(gCtx, &emptypb.Empty{})
+		if err == nil {
+			pool.Stats = poolStats
+
+			return nil
+		}
+
+		return fmt.Errorf("failed to get pool stats: %w", err)
+	})
+	g.Go(func() error {
+		poolSlaves, err := client.GetPoolSlaves(gCtx, &emptypb.Empty{})
+		if err == nil {
+			pool.Slaves = poolSlaves.Slaves
+
+			return nil
+		}
+
+		return fmt.Errorf("failed to get pool slaves: %w", err)
+	})
+
+	return pool, g.Wait()
 }
 
 func (s *BlockchainService) GetPoolInfo(ctx context.Context, blockchain *blockchains.Blockchain) (*poolProto.PoolInfo, error) {

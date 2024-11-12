@@ -10,7 +10,7 @@ import (
 )
 
 func NewClient(address, certsPath, caCertFile string, requestTimeout time.Duration) (*grpc.ClientConn, error) {
-	creds, err := credentials.NewClientTLSFromFile(fmt.Sprintf("%s/%s", caCertFile, certsPath), "")
+	creds, err := credentials.NewClientTLSFromFile(fmt.Sprintf("%s/%s", certsPath, caCertFile), "")
 	if err != nil {
 		return nil, fmt.Errorf("failed to load pool api client certificate: %w", err)
 	}

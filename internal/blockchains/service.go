@@ -13,8 +13,8 @@ import (
 )
 
 type PoolAPIDB struct {
-	URL   string `db:"pool_api_url"`
-	TLSCA string `db:"pool_api_tls_ca"`
+	Address string `db:"pool_api_address"`
+	TLSCA   string `db:"pool_api_tls_ca"`
 }
 
 type BlockchainDB struct {
@@ -95,7 +95,7 @@ func (s *Service) Start(ctx context.Context, certsPath string) error {
 
 	for _, b := range blockchains {
 		conn, err := poolAPIClient.NewClient(
-			b.PoolAPIDB.URL,
+			b.PoolAPIDB.Address,
 			certsPath,
 			b.PoolAPIDB.TLSCA,
 			time.Duration(s.config.RequestTimeout)*time.Second,

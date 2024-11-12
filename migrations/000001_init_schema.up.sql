@@ -3,14 +3,14 @@ CREATE TABLE IF NOT EXISTS blockchains (
     name VARCHAR(128) NOT NULL,
     ticker VARCHAR(16) NOT NULL,
     atomic_unit SMALLINT NOT NULL,
-    pool_api_url VARCHAR(64) NOT NULL,
+    pool_api_address VARCHAR(64) NOT NULL,
     pool_api_tls_ca VARCHAR(64) NOT NULL,
     row_order INTEGER NOT NULL
 );
 
 ALTER TABLE blockchains ADD CONSTRAINT blockchains_unique_name UNIQUE (name);
 ALTER TABLE blockchains ADD CONSTRAINT blockchains_unique_ticker UNIQUE (ticker);
-ALTER TABLE blockchains ADD CONSTRAINT blockchains_unique_pool_api_url UNIQUE (pool_api_url);
+ALTER TABLE blockchains ADD CONSTRAINT blockchains_unique_pool_api_url UNIQUE (pool_api_address);
 ALTER TABLE blockchains ADD CONSTRAINT blockchains_unique_row_order UNIQUE (row_order);
 
 CREATE TABLE IF NOT EXISTS prices (
