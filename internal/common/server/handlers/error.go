@@ -39,6 +39,9 @@ func ErrorHandler() ogenerrors.ErrorHandler {
 		switch t := err.(type) {
 		case serverErrors.ServerError:
 			se = t
+		case *ogenerrors.DecodeParamsError:
+		case *ogenerrors.DecodeParamError:
+			se = serverErrors.CreateBadRequestError(serverErrors.DecodeParamsError, err)
 		case *ogenerrors.DecodeRequestError:
 			se = serverErrors.CreateBadRequestError(serverErrors.DecodeRequestErrorCode, err)
 		default:
