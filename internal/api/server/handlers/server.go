@@ -47,8 +47,8 @@ func (h *ServerHandler) getBlockchain(coin string) (*blockchains.Blockchain, *ap
 	return blockchain, nil
 }
 
-func (h *ServerHandler) GetPoolsStats(ctx context.Context) (apiModels.GetPoolsStatsRes, error) {
-	return h.poolsHandler.GetStats(ctx), nil
+func (h *ServerHandler) GetPools(ctx context.Context) (apiModels.GetPoolsRes, error) {
+	return h.poolsHandler.GetPools(ctx), nil
 }
 
 func (h *ServerHandler) GetBlockchainPool(ctx context.Context, params apiModels.GetBlockchainPoolParams) (apiModels.GetBlockchainPoolRes, error) {

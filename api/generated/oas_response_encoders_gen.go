@@ -887,9 +887,9 @@ func encodeGetBlockchainsResponse(response *BlockchainsList, w http.ResponseWrit
 	return nil
 }
 
-func encodeGetPoolsStatsResponse(response GetPoolsStatsRes, w http.ResponseWriter) error {
+func encodeGetPoolsResponse(response GetPoolsRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
-	case *PoolsStatsList:
+	case *PoolsList:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(200)
 
@@ -901,7 +901,7 @@ func encodeGetPoolsStatsResponse(response GetPoolsStatsRes, w http.ResponseWrite
 
 		return nil
 
-	case *GetPoolsStatsInternalServerError:
+	case *GetPoolsInternalServerError:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 

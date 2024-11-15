@@ -77,8 +77,8 @@ type GetBlockchainSoloBlocksRes interface {
 	getBlockchainSoloBlocksRes()
 }
 
-type GetPoolsStatsRes interface {
-	getPoolsStatsRes()
+type GetPoolsRes interface {
+	getPoolsRes()
 }
 
 type GetPricesRes interface {

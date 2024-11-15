@@ -6,6 +6,7 @@ import (
 
 	poolProto "github.com/grandminingpool/pool-api-proto/generated/pool"
 	"github.com/grandminingpool/pool-api/internal/blockchains"
+	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -14,42 +15,62 @@ type PoolsService struct {
 	blockchainsService *blockchains.Service
 }
 
-type BlockchainPoolStats struct {
-	PoolStats  *poolProto.PoolStats
+type BlockchainPool struct {
+	Info       *poolProto.PoolInfo
+	Stats      *poolProto.PoolStats
 	Blockchain string
 }
 
-func (s *PoolsService) getBlockchainPoolStats(
+func (s *PoolsService) getBlockchainPool(
 	ctx context.Context,
 	blockchain string,
 	blockchainConn *grpc.ClientConn,
-	poolsCh chan<- *BlockchainPoolStats,
+	poolsCh chan<- *BlockchainPool,
 	errCh chan<- error,
 ) {
 	select {
 	case <-ctx.Done():
 		return
 	default:
+		pool := &BlockchainPool{}
 		client := poolProto.NewPoolServiceClient(blockchainConn)
-		poolStats, err := client.GetPoolStats(ctx, &emptypb.Empty{})
-		if err != nil {
-			errCh <- fmt.Errorf("failed to get pool stats (blockchain: %s), error: %w", blockchain, err)
+		g, gCtx := errgroup.WithContext(ctx)
+		g.Go(func() error {
+			poolInfo, err := client.GetPoolInfo(gCtx, &emptypb.Empty{})
+			if err != nil {
+				return fmt.Errorf("failed to get pool info (blockchain: %s), error: %w", blockchain, err)
+			}
+
+			pool.Info = poolInfo
+
+			return nil
+		})
+		g.Go(func() error {
+			poolStats, err := client.GetPoolStats(gCtx, &emptypb.Empty{})
+			if err != nil {
+				return fmt.Errorf("failed to get pool stats (blockchain: %s), error: %w", blockchain, err)
+			}
+
+			pool.Stats = poolStats
+
+			return nil
+		})
+
+		if err := g.Wait(); err != nil {
+			errCh <- err
 
 			return
 		}
 
-		poolsCh <- &BlockchainPoolStats{
-			PoolStats:  poolStats,
-			Blockchain: blockchain,
-		}
+		poolsCh <- pool
 	}
 }
 
-func (s *PoolsService) GetStats(ctx context.Context) ([]*BlockchainPoolStats, error) {
+func (s *PoolsService) GetPools(ctx context.Context) ([]*BlockchainPool, error) {
 	blockchains := s.blockchainsService.GetBlockchains()
 
 	callsNum := len(blockchains)
-	poolsCh := make(chan *BlockchainPoolStats, callsNum)
+	poolsCh := make(chan *BlockchainPool, callsNum)
 	errCh := make(chan error, callsNum)
 	defer close(poolsCh)
 	defer close(errCh)
@@ -58,7 +79,7 @@ func (s *PoolsService) GetStats(ctx context.Context) ([]*BlockchainPoolStats, er
 	defer cancel()
 
 	for _, blockchain := range blockchains {
-		go s.getBlockchainPoolStats(
+		go s.getBlockchainPool(
 			newCtx,
 			blockchain.GetInfo().Blockchain,
 			blockchain.GetConnection(),
@@ -67,27 +88,27 @@ func (s *PoolsService) GetStats(ctx context.Context) ([]*BlockchainPoolStats, er
 		)
 	}
 
-	blockchainsPoolStatsMap := make(map[string]*BlockchainPoolStats)
-	defer clear(blockchainsPoolStatsMap)
+	blockchainsPoolsMap := make(map[string]*BlockchainPool)
+	defer clear(blockchainsPoolsMap)
 
 	for i := 0; i < callsNum; i++ {
 		select {
 		case err := <-errCh:
 			return nil, err
-		case blockchainPoolStats := <-poolsCh:
-			blockchainsPoolStatsMap[blockchainPoolStats.Blockchain] = blockchainPoolStats
+		case blockchainPool := <-poolsCh:
+			blockchainsPoolsMap[blockchainPool.Info.Blockchain] = blockchainPool
 		}
 	}
 
-	blockchainsPoolStats := make([]*BlockchainPoolStats, 0, callsNum)
+	blockchainsPools := make([]*BlockchainPool, 0, callsNum)
 	for _, blockchain := range blockchains {
-		blockchainPoolStats, ok := blockchainsPoolStatsMap[blockchain.GetInfo().Blockchain]
+		blockchainPool, ok := blockchainsPoolsMap[blockchain.GetInfo().Blockchain]
 		if ok {
-			blockchainsPoolStats = append(blockchainsPoolStats, blockchainPoolStats)
+			blockchainsPools = append(blockchainsPools, blockchainPool)
 		}
 	}
 
-	return blockchainsPoolStats, nil
+	return blockchainsPools, nil
 }
 
 func NewPoolsService(blockchainsService *blockchains.Service) *PoolsService {

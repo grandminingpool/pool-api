@@ -52,8 +52,8 @@ func CreateHandler(
 		poolStatsSerializer,
 		poolSlaveSerializer,
 	)
-	blockchainPoolStatsSerializer := poolsSerializers.NewBlockchainPoolStatsSerializer(poolStatsSerializer)
-	poolsHandler := poolsHandlers.NewHandler(poolsService, blockchainPoolStatsSerializer)
+	blockchainPoolSerializer := poolsSerializers.NewBlockchainPoolSerializer(poolInfoSerializer, poolStatsSerializer)
+	poolsHandler := poolsHandlers.NewHandler(poolsService, blockchainPoolSerializer)
 
 	//	Init prices handlers
 	marketPriceSerializer := &pricesSerializer.MarkerPriceSerializer{}

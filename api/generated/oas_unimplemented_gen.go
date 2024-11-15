@@ -193,12 +193,12 @@ func (UnimplementedHandler) GetBlockchains(ctx context.Context) (r *BlockchainsL
 	return r, ht.ErrNotImplemented
 }
 
-// GetPoolsStats implements getPoolsStats operation.
+// GetPools implements getPools operation.
 //
-// Get pool statistics for all blockchains.
+// Get pool info and statistics for all blockchains.
 //
-// GET /pools/stats
-func (UnimplementedHandler) GetPoolsStats(ctx context.Context) (r GetPoolsStatsRes, _ error) {
+// GET /pools
+func (UnimplementedHandler) GetPools(ctx context.Context) (r GetPoolsRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

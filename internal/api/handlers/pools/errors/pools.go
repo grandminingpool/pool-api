@@ -5,11 +5,11 @@ import (
 	serverErrors "github.com/grandminingpool/pool-api/internal/common/server/errors"
 )
 
-const GetPoolsStatsError serverErrors.ServerErrorCode = "get_pools_stats_error"
+const GetPoolsError serverErrors.ServerErrorCode = "get_pools_error"
 
-func CreateGetPoolsStatsError(err error) *apiModels.GetPoolsStatsInternalServerError {
-	return &apiModels.GetPoolsStatsInternalServerError{
-		Code:    string(GetPoolsStatsError),
+func CreateGetPoolsError(err error) *apiModels.GetPoolsInternalServerError {
+	return &apiModels.GetPoolsInternalServerError{
+		Code:    string(GetPoolsError),
 		Message: err.Error(),
 	}
 }

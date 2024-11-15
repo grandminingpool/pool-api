@@ -128,12 +128,12 @@ type Handler interface {
 	//
 	// GET /blockchains
 	GetBlockchains(ctx context.Context) (*BlockchainsList, error)
-	// GetPoolsStats implements getPoolsStats operation.
+	// GetPools implements getPools operation.
 	//
-	// Get pool statistics for all blockchains.
+	// Get pool info and statistics for all blockchains.
 	//
-	// GET /pools/stats
-	GetPoolsStats(ctx context.Context) (GetPoolsStatsRes, error)
+	// GET /pools
+	GetPools(ctx context.Context) (GetPoolsRes, error)
 	// GetPrices implements getPrices operation.
 	//
 	// Get blockchains prices list.

@@ -1796,25 +1796,25 @@ func (s *Server) handleGetBlockchainsRequest(args [0]string, argsEscaped bool, w
 	}
 }
 
-// handleGetPoolsStatsRequest handles getPoolsStats operation.
+// handleGetPoolsRequest handles getPools operation.
 //
-// Get pool statistics for all blockchains.
+// Get pool info and statistics for all blockchains.
 //
-// GET /pools/stats
-func (s *Server) handleGetPoolsStatsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+// GET /pools
+func (s *Server) handleGetPoolsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var (
 		err error
 	)
 
-	var response GetPoolsStatsRes
+	var response GetPoolsRes
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetPoolsStats",
-			OperationSummary: "Get pool statistics for all blockchains",
-			OperationID:      "getPoolsStats",
+			OperationName:    "GetPools",
+			OperationSummary: "Get pool info and statistics for all blockchains",
+			OperationID:      "getPools",
 			Body:             nil,
 			Params:           middleware.Parameters{},
 			Raw:              r,
@@ -1823,7 +1823,7 @@ func (s *Server) handleGetPoolsStatsRequest(args [0]string, argsEscaped bool, w 
 		type (
 			Request  = struct{}
 			Params   = struct{}
-			Response = GetPoolsStatsRes
+			Response = GetPoolsRes
 		)
 		response, err = middleware.HookMiddleware[
 			Request,
@@ -1834,12 +1834,12 @@ func (s *Server) handleGetPoolsStatsRequest(args [0]string, argsEscaped bool, w 
 			mreq,
 			nil,
 			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.GetPoolsStats(ctx)
+				response, err = s.h.GetPools(ctx)
 				return response, err
 			},
 		)
 	} else {
-		response, err = s.h.GetPoolsStats(ctx)
+		response, err = s.h.GetPools(ctx)
 	}
 	if err != nil {
 		defer recordError("Internal", err)
@@ -1847,7 +1847,7 @@ func (s *Server) handleGetPoolsStatsRequest(args [0]string, argsEscaped bool, w 
 		return
 	}
 
-	if err := encodeGetPoolsStatsResponse(response, w); err != nil {
+	if err := encodeGetPoolsResponse(response, w); err != nil {
 		defer recordError("EncodeResponse", err)
 		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
 			s.cfg.ErrorHandler(ctx, w, r, err)

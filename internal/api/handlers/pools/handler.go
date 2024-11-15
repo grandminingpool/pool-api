@@ -10,32 +10,32 @@ import (
 )
 
 type Handler struct {
-	poolsService                  *poolsServices.PoolsService
-	blockchainPoolStatsSerializer *poolsSerializers.BlockchainPoolStatsSerializer
+	poolsService             *poolsServices.PoolsService
+	blockchainPoolSerializer *poolsSerializers.BlockchainPoolSerializer
 }
 
-func (h *Handler) GetStats(ctx context.Context) apiModels.GetPoolsStatsRes {
-	poolsStats, err := h.poolsService.GetStats(ctx)
+func (h *Handler) GetPools(ctx context.Context) apiModels.GetPoolsRes {
+	pools, err := h.poolsService.GetPools(ctx)
 	if err != nil {
-		return poolsErrors.CreateGetPoolsStatsError(err)
+		return poolsErrors.CreateGetPoolsError(err)
 	}
 
-	statsResponse := make([]apiModels.BlockchainPoolStats, 0, len(poolsStats))
-	for _, ps := range poolsStats {
-		statsResponse = append(statsResponse, *h.blockchainPoolStatsSerializer.Serialize(ctx, ps))
+	poolsResponse := make([]apiModels.BlockchainPool, 0, len(pools))
+	for _, p := range pools {
+		poolsResponse = append(poolsResponse, *h.blockchainPoolSerializer.Serialize(ctx, p))
 	}
 
-	return &apiModels.PoolsStatsList{
-		Stats: statsResponse,
+	return &apiModels.PoolsList{
+		Pools: poolsResponse,
 	}
 }
 
 func NewHandler(
 	poolsService *poolsServices.PoolsService,
-	blockchainPoolStatsSerializer *poolsSerializers.BlockchainPoolStatsSerializer,
+	blockchainPoolSerializer *poolsSerializers.BlockchainPoolSerializer,
 ) *Handler {
 	return &Handler{
-		poolsService:                  poolsService,
-		blockchainPoolStatsSerializer: blockchainPoolStatsSerializer,
+		poolsService:             poolsService,
+		blockchainPoolSerializer: blockchainPoolSerializer,
 	}
 }

@@ -140,29 +140,29 @@ func (*BlockchainNotFound) getBlockchainPoolStatsRes()                 {}
 func (*BlockchainNotFound) getBlockchainRoundsChartRes()               {}
 func (*BlockchainNotFound) getBlockchainSoloBlocksRes()                {}
 
-// Ref: #/components/schemas/BlockchainPoolStats
-type BlockchainPoolStats struct {
-	Blockchain string    `json:"blockchain"`
-	Stats      PoolStats `json:"stats"`
+// Ref: #/components/schemas/BlockchainPool
+type BlockchainPool struct {
+	Info  PoolInfo  `json:"info"`
+	Stats PoolStats `json:"stats"`
 }
 
-// GetBlockchain returns the value of Blockchain.
-func (s *BlockchainPoolStats) GetBlockchain() string {
-	return s.Blockchain
+// GetInfo returns the value of Info.
+func (s *BlockchainPool) GetInfo() PoolInfo {
+	return s.Info
 }
 
 // GetStats returns the value of Stats.
-func (s *BlockchainPoolStats) GetStats() PoolStats {
+func (s *BlockchainPool) GetStats() PoolStats {
 	return s.Stats
 }
 
-// SetBlockchain sets the value of Blockchain.
-func (s *BlockchainPoolStats) SetBlockchain(val string) {
-	s.Blockchain = val
+// SetInfo sets the value of Info.
+func (s *BlockchainPool) SetInfo(val PoolInfo) {
+	s.Info = val
 }
 
 // SetStats sets the value of Stats.
-func (s *BlockchainPoolStats) SetStats(val PoolStats) {
+func (s *BlockchainPool) SetStats(val PoolStats) {
 	s.Stats = val
 }
 
@@ -975,33 +975,33 @@ func (s *GetBlockchainSoloBlocksMethodNotAllowed) SetMessage(val string) {
 func (*GetBlockchainSoloBlocksMethodNotAllowed) getBlockchainSoloBlocksRes() {}
 
 // Merged schema.
-type GetPoolsStatsInternalServerError struct {
+type GetPoolsInternalServerError struct {
 	// Merged property.
 	Code    string `json:"code"`
 	Message string `json:"message"`
 }
 
 // GetCode returns the value of Code.
-func (s *GetPoolsStatsInternalServerError) GetCode() string {
+func (s *GetPoolsInternalServerError) GetCode() string {
 	return s.Code
 }
 
 // GetMessage returns the value of Message.
-func (s *GetPoolsStatsInternalServerError) GetMessage() string {
+func (s *GetPoolsInternalServerError) GetMessage() string {
 	return s.Message
 }
 
 // SetCode sets the value of Code.
-func (s *GetPoolsStatsInternalServerError) SetCode(val string) {
+func (s *GetPoolsInternalServerError) SetCode(val string) {
 	s.Code = val
 }
 
 // SetMessage sets the value of Message.
-func (s *GetPoolsStatsInternalServerError) SetMessage(val string) {
+func (s *GetPoolsInternalServerError) SetMessage(val string) {
 	s.Message = val
 }
 
-func (*GetPoolsStatsInternalServerError) getPoolsStatsRes() {}
+func (*GetPoolsInternalServerError) getPoolsRes() {}
 
 // Merged schema.
 type GetPricesInternalServerError struct {
@@ -2538,22 +2538,22 @@ func (s *PoolStatsPoints) SetPoints(val []PoolStatsPoint) {
 
 func (*PoolStatsPoints) getBlockchainPoolStatsChartRes() {}
 
-// Ref: #/components/schemas/PoolsStatsList
-type PoolsStatsList struct {
-	Stats []BlockchainPoolStats `json:"stats"`
+// Ref: #/components/schemas/PoolsList
+type PoolsList struct {
+	Pools []BlockchainPool `json:"pools"`
 }
 
-// GetStats returns the value of Stats.
-func (s *PoolsStatsList) GetStats() []BlockchainPoolStats {
-	return s.Stats
+// GetPools returns the value of Pools.
+func (s *PoolsList) GetPools() []BlockchainPool {
+	return s.Pools
 }
 
-// SetStats sets the value of Stats.
-func (s *PoolsStatsList) SetStats(val []BlockchainPoolStats) {
-	s.Stats = val
+// SetPools sets the value of Pools.
+func (s *PoolsList) SetPools(val []BlockchainPool) {
+	s.Pools = val
 }
 
-func (*PoolsStatsList) getPoolsStatsRes() {}
+func (*PoolsList) getPoolsRes() {}
 
 // Ref: #/components/schemas/PricesList
 type PricesList struct {
