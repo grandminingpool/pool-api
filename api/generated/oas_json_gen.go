@@ -6089,10 +6089,8 @@ func (s *PayoutsInfo) encodeFields(e *jx.Encoder) {
 		e.UInt32(s.Interval)
 	}
 	{
-		if s.MinPayout.Set {
-			e.FieldStart("min_payout")
-			s.MinPayout.Encode(e)
-		}
+		e.FieldStart("min_payout")
+		e.UInt64(s.MinPayout)
 	}
 	{
 		if s.MaxPayout.Set {
@@ -6130,9 +6128,11 @@ func (s *PayoutsInfo) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"interval\"")
 			}
 		case "min_payout":
+			requiredBitSet[0] |= 1 << 1
 			if err := func() error {
-				s.MinPayout.Reset()
-				if err := s.MinPayout.Decode(d); err != nil {
+				v, err := d.UInt64()
+				s.MinPayout = uint64(v)
+				if err != nil {
 					return err
 				}
 				return nil
@@ -6159,7 +6159,7 @@ func (s *PayoutsInfo) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00000001,
+		0b00000011,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.

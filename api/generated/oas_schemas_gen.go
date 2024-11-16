@@ -2005,7 +2005,7 @@ func (s *PayoutMode) UnmarshalText(data []byte) error {
 // Ref: #/components/schemas/PayoutsInfo
 type PayoutsInfo struct {
 	Interval  uint32    `json:"interval"`
-	MinPayout OptUint64 `json:"min_payout"`
+	MinPayout uint64    `json:"min_payout"`
 	MaxPayout OptUint64 `json:"max_payout"`
 }
 
@@ -2015,7 +2015,7 @@ func (s *PayoutsInfo) GetInterval() uint32 {
 }
 
 // GetMinPayout returns the value of MinPayout.
-func (s *PayoutsInfo) GetMinPayout() OptUint64 {
+func (s *PayoutsInfo) GetMinPayout() uint64 {
 	return s.MinPayout
 }
 
@@ -2030,7 +2030,7 @@ func (s *PayoutsInfo) SetInterval(val uint32) {
 }
 
 // SetMinPayout sets the value of MinPayout.
-func (s *PayoutsInfo) SetMinPayout(val OptUint64) {
+func (s *PayoutsInfo) SetMinPayout(val uint64) {
 	s.MinPayout = val
 }
 

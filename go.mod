@@ -6,7 +6,7 @@ require (
 	github.com/go-faster/errors v0.7.1
 	github.com/go-faster/jx v1.1.0
 	github.com/go-playground/validator/v10 v10.22.0
-	github.com/grandminingpool/pool-api-proto v0.14.0
+	github.com/grandminingpool/pool-api-proto v0.15.0
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/ogen-go/ogen v1.5.0
 	github.com/spf13/viper v1.19.0

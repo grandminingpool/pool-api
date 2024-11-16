@@ -30,12 +30,8 @@ func (s *PoolInfoSerializer) Serialize(ctx context.Context, poolInfo *poolProto.
 
 	payoutsInfo := apiModels.PayoutsInfo{
 		Interval:  poolInfo.PayoutsInfo.Interval,
-		MinPayout: apiModels.OptUint64{},
+		MinPayout: poolInfo.PayoutsInfo.MinPayout,
 		MaxPayout: apiModels.OptUint64{},
-	}
-
-	if poolInfo.PayoutsInfo.MinPayout != nil {
-		payoutsInfo.MinPayout.SetTo(*poolInfo.PayoutsInfo.MinPayout)
 	}
 
 	if poolInfo.PayoutsInfo.MaxPayout != nil {
