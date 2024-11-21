@@ -43,6 +43,7 @@ func CreateHandler(
 	//	Init pools handlers
 	poolInfoSerializer := &poolsSerializers.PoolInfoSerializer{}
 	poolStatsSerializer := &poolsSerializers.PoolStatsSerializer{}
+	poolNetworkInfoSerializer := &poolsSerializers.PoolNetworkInfoSerialzier{}
 	poolSlaveSerializer := &poolsSerializers.PoolSlaveSerialzier{}
 	poolSerializer := poolsSerializers.NewPoolSerializer(poolInfoSerializer, poolStatsSerializer, poolSlaveSerializer)
 	poolsBlockchainHandler := poolsHandlers.NewBlockchainHandler(
@@ -51,6 +52,7 @@ func CreateHandler(
 		poolInfoSerializer,
 		poolStatsSerializer,
 		poolSlaveSerializer,
+		poolNetworkInfoSerializer,
 	)
 	blockchainPoolSerializer := poolsSerializers.NewBlockchainPoolSerializer(poolInfoSerializer, poolStatsSerializer)
 	poolsHandler := poolsHandlers.NewHandler(poolsService, blockchainPoolSerializer)
@@ -82,6 +84,7 @@ func CreateHandler(
 	roundsPointSerializer := &chartsSerializers.RoundsPointSerializer{}
 	minerHashratesPointSerializer := &chartsSerializers.MinerHashratesPointSerializer{}
 	minerSharesPointSerializer := &chartsSerializers.MinerSharesPointSerializer{}
+	minerProfitabilitiesPointSerializer := &chartsSerializers.MinerProfitabilitiesPointSerializer{}
 	chartsBlockchainHandler := chartsHandlers.NewBlockchainHandler(
 		chartsBlockchainService,
 		poolStatsPointSerializer,
@@ -89,6 +92,7 @@ func CreateHandler(
 		roundsPointSerializer,
 		minerHashratesPointSerializer,
 		minerSharesPointSerializer,
+		minerProfitabilitiesPointSerializer,
 	)
 
 	return apiServerHandlers.NewServerHandler(

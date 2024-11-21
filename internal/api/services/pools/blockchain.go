@@ -11,14 +11,15 @@ import (
 )
 
 type Pool struct {
-	Info   *poolProto.PoolInfo
-	Stats  *poolProto.PoolStats
-	Slaves []*poolProto.PoolSlave
+	Info        *poolProto.PoolInfo
+	Stats       *poolProto.PoolStats
+	NetworkInfo *poolProto.NetworkInfo
+	Slaves      []*poolProto.PoolSlave
 }
 
 type BlockchainService struct{}
 
-func (s *BlockchainService) GetPool(ctx context.Context, blockchain *blockchains.Blockchain) (*Pool, error) {
+func (s *BlockchainService) GetPool(ctx context.Context, blockchain *blockchains.Blockchain, solo bool) (*Pool, error) {
 	client := poolProto.NewPoolServiceClient(blockchain.GetConnection())
 	pool := &Pool{
 		Info:   nil,
@@ -38,7 +39,9 @@ func (s *BlockchainService) GetPool(ctx context.Context, blockchain *blockchains
 		return fmt.Errorf("failed to get pool info: %w", err)
 	})
 	g.Go(func() error {
-		poolStats, err := client.GetPoolStats(gCtx, &emptypb.Empty{})
+		poolStats, err := client.GetPoolStats(gCtx, &poolProto.GetPoolAssetRequest{
+			Solo: solo,
+		})
 		if err == nil {
 			pool.Stats = poolStats
 
@@ -48,7 +51,19 @@ func (s *BlockchainService) GetPool(ctx context.Context, blockchain *blockchains
 		return fmt.Errorf("failed to get pool stats: %w", err)
 	})
 	g.Go(func() error {
-		poolSlaves, err := client.GetPoolSlaves(gCtx, &emptypb.Empty{})
+		networkInfo, err := client.GetNetworkInfo(ctx, &emptypb.Empty{})
+		if err == nil {
+			pool.NetworkInfo = networkInfo
+
+			return nil
+		}
+
+		return fmt.Errorf("failed to get pool network info: %w", err)
+	})
+	g.Go(func() error {
+		poolSlaves, err := client.GetPoolSlaves(gCtx, &poolProto.GetPoolAssetRequest{
+			Solo: solo,
+		})
 		if err == nil {
 			pool.Slaves = poolSlaves.Slaves
 
@@ -71,21 +86,35 @@ func (s *BlockchainService) GetPoolInfo(ctx context.Context, blockchain *blockch
 	return poolInfo, nil
 }
 
-func (s *BlockchainService) GetPoolStats(ctx context.Context, blockchain *blockchains.Blockchain) (*poolProto.PoolStats, error) {
+func (s *BlockchainService) GetPoolStats(ctx context.Context, blockchain *blockchains.Blockchain, solo bool) (*poolProto.PoolStats, error) {
 	client := poolProto.NewPoolServiceClient(blockchain.GetConnection())
-	poolStats, err := client.GetPoolStats(ctx, &emptypb.Empty{})
+	poolStats, err := client.GetPoolStats(ctx, &poolProto.GetPoolAssetRequest{
+		Solo: solo,
+	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get pool (blockchain: %s) stats: %w", blockchain.GetInfo().Blockchain, err)
+		return nil, fmt.Errorf("failed to get pool (blockchain: %s, solo: %t) stats: %w", blockchain.GetInfo().Blockchain, solo, err)
 	}
 
 	return poolStats, nil
 }
 
-func (s *BlockchainService) GetPoolSlaves(ctx context.Context, blockchain *blockchains.Blockchain) ([]*poolProto.PoolSlave, error) {
+func (s *BlockchainService) GetPoolNetworkInfo(ctx context.Context, blockchain *blockchains.Blockchain) (*poolProto.NetworkInfo, error) {
 	client := poolProto.NewPoolServiceClient(blockchain.GetConnection())
-	poolSlaves, err := client.GetPoolSlaves(ctx, &emptypb.Empty{})
+	networkInfo, err := client.GetNetworkInfo(ctx, &emptypb.Empty{})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get pool (blockchain: %s) slaves: %w", blockchain.GetInfo().Blockchain, err)
+		return nil, fmt.Errorf("failed to get pool (blockchain: %s) network info: %w", blockchain.GetInfo().Blockchain, err)
+	}
+
+	return networkInfo, nil
+}
+
+func (s *BlockchainService) GetPoolSlaves(ctx context.Context, blockchain *blockchains.Blockchain, solo bool) ([]*poolProto.PoolSlave, error) {
+	client := poolProto.NewPoolServiceClient(blockchain.GetConnection())
+	poolSlaves, err := client.GetPoolSlaves(ctx, &poolProto.GetPoolAssetRequest{
+		Solo: solo,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get pool (blockchain: %s, solo: %t) slaves: %w", blockchain.GetInfo().Blockchain, solo, err)
 	}
 
 	return poolSlaves.Slaves, nil

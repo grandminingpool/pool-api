@@ -40,6 +40,10 @@ github.com/grandminingpool/pool-api-proto v0.14.0 h1:wihbosSZjdFdEPFGbaosnRQgrED
 github.com/grandminingpool/pool-api-proto v0.14.0/go.mod h1:ob9NOkU+8Nsqn+2dEyyfNX/KviX0aEt0YtUlCvEKLKY=
 github.com/grandminingpool/pool-api-proto v0.15.0 h1:hTLuflv1zlbhC7NTAkb7nBFL8Yw4DY5z6+tn/mDVdBU=
 github.com/grandminingpool/pool-api-proto v0.15.0/go.mod h1:ob9NOkU+8Nsqn+2dEyyfNX/KviX0aEt0YtUlCvEKLKY=
+github.com/grandminingpool/pool-api-proto v0.16.0 h1:N5LkC6dhE7TQQ6yofIWLu8+DlUYNpcVkOmjNDvK4H5c=
+github.com/grandminingpool/pool-api-proto v0.16.0/go.mod h1:ob9NOkU+8Nsqn+2dEyyfNX/KviX0aEt0YtUlCvEKLKY=
+github.com/grandminingpool/pool-api-proto v0.17.0 h1:AXTeah3OjAfEFqYnnVO9bBuTXRoALnWsK4GQcqLwv60=
+github.com/grandminingpool/pool-api-proto v0.17.0/go.mod h1:ob9NOkU+8Nsqn+2dEyyfNX/KviX0aEt0YtUlCvEKLKY=
 github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0 h1:pRhl55Yx1eC7BZ1N+BBWwnKaMyD8uC+34TLdndZMAKk=
 github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.1.0/go.mod h1:XKMd7iuf/RGPSMJ/U4HP0zS2Z9Fh8Ps9a+6X26m/tmI=
 github.com/hashicorp/hcl v1.0.0 h1:0Anlzjpi4vEasTeNFn2mLJgTSwt0+6sfsiTG8qcWGx4=

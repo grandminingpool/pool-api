@@ -38,6 +38,12 @@ type Handler interface {
 	//
 	// GET /charts/{blockchain}/miner/{miner}/hashrates
 	GetBlockchainMinerHashratesChart(ctx context.Context, params GetBlockchainMinerHashratesChartParams) (GetBlockchainMinerHashratesChartRes, error)
+	// GetBlockchainMinerProfitabilitiesChart implements getBlockchainMinerProfitabilitiesChart operation.
+	//
+	// Get miner profitabilities chart points.
+	//
+	// GET /charts/{blockchain}/miner/{miner}/profitabilities
+	GetBlockchainMinerProfitabilitiesChart(ctx context.Context, params GetBlockchainMinerProfitabilitiesChartParams) (GetBlockchainMinerProfitabilitiesChartRes, error)
 	// GetBlockchainMinerSharesChart implements getBlockchainMinerSharesChart operation.
 	//
 	// Get miner shares chart points.
@@ -92,6 +98,12 @@ type Handler interface {
 	//
 	// GET /pools/{blockchain}/info
 	GetBlockchainPoolInfo(ctx context.Context, params GetBlockchainPoolInfoParams) (GetBlockchainPoolInfoRes, error)
+	// GetBlockchainPoolNetworkInfo implements getBlockchainPoolNetworkInfo operation.
+	//
+	// Get pool blockchain network info.
+	//
+	// GET /pools/{blockchain}/network_info
+	GetBlockchainPoolNetworkInfo(ctx context.Context, params GetBlockchainPoolNetworkInfoParams) (GetBlockchainPoolNetworkInfoRes, error)
 	// GetBlockchainPoolSlaves implements getBlockchainPoolSlaves operation.
 	//
 	// Get pool locations on blockchain.
@@ -133,7 +145,7 @@ type Handler interface {
 	// Get pool info and statistics for all blockchains.
 	//
 	// GET /pools
-	GetPools(ctx context.Context) (GetPoolsRes, error)
+	GetPools(ctx context.Context, params GetPoolsParams) (GetPoolsRes, error)
 	// GetPrices implements getPrices operation.
 	//
 	// Get blockchains prices list.

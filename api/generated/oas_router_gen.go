@@ -243,6 +243,30 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								}
 
 								elem = origElem
+							case 'p': // Prefix: "profitabilities"
+								origElem := elem
+								if l := len("profitabilities"); len(elem) >= l && elem[0:l] == "profitabilities" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "GET":
+										s.handleGetBlockchainMinerProfitabilitiesChartRequest([2]string{
+											args[0],
+											args[1],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET")
+									}
+
+									return
+								}
+
+								elem = origElem
 							case 's': // Prefix: "shares"
 								origElem := elem
 								if l := len("shares"); len(elem) >= l && elem[0:l] == "shares" {
@@ -716,6 +740,29 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 								}
 
 								elem = origElem
+							case 'n': // Prefix: "network_info"
+								origElem := elem
+								if l := len("network_info"); len(elem) >= l && elem[0:l] == "network_info" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch r.Method {
+									case "GET":
+										s.handleGetBlockchainPoolNetworkInfoRequest([1]string{
+											args[0],
+										}, elemIsEscaped, w, r)
+									default:
+										s.notAllowed(w, r, "GET")
+									}
+
+									return
+								}
+
+								elem = origElem
 							case 's': // Prefix: "s"
 								origElem := elem
 								if l := len("s"); len(elem) >= l && elem[0:l] == "s" {
@@ -1116,6 +1163,31 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										r.summary = "Get miner hashrates chart points"
 										r.operationID = "getBlockchainMinerHashratesChart"
 										r.pathPattern = "/charts/{blockchain}/miner/{miner}/hashrates"
+										r.args = args
+										r.count = 2
+										return r, true
+									default:
+										return
+									}
+								}
+
+								elem = origElem
+							case 'p': // Prefix: "profitabilities"
+								origElem := elem
+								if l := len("profitabilities"); len(elem) >= l && elem[0:l] == "profitabilities" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "GET":
+										r.name = "GetBlockchainMinerProfitabilitiesChart"
+										r.summary = "Get miner profitabilities chart points"
+										r.operationID = "getBlockchainMinerProfitabilitiesChart"
+										r.pathPattern = "/charts/{blockchain}/miner/{miner}/profitabilities"
 										r.args = args
 										r.count = 2
 										return r, true
@@ -1611,6 +1683,31 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										r.summary = "Get pool info on blockchain"
 										r.operationID = "getBlockchainPoolInfo"
 										r.pathPattern = "/pools/{blockchain}/info"
+										r.args = args
+										r.count = 1
+										return r, true
+									default:
+										return
+									}
+								}
+
+								elem = origElem
+							case 'n': // Prefix: "network_info"
+								origElem := elem
+								if l := len("network_info"); len(elem) >= l && elem[0:l] == "network_info" {
+									elem = elem[l:]
+								} else {
+									break
+								}
+
+								if len(elem) == 0 {
+									// Leaf node.
+									switch method {
+									case "GET":
+										r.name = "GetBlockchainPoolNetworkInfo"
+										r.summary = "Get pool blockchain network info"
+										r.operationID = "getBlockchainPoolNetworkInfo"
+										r.pathPattern = "/pools/{blockchain}/network_info"
 										r.args = args
 										r.count = 1
 										return r, true

@@ -13,6 +13,7 @@ const (
 	GetMinerWorkerHashratesChartError serverErrors.ServerErrorCode = "get_miner_worker_hashrates_chart_error"
 	GetMinerSharesChartError          serverErrors.ServerErrorCode = "get_miner_shares_chart_error"
 	GetMinerWorkerSharesChartError    serverErrors.ServerErrorCode = "get_miner_worker_shares_chart_error"
+	GetMinerProfitabilitiesChartError serverErrors.ServerErrorCode = "get_miner_profitabilities_chart_error"
 )
 
 func CreateGetPoolStatsChartError(err error) *apiModels.GetBlockchainPoolStatsChartInternalServerError {
@@ -60,6 +61,13 @@ func CreateGetMinerSharesChartError(err error) *apiModels.GetBlockchainMinerShar
 func CreateGetMinerWorkerSharesChartError(err error) *apiModels.GetBlockchainMinerWorkerSharesChartInternalServerError {
 	return &apiModels.GetBlockchainMinerWorkerSharesChartInternalServerError{
 		Code:    string(GetMinerWorkerSharesChartError),
+		Message: err.Error(),
+	}
+}
+
+func CreateGetMinerProfitabilitiesChartError(err error) *apiModels.GetBlockchainMinerProfitabilitiesChartInternalServerError {
+	return &apiModels.GetBlockchainMinerProfitabilitiesChartInternalServerError{
+		Code:    string(GetMinerProfitabilitiesChartError),
 		Message: err.Error(),
 	}
 }

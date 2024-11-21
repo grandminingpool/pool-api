@@ -17,6 +17,10 @@ type GetBlockchainMinerHashratesChartRes interface {
 	getBlockchainMinerHashratesChartRes()
 }
 
+type GetBlockchainMinerProfitabilitiesChartRes interface {
+	getBlockchainMinerProfitabilitiesChartRes()
+}
+
 type GetBlockchainMinerRes interface {
 	getBlockchainMinerRes()
 }
@@ -51,6 +55,10 @@ type GetBlockchainPoolDifficultiesChartRes interface {
 
 type GetBlockchainPoolInfoRes interface {
 	getBlockchainPoolInfoRes()
+}
+
+type GetBlockchainPoolNetworkInfoRes interface {
+	getBlockchainPoolNetworkInfoRes()
 }
 
 type GetBlockchainPoolRes interface {

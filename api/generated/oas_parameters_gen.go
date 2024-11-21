@@ -1078,6 +1078,232 @@ func decodeGetBlockchainMinerHashratesChartParams(args [2]string, argsEscaped bo
 	return params, nil
 }
 
+// GetBlockchainMinerProfitabilitiesChartParams is parameters of getBlockchainMinerProfitabilitiesChart operation.
+type GetBlockchainMinerProfitabilitiesChartParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// Pool miner.
+	Miner string
+	// Chart period.
+	Period ChartPeriod
+	// Show miner solo profitabilities points (if pool supports solo mining)?.
+	Solo OptBool
+}
+
+func unpackGetBlockchainMinerProfitabilitiesChartParams(packed middleware.Parameters) (params GetBlockchainMinerProfitabilitiesChartParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "miner",
+			In:   "path",
+		}
+		params.Miner = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "period",
+			In:   "query",
+		}
+		params.Period = packed[key].(ChartPeriod)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "solo",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Solo = v.(OptBool)
+		}
+	}
+	return params
+}
+
+func decodeGetBlockchainMinerProfitabilitiesChartParams(args [2]string, argsEscaped bool, r *http.Request) (params GetBlockchainMinerProfitabilitiesChartParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode path: miner.
+	if err := func() error {
+		param := args[1]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[1])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "miner",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Miner = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "miner",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: period.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "period",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Period = ChartPeriod(c)
+				return nil
+			}); err != nil {
+				return err
+			}
+			if err := func() error {
+				if err := params.Period.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "period",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: solo.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "solo",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSoloVal bool
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToBool(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotSoloVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Solo.SetTo(paramsDotSoloVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "solo",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
 // GetBlockchainMinerSharesChartParams is parameters of getBlockchainMinerSharesChart operation.
 type GetBlockchainMinerSharesChartParams struct {
 	// Pool blockchain.
@@ -2842,6 +3068,8 @@ func decodeGetBlockchainPayoutsParams(args [1]string, argsEscaped bool, r *http.
 type GetBlockchainPoolParams struct {
 	// Pool blockchain.
 	Blockchain string
+	// Show data for solo pool (if pool supports solo mining)?.
+	Solo OptBool
 }
 
 func unpackGetBlockchainPoolParams(packed middleware.Parameters) (params GetBlockchainPoolParams) {
@@ -2852,10 +3080,20 @@ func unpackGetBlockchainPoolParams(packed middleware.Parameters) (params GetBloc
 		}
 		params.Blockchain = packed[key].(string)
 	}
+	{
+		key := middleware.ParameterKey{
+			Name: "solo",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Solo = v.(OptBool)
+		}
+	}
 	return params
 }
 
 func decodeGetBlockchainPoolParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainPoolParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
 	// Decode path: blockchain.
 	if err := func() error {
 		param := args[0]
@@ -2898,6 +3136,47 @@ func decodeGetBlockchainPoolParams(args [1]string, argsEscaped bool, r *http.Req
 		return params, &ogenerrors.DecodeParamError{
 			Name: "blockchain",
 			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: solo.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "solo",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSoloVal bool
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToBool(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotSoloVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Solo.SetTo(paramsDotSoloVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "solo",
+			In:   "query",
 			Err:  err,
 		}
 	}
@@ -3142,13 +3421,13 @@ func decodeGetBlockchainPoolInfoParams(args [1]string, argsEscaped bool, r *http
 	return params, nil
 }
 
-// GetBlockchainPoolSlavesParams is parameters of getBlockchainPoolSlaves operation.
-type GetBlockchainPoolSlavesParams struct {
+// GetBlockchainPoolNetworkInfoParams is parameters of getBlockchainPoolNetworkInfo operation.
+type GetBlockchainPoolNetworkInfoParams struct {
 	// Pool blockchain.
 	Blockchain string
 }
 
-func unpackGetBlockchainPoolSlavesParams(packed middleware.Parameters) (params GetBlockchainPoolSlavesParams) {
+func unpackGetBlockchainPoolNetworkInfoParams(packed middleware.Parameters) (params GetBlockchainPoolNetworkInfoParams) {
 	{
 		key := middleware.ParameterKey{
 			Name: "blockchain",
@@ -3159,7 +3438,7 @@ func unpackGetBlockchainPoolSlavesParams(packed middleware.Parameters) (params G
 	return params
 }
 
-func decodeGetBlockchainPoolSlavesParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainPoolSlavesParams, _ error) {
+func decodeGetBlockchainPoolNetworkInfoParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainPoolNetworkInfoParams, _ error) {
 	// Decode path: blockchain.
 	if err := func() error {
 		param := args[0]
@@ -3208,13 +3487,15 @@ func decodeGetBlockchainPoolSlavesParams(args [1]string, argsEscaped bool, r *ht
 	return params, nil
 }
 
-// GetBlockchainPoolStatsParams is parameters of getBlockchainPoolStats operation.
-type GetBlockchainPoolStatsParams struct {
+// GetBlockchainPoolSlavesParams is parameters of getBlockchainPoolSlaves operation.
+type GetBlockchainPoolSlavesParams struct {
 	// Pool blockchain.
 	Blockchain string
+	// Show slaves for solo pool (if pool supports solo mining)?.
+	Solo OptBool
 }
 
-func unpackGetBlockchainPoolStatsParams(packed middleware.Parameters) (params GetBlockchainPoolStatsParams) {
+func unpackGetBlockchainPoolSlavesParams(packed middleware.Parameters) (params GetBlockchainPoolSlavesParams) {
 	{
 		key := middleware.ParameterKey{
 			Name: "blockchain",
@@ -3222,10 +3503,20 @@ func unpackGetBlockchainPoolStatsParams(packed middleware.Parameters) (params Ge
 		}
 		params.Blockchain = packed[key].(string)
 	}
+	{
+		key := middleware.ParameterKey{
+			Name: "solo",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Solo = v.(OptBool)
+		}
+	}
 	return params
 }
 
-func decodeGetBlockchainPoolStatsParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainPoolStatsParams, _ error) {
+func decodeGetBlockchainPoolSlavesParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainPoolSlavesParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
 	// Decode path: blockchain.
 	if err := func() error {
 		param := args[0]
@@ -3268,6 +3559,166 @@ func decodeGetBlockchainPoolStatsParams(args [1]string, argsEscaped bool, r *htt
 		return params, &ogenerrors.DecodeParamError{
 			Name: "blockchain",
 			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: solo.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "solo",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSoloVal bool
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToBool(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotSoloVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Solo.SetTo(paramsDotSoloVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "solo",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetBlockchainPoolStatsParams is parameters of getBlockchainPoolStats operation.
+type GetBlockchainPoolStatsParams struct {
+	// Pool blockchain.
+	Blockchain string
+	// Show statistics for solo pool (if pool supports solo mining)?.
+	Solo OptBool
+}
+
+func unpackGetBlockchainPoolStatsParams(packed middleware.Parameters) (params GetBlockchainPoolStatsParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "blockchain",
+			In:   "path",
+		}
+		params.Blockchain = packed[key].(string)
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "solo",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.Solo = v.(OptBool)
+		}
+	}
+	return params
+}
+
+func decodeGetBlockchainPoolStatsParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainPoolStatsParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode path: blockchain.
+	if err := func() error {
+		param := args[0]
+		if argsEscaped {
+			unescaped, err := url.PathUnescape(args[0])
+			if err != nil {
+				return errors.Wrap(err, "unescape path")
+			}
+			param = unescaped
+		}
+		if len(param) > 0 {
+			d := uri.NewPathDecoder(uri.PathDecoderConfig{
+				Param:   "blockchain",
+				Value:   param,
+				Style:   uri.PathStyleSimple,
+				Explode: false,
+			})
+
+			if err := func() error {
+				val, err := d.DecodeValue()
+				if err != nil {
+					return err
+				}
+
+				c, err := conv.ToString(val)
+				if err != nil {
+					return err
+				}
+
+				params.Blockchain = c
+				return nil
+			}(); err != nil {
+				return err
+			}
+		} else {
+			return validate.ErrFieldRequired
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "blockchain",
+			In:   "path",
+			Err:  err,
+		}
+	}
+	// Decode query: solo.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "solo",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotSoloVal bool
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToBool(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotSoloVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.Solo.SetTo(paramsDotSoloVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "solo",
+			In:   "query",
 			Err:  err,
 		}
 	}
@@ -4142,6 +4593,123 @@ func decodeGetBlockchainSoloBlocksParams(args [1]string, argsEscaped bool, r *ht
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
 			Name: "mined_at",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	return params, nil
+}
+
+// GetPoolsParams is parameters of getPools operation.
+type GetPoolsParams struct {
+	// Include pool solo statistics (if pool supports solo mining) in response?.
+	IncludeSoloStats OptBool
+	// Include pool network info in response?.
+	IncludeNetworkInfo OptBool
+}
+
+func unpackGetPoolsParams(packed middleware.Parameters) (params GetPoolsParams) {
+	{
+		key := middleware.ParameterKey{
+			Name: "include_solo_stats",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.IncludeSoloStats = v.(OptBool)
+		}
+	}
+	{
+		key := middleware.ParameterKey{
+			Name: "include_network_info",
+			In:   "query",
+		}
+		if v, ok := packed[key]; ok {
+			params.IncludeNetworkInfo = v.(OptBool)
+		}
+	}
+	return params
+}
+
+func decodeGetPoolsParams(args [0]string, argsEscaped bool, r *http.Request) (params GetPoolsParams, _ error) {
+	q := uri.NewQueryDecoder(r.URL.Query())
+	// Decode query: include_solo_stats.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "include_solo_stats",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotIncludeSoloStatsVal bool
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToBool(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotIncludeSoloStatsVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.IncludeSoloStats.SetTo(paramsDotIncludeSoloStatsVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "include_solo_stats",
+			In:   "query",
+			Err:  err,
+		}
+	}
+	// Decode query: include_network_info.
+	if err := func() error {
+		cfg := uri.QueryParameterDecodingConfig{
+			Name:    "include_network_info",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.HasParam(cfg); err == nil {
+			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
+				var paramsDotIncludeNetworkInfoVal bool
+				if err := func() error {
+					val, err := d.DecodeValue()
+					if err != nil {
+						return err
+					}
+
+					c, err := conv.ToBool(val)
+					if err != nil {
+						return err
+					}
+
+					paramsDotIncludeNetworkInfoVal = c
+					return nil
+				}(); err != nil {
+					return err
+				}
+				params.IncludeNetworkInfo.SetTo(paramsDotIncludeNetworkInfoVal)
+				return nil
+			}); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		return params, &ogenerrors.DecodeParamError{
+			Name: "include_network_info",
 			In:   "query",
 			Err:  err,
 		}

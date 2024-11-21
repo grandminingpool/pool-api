@@ -14,8 +14,8 @@ type Handler struct {
 	blockchainPoolSerializer *poolsSerializers.BlockchainPoolSerializer
 }
 
-func (h *Handler) GetPools(ctx context.Context) apiModels.GetPoolsRes {
-	pools, err := h.poolsService.GetPools(ctx)
+func (h *Handler) GetPools(ctx context.Context, includeSoloStats, includeNetworkInfo bool) apiModels.GetPoolsRes {
+	pools, err := h.poolsService.GetPools(ctx, includeSoloStats, includeNetworkInfo)
 	if err != nil {
 		return poolsErrors.CreateGetPoolsError(err)
 	}

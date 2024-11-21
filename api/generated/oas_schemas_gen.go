@@ -124,6 +124,7 @@ func (s *BlockchainNotFound) SetMessage(val string) {
 func (*BlockchainNotFound) getBlockchainBlocksRes()                    {}
 func (*BlockchainNotFound) getBlockchainMinerBalanceRes()              {}
 func (*BlockchainNotFound) getBlockchainMinerHashratesChartRes()       {}
+func (*BlockchainNotFound) getBlockchainMinerProfitabilitiesChartRes() {}
 func (*BlockchainNotFound) getBlockchainMinerRes()                     {}
 func (*BlockchainNotFound) getBlockchainMinerSharesChartRes()          {}
 func (*BlockchainNotFound) getBlockchainMinerWorkerHashratesChartRes() {}
@@ -133,6 +134,7 @@ func (*BlockchainNotFound) getBlockchainMinersRes()                    {}
 func (*BlockchainNotFound) getBlockchainPayoutsRes()                   {}
 func (*BlockchainNotFound) getBlockchainPoolDifficultiesChartRes()     {}
 func (*BlockchainNotFound) getBlockchainPoolInfoRes()                  {}
+func (*BlockchainNotFound) getBlockchainPoolNetworkInfoRes()           {}
 func (*BlockchainNotFound) getBlockchainPoolRes()                      {}
 func (*BlockchainNotFound) getBlockchainPoolSlavesRes()                {}
 func (*BlockchainNotFound) getBlockchainPoolStatsChartRes()            {}
@@ -142,8 +144,10 @@ func (*BlockchainNotFound) getBlockchainSoloBlocksRes()                {}
 
 // Ref: #/components/schemas/BlockchainPool
 type BlockchainPool struct {
-	Info  PoolInfo  `json:"info"`
-	Stats PoolStats `json:"stats"`
+	Info        PoolInfo           `json:"info"`
+	Stats       PoolStats          `json:"stats"`
+	SoloStats   OptPoolStats       `json:"solo_stats"`
+	NetworkInfo OptPoolNetworkInfo `json:"network_info"`
 }
 
 // GetInfo returns the value of Info.
@@ -156,6 +160,16 @@ func (s *BlockchainPool) GetStats() PoolStats {
 	return s.Stats
 }
 
+// GetSoloStats returns the value of SoloStats.
+func (s *BlockchainPool) GetSoloStats() OptPoolStats {
+	return s.SoloStats
+}
+
+// GetNetworkInfo returns the value of NetworkInfo.
+func (s *BlockchainPool) GetNetworkInfo() OptPoolNetworkInfo {
+	return s.NetworkInfo
+}
+
 // SetInfo sets the value of Info.
 func (s *BlockchainPool) SetInfo(val PoolInfo) {
 	s.Info = val
@@ -164,6 +178,16 @@ func (s *BlockchainPool) SetInfo(val PoolInfo) {
 // SetStats sets the value of Stats.
 func (s *BlockchainPool) SetStats(val PoolStats) {
 	s.Stats = val
+}
+
+// SetSoloStats sets the value of SoloStats.
+func (s *BlockchainPool) SetSoloStats(val OptPoolStats) {
+	s.SoloStats = val
+}
+
+// SetNetworkInfo sets the value of NetworkInfo.
+func (s *BlockchainPool) SetNetworkInfo(val OptPoolNetworkInfo) {
+	s.NetworkInfo = val
 }
 
 // Merged schema.
@@ -508,6 +532,36 @@ func (s *GetBlockchainMinerNotFound) SetMessage(val string) {
 func (*GetBlockchainMinerNotFound) getBlockchainMinerRes() {}
 
 // Merged schema.
+type GetBlockchainMinerProfitabilitiesChartInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainMinerProfitabilitiesChartInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainMinerProfitabilitiesChartInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainMinerProfitabilitiesChartInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainMinerProfitabilitiesChartInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainMinerProfitabilitiesChartInternalServerError) getBlockchainMinerProfitabilitiesChartRes() {
+}
+
+// Merged schema.
 type GetBlockchainMinerSharesChartInternalServerError struct {
 	// Merged property.
 	Code    string `json:"code"`
@@ -799,6 +853,35 @@ func (s *GetBlockchainPoolInternalServerError) SetMessage(val string) {
 }
 
 func (*GetBlockchainPoolInternalServerError) getBlockchainPoolRes() {}
+
+// Merged schema.
+type GetBlockchainPoolNetworkInfoInternalServerError struct {
+	// Merged property.
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *GetBlockchainPoolNetworkInfoInternalServerError) GetCode() string {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *GetBlockchainPoolNetworkInfoInternalServerError) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *GetBlockchainPoolNetworkInfoInternalServerError) SetCode(val string) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *GetBlockchainPoolNetworkInfoInternalServerError) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*GetBlockchainPoolNetworkInfoInternalServerError) getBlockchainPoolNetworkInfoRes() {}
 
 // Merged schema.
 type GetBlockchainPoolSlavesInternalServerError struct {
@@ -1467,6 +1550,49 @@ func (s *MinerHashratesPoints) SetPoints(val []MinerHashratesPoint) {
 func (*MinerHashratesPoints) getBlockchainMinerHashratesChartRes()       {}
 func (*MinerHashratesPoints) getBlockchainMinerWorkerHashratesChartRes() {}
 
+// Ref: #/components/schemas/MinerProfitabilitiesPoint
+type MinerProfitabilitiesPoint struct {
+	Balance uint64 `json:"balance"`
+	Date    string `json:"date"`
+}
+
+// GetBalance returns the value of Balance.
+func (s *MinerProfitabilitiesPoint) GetBalance() uint64 {
+	return s.Balance
+}
+
+// GetDate returns the value of Date.
+func (s *MinerProfitabilitiesPoint) GetDate() string {
+	return s.Date
+}
+
+// SetBalance sets the value of Balance.
+func (s *MinerProfitabilitiesPoint) SetBalance(val uint64) {
+	s.Balance = val
+}
+
+// SetDate sets the value of Date.
+func (s *MinerProfitabilitiesPoint) SetDate(val string) {
+	s.Date = val
+}
+
+// Ref: #/components/schemas/MinerProfitabilitiesPoints
+type MinerProfitabilitiesPoints struct {
+	Points []MinerProfitabilitiesPoint `json:"points"`
+}
+
+// GetPoints returns the value of Points.
+func (s *MinerProfitabilitiesPoints) GetPoints() []MinerProfitabilitiesPoint {
+	return s.Points
+}
+
+// SetPoints sets the value of Points.
+func (s *MinerProfitabilitiesPoints) SetPoints(val []MinerProfitabilitiesPoint) {
+	s.Points = val
+}
+
+func (*MinerProfitabilitiesPoints) getBlockchainMinerProfitabilitiesChartRes() {}
+
 // Ref: #/components/schemas/MinerSharesPoint
 type MinerSharesPoint struct {
 	AcceptedSharesCount   uint32 `json:"accepted_shares_count"`
@@ -1774,6 +1900,98 @@ func (o OptFloat64) Or(d float64) float64 {
 	return d
 }
 
+// NewOptPoolNetworkInfo returns new OptPoolNetworkInfo with value set to v.
+func NewOptPoolNetworkInfo(v PoolNetworkInfo) OptPoolNetworkInfo {
+	return OptPoolNetworkInfo{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptPoolNetworkInfo is optional PoolNetworkInfo.
+type OptPoolNetworkInfo struct {
+	Value PoolNetworkInfo
+	Set   bool
+}
+
+// IsSet returns true if OptPoolNetworkInfo was set.
+func (o OptPoolNetworkInfo) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptPoolNetworkInfo) Reset() {
+	var v PoolNetworkInfo
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptPoolNetworkInfo) SetTo(v PoolNetworkInfo) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptPoolNetworkInfo) Get() (v PoolNetworkInfo, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptPoolNetworkInfo) Or(d PoolNetworkInfo) PoolNetworkInfo {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
+// NewOptPoolStats returns new OptPoolStats with value set to v.
+func NewOptPoolStats(v PoolStats) OptPoolStats {
+	return OptPoolStats{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptPoolStats is optional PoolStats.
+type OptPoolStats struct {
+	Value PoolStats
+	Set   bool
+}
+
+// IsSet returns true if OptPoolStats was set.
+func (o OptPoolStats) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptPoolStats) Reset() {
+	var v PoolStats
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptPoolStats) SetTo(v PoolStats) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptPoolStats) Get() (v PoolStats, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptPoolStats) Or(d PoolStats) PoolStats {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
+
 // NewOptString returns new OptString with value set to v.
 func NewOptString(v string) OptString {
 	return OptString{
@@ -1814,52 +2032,6 @@ func (o OptString) Get() (v string, ok bool) {
 
 // Or returns value if set, or given parameter if does not.
 func (o OptString) Or(d string) string {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
-// NewOptUint32 returns new OptUint32 with value set to v.
-func NewOptUint32(v uint32) OptUint32 {
-	return OptUint32{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptUint32 is optional uint32.
-type OptUint32 struct {
-	Value uint32
-	Set   bool
-}
-
-// IsSet returns true if OptUint32 was set.
-func (o OptUint32) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptUint32) Reset() {
-	var v uint32
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptUint32) SetTo(v uint32) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptUint32) Get() (v uint32, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptUint32) Or(d uint32) uint32 {
 	if v, ok := o.Get(); ok {
 		return v
 	}
@@ -2092,9 +2264,10 @@ func (*PayoutsList) getBlockchainPayoutsRes() {}
 
 // Ref: #/components/schemas/Pool
 type Pool struct {
-	Info   PoolInfo    `json:"info"`
-	Stats  PoolStats   `json:"stats"`
-	Slaves []PoolSlave `json:"slaves"`
+	Info        PoolInfo        `json:"info"`
+	Stats       PoolStats       `json:"stats"`
+	NetworkInfo PoolNetworkInfo `json:"network_info"`
+	Slaves      []PoolSlave     `json:"slaves"`
 }
 
 // GetInfo returns the value of Info.
@@ -2105,6 +2278,11 @@ func (s *Pool) GetInfo() PoolInfo {
 // GetStats returns the value of Stats.
 func (s *Pool) GetStats() PoolStats {
 	return s.Stats
+}
+
+// GetNetworkInfo returns the value of NetworkInfo.
+func (s *Pool) GetNetworkInfo() PoolNetworkInfo {
+	return s.NetworkInfo
 }
 
 // GetSlaves returns the value of Slaves.
@@ -2120,6 +2298,11 @@ func (s *Pool) SetInfo(val PoolInfo) {
 // SetStats sets the value of Stats.
 func (s *Pool) SetStats(val PoolStats) {
 	s.Stats = val
+}
+
+// SetNetworkInfo sets the value of NetworkInfo.
+func (s *Pool) SetNetworkInfo(val PoolNetworkInfo) {
+	s.NetworkInfo = val
 }
 
 // SetSlaves sets the value of Slaves.
@@ -2292,14 +2475,52 @@ func (s *PoolInfo) SetAgents(val []string) {
 
 func (*PoolInfo) getBlockchainPoolInfoRes() {}
 
+// Ref: #/components/schemas/PoolNetworkInfo
+type PoolNetworkInfo struct {
+	TopBlockHash string `json:"top_block_hash"`
+	Difficulty   string `json:"difficulty"`
+	BlockReward  uint64 `json:"block_reward"`
+}
+
+// GetTopBlockHash returns the value of TopBlockHash.
+func (s *PoolNetworkInfo) GetTopBlockHash() string {
+	return s.TopBlockHash
+}
+
+// GetDifficulty returns the value of Difficulty.
+func (s *PoolNetworkInfo) GetDifficulty() string {
+	return s.Difficulty
+}
+
+// GetBlockReward returns the value of BlockReward.
+func (s *PoolNetworkInfo) GetBlockReward() uint64 {
+	return s.BlockReward
+}
+
+// SetTopBlockHash sets the value of TopBlockHash.
+func (s *PoolNetworkInfo) SetTopBlockHash(val string) {
+	s.TopBlockHash = val
+}
+
+// SetDifficulty sets the value of Difficulty.
+func (s *PoolNetworkInfo) SetDifficulty(val string) {
+	s.Difficulty = val
+}
+
+// SetBlockReward sets the value of BlockReward.
+func (s *PoolNetworkInfo) SetBlockReward(val uint64) {
+	s.BlockReward = val
+}
+
+func (*PoolNetworkInfo) getBlockchainPoolNetworkInfoRes() {}
+
 // Ref: #/components/schemas/PoolSlave
 type PoolSlave struct {
-	Region      string    `json:"region"`
-	Host        string    `json:"host"`
-	TCPPort     uint32    `json:"tcp_port"`
-	SslPort     uint32    `json:"ssl_port"`
-	SoloPort    OptUint32 `json:"solo_port"`
-	ConnectedAt string    `json:"connected_at"`
+	Region      string `json:"region"`
+	Host        string `json:"host"`
+	TCPPort     uint32 `json:"tcp_port"`
+	SslPort     uint32 `json:"ssl_port"`
+	ConnectedAt string `json:"connected_at"`
 }
 
 // GetRegion returns the value of Region.
@@ -2320,11 +2541,6 @@ func (s *PoolSlave) GetTCPPort() uint32 {
 // GetSslPort returns the value of SslPort.
 func (s *PoolSlave) GetSslPort() uint32 {
 	return s.SslPort
-}
-
-// GetSoloPort returns the value of SoloPort.
-func (s *PoolSlave) GetSoloPort() OptUint32 {
-	return s.SoloPort
 }
 
 // GetConnectedAt returns the value of ConnectedAt.
@@ -2352,11 +2568,6 @@ func (s *PoolSlave) SetSslPort(val uint32) {
 	s.SslPort = val
 }
 
-// SetSoloPort sets the value of SoloPort.
-func (s *PoolSlave) SetSoloPort(val OptUint32) {
-	s.SoloPort = val
-}
-
 // SetConnectedAt sets the value of ConnectedAt.
 func (s *PoolSlave) SetConnectedAt(val string) {
 	s.ConnectedAt = val
@@ -2381,14 +2592,11 @@ func (*PoolSlavesList) getBlockchainPoolSlavesRes() {}
 
 // Ref: #/components/schemas/PoolStats
 type PoolStats struct {
-	MinersCount         uint32    `json:"miners_count"`
-	SoloMinersCount     OptUint32 `json:"solo_miners_count"`
-	Hashrate            string    `json:"hashrate"`
-	AvgHashrate         string    `json:"avg_hashrate"`
-	SoloHashrate        OptString `json:"solo_hashrate"`
-	SoloAvgHashrate     OptString `json:"solo_avg_hashrate"`
-	ShareDifficulty     uint64    `json:"share_difficulty"`
-	SoloShareDifficulty OptUint64 `json:"solo_share_difficulty"`
+	MinersCount     uint32 `json:"miners_count"`
+	WorkersCount    uint32 `json:"workers_count"`
+	Hashrate        string `json:"hashrate"`
+	AvgHashrate     string `json:"avg_hashrate"`
+	ShareDifficulty uint64 `json:"share_difficulty"`
 }
 
 // GetMinersCount returns the value of MinersCount.
@@ -2396,9 +2604,9 @@ func (s *PoolStats) GetMinersCount() uint32 {
 	return s.MinersCount
 }
 
-// GetSoloMinersCount returns the value of SoloMinersCount.
-func (s *PoolStats) GetSoloMinersCount() OptUint32 {
-	return s.SoloMinersCount
+// GetWorkersCount returns the value of WorkersCount.
+func (s *PoolStats) GetWorkersCount() uint32 {
+	return s.WorkersCount
 }
 
 // GetHashrate returns the value of Hashrate.
@@ -2411,24 +2619,9 @@ func (s *PoolStats) GetAvgHashrate() string {
 	return s.AvgHashrate
 }
 
-// GetSoloHashrate returns the value of SoloHashrate.
-func (s *PoolStats) GetSoloHashrate() OptString {
-	return s.SoloHashrate
-}
-
-// GetSoloAvgHashrate returns the value of SoloAvgHashrate.
-func (s *PoolStats) GetSoloAvgHashrate() OptString {
-	return s.SoloAvgHashrate
-}
-
 // GetShareDifficulty returns the value of ShareDifficulty.
 func (s *PoolStats) GetShareDifficulty() uint64 {
 	return s.ShareDifficulty
-}
-
-// GetSoloShareDifficulty returns the value of SoloShareDifficulty.
-func (s *PoolStats) GetSoloShareDifficulty() OptUint64 {
-	return s.SoloShareDifficulty
 }
 
 // SetMinersCount sets the value of MinersCount.
@@ -2436,9 +2629,9 @@ func (s *PoolStats) SetMinersCount(val uint32) {
 	s.MinersCount = val
 }
 
-// SetSoloMinersCount sets the value of SoloMinersCount.
-func (s *PoolStats) SetSoloMinersCount(val OptUint32) {
-	s.SoloMinersCount = val
+// SetWorkersCount sets the value of WorkersCount.
+func (s *PoolStats) SetWorkersCount(val uint32) {
+	s.WorkersCount = val
 }
 
 // SetHashrate sets the value of Hashrate.
@@ -2451,24 +2644,9 @@ func (s *PoolStats) SetAvgHashrate(val string) {
 	s.AvgHashrate = val
 }
 
-// SetSoloHashrate sets the value of SoloHashrate.
-func (s *PoolStats) SetSoloHashrate(val OptString) {
-	s.SoloHashrate = val
-}
-
-// SetSoloAvgHashrate sets the value of SoloAvgHashrate.
-func (s *PoolStats) SetSoloAvgHashrate(val OptString) {
-	s.SoloAvgHashrate = val
-}
-
 // SetShareDifficulty sets the value of ShareDifficulty.
 func (s *PoolStats) SetShareDifficulty(val uint64) {
 	s.ShareDifficulty = val
-}
-
-// SetSoloShareDifficulty sets the value of SoloShareDifficulty.
-func (s *PoolStats) SetSoloShareDifficulty(val OptUint64) {
-	s.SoloShareDifficulty = val
 }
 
 func (*PoolStats) getBlockchainPoolStatsRes() {}

@@ -47,8 +47,8 @@ func (h *ServerHandler) getBlockchain(coin string) (*blockchains.Blockchain, *ap
 	return blockchain, nil
 }
 
-func (h *ServerHandler) GetPools(ctx context.Context) (apiModels.GetPoolsRes, error) {
-	return h.poolsHandler.GetPools(ctx), nil
+func (h *ServerHandler) GetPools(ctx context.Context, params apiModels.GetPoolsParams) (apiModels.GetPoolsRes, error) {
+	return h.poolsHandler.GetPools(ctx, params.IncludeSoloStats.Value, params.IncludeNetworkInfo.Value), nil
 }
 
 func (h *ServerHandler) GetBlockchainPool(ctx context.Context, params apiModels.GetBlockchainPoolParams) (apiModels.GetBlockchainPoolRes, error) {
@@ -57,7 +57,7 @@ func (h *ServerHandler) GetBlockchainPool(ctx context.Context, params apiModels.
 		return notFound, nil
 	}
 
-	return h.poolsBlockchainHandler.GetPool(ctx, blockchain), nil
+	return h.poolsBlockchainHandler.GetPool(ctx, blockchain, params.Solo.Value), nil
 }
 
 func (h *ServerHandler) GetBlockchainPoolInfo(ctx context.Context, params apiModels.GetBlockchainPoolInfoParams) (apiModels.GetBlockchainPoolInfoRes, error) {
@@ -75,7 +75,16 @@ func (h *ServerHandler) GetBlockchainPoolStats(ctx context.Context, params apiMo
 		return notFound, nil
 	}
 
-	return h.poolsBlockchainHandler.GetPoolStats(ctx, blockchain), nil
+	return h.poolsBlockchainHandler.GetPoolStats(ctx, blockchain, params.Solo.Value), nil
+}
+
+func (h *ServerHandler) GetBlockchainPoolNetworkInfo(ctx context.Context, params apiModels.GetBlockchainPoolNetworkInfoParams) (apiModels.GetBlockchainPoolNetworkInfoRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
+	}
+
+	return h.poolsBlockchainHandler.GetPoolNetworkInfo(ctx, blockchain), nil
 }
 
 func (h *ServerHandler) GetBlockchainPoolSlaves(ctx context.Context, params apiModels.GetBlockchainPoolSlavesParams) (apiModels.GetBlockchainPoolSlavesRes, error) {
@@ -84,7 +93,7 @@ func (h *ServerHandler) GetBlockchainPoolSlaves(ctx context.Context, params apiM
 		return notFound, nil
 	}
 
-	return h.poolsBlockchainHandler.GetPoolSlaves(ctx, blockchain), nil
+	return h.poolsBlockchainHandler.GetPoolSlaves(ctx, blockchain, params.Solo.Value), nil
 }
 
 func (h *ServerHandler) GetBlockchainMarkets(ctx context.Context, params apiModels.GetBlockchainMarketsParams) (apiModels.GetBlockchainMarketsRes, error) {
@@ -231,6 +240,15 @@ func (h *ServerHandler) GetBlockchainMinerWorkerSharesChart(ctx context.Context,
 	}
 
 	return h.chartsBlockchainHandler.GetMinerWorkerSharesChart(ctx, blockchain, &params.Period, params.Miner, params.Worker), nil
+}
+
+func (h *ServerHandler) GetBlockchainMinerProfitabilitiesChart(ctx context.Context, params apiModels.GetBlockchainMinerProfitabilitiesChartParams) (apiModels.GetBlockchainMinerProfitabilitiesChartRes, error) {
+	blockchain, notFound := h.getBlockchain(params.Blockchain)
+	if notFound != nil {
+		return notFound, nil
+	}
+
+	return h.chartsBlockchainHandler.GetMinerProfitabilitiesChart(ctx, blockchain, &params.Period, params.Miner, params.Solo.Value), nil
 }
 
 func NewServerHandler(

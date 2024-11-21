@@ -157,3 +157,23 @@ func (s *BlockchainService) GetMinerWorkerSharesChartPoints(
 
 	return minerWorkerSharesPoints.Points, nil
 }
+
+func (s *BlockchainService) GetMinerProfitabilitiesChartPoints(
+	ctx context.Context,
+	blockchain *blockchains.Blockchain,
+	period *apiModels.ChartPeriod,
+	miner string,
+	solo bool,
+) ([]*chartsProto.MinerProfitabilityPoint, error) {
+	client := s.getProtoClient(blockchain)
+	minerProfitabilitiesPoints, err := client.GetMinerProfitabilities(ctx, &chartsProto.GetMinerChartRequest{
+		Miner:  miner,
+		Solo:   solo,
+		Period: *s.getChartPeriodProto(period),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get miner (address: %s) profitabilities chart (blockchain: %s), error: %w", miner, blockchain.GetInfo().Blockchain, err)
+	}
+
+	return minerProfitabilitiesPoints.Points, nil
+}
