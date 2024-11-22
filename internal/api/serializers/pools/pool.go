@@ -8,9 +8,10 @@ import (
 )
 
 type PoolSerializer struct {
-	poolInfoSerializer  *PoolInfoSerializer
-	poolStatsSerializer *PoolStatsSerializer
-	poolSlaveSerializer *PoolSlaveSerialzier
+	poolInfoSerializer        *PoolInfoSerializer
+	poolStatsSerializer       *PoolStatsSerializer
+	poolNetworkInfoSerializer *PoolNetworkInfoSerialzier
+	poolSlaveSerializer       *PoolSlaveSerialzier
 }
 
 func (s *PoolSerializer) Serialize(ctx context.Context, pool *poolsServices.Pool) *apiModels.Pool {
@@ -20,20 +21,23 @@ func (s *PoolSerializer) Serialize(ctx context.Context, pool *poolsServices.Pool
 	}
 
 	return &apiModels.Pool{
-		Info:   *s.poolInfoSerializer.Serialize(ctx, pool.Info),
-		Stats:  *s.poolStatsSerializer.Serialize(ctx, pool.Stats),
-		Slaves: slaves,
+		Info:        *s.poolInfoSerializer.Serialize(ctx, pool.Info),
+		Stats:       *s.poolStatsSerializer.Serialize(ctx, pool.Stats),
+		NetworkInfo: *s.poolNetworkInfoSerializer.Serialize(ctx, pool.NetworkInfo),
+		Slaves:      slaves,
 	}
 }
 
 func NewPoolSerializer(
 	poolInfoSerializer *PoolInfoSerializer,
 	poolStatsSerializer *PoolStatsSerializer,
+	poolNetworkInfoSerializer *PoolNetworkInfoSerialzier,
 	poolSlaveSerializer *PoolSlaveSerialzier,
 ) *PoolSerializer {
 	return &PoolSerializer{
-		poolInfoSerializer:  poolInfoSerializer,
-		poolStatsSerializer: poolStatsSerializer,
-		poolSlaveSerializer: poolSlaveSerializer,
+		poolInfoSerializer:        poolInfoSerializer,
+		poolStatsSerializer:       poolStatsSerializer,
+		poolNetworkInfoSerializer: poolNetworkInfoSerializer,
+		poolSlaveSerializer:       poolSlaveSerializer,
 	}
 }

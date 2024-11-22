@@ -29,7 +29,7 @@ func (s *PoolsService) getBlockchainPool(
 	ctx context.Context,
 	blockchain string,
 	blockchainConn *grpc.ClientConn,
-	includeNetworkInfo, includeSoloStats bool,
+	includeSoloStats, includeNetworkInfo bool,
 	poolsCh chan<- *BlockchainPool,
 	errCh chan<- error,
 ) {

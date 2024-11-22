@@ -8,23 +8,38 @@ import (
 )
 
 type BlockchainPoolSerializer struct {
-	poolInfoSerializer  *PoolInfoSerializer
-	poolStatsSerializer *PoolStatsSerializer
+	poolInfoSerializer        *PoolInfoSerializer
+	poolStatsSerializer       *PoolStatsSerializer
+	poolNetworkInfoSerializer *PoolNetworkInfoSerialzier
 }
 
 func (s *BlockchainPoolSerializer) Serialize(ctx context.Context, blockchainPool *poolsServices.BlockchainPool) *apiModels.BlockchainPool {
-	return &apiModels.BlockchainPool{
-		Info:  *s.poolInfoSerializer.Serialize(ctx, blockchainPool.Info),
-		Stats: *s.poolStatsSerializer.Serialize(ctx, blockchainPool.Stats),
+	response := &apiModels.BlockchainPool{
+		Info:        *s.poolInfoSerializer.Serialize(ctx, blockchainPool.Info),
+		Stats:       *s.poolStatsSerializer.Serialize(ctx, blockchainPool.Stats),
+		SoloStats:   apiModels.OptPoolStats{},
+		NetworkInfo: apiModels.OptPoolNetworkInfo{},
 	}
+
+	if blockchainPool.SoloStats != nil {
+		response.SoloStats = apiModels.NewOptPoolStats(*s.poolStatsSerializer.Serialize(ctx, blockchainPool.SoloStats))
+	}
+
+	if blockchainPool.NetworkInfo != nil {
+		response.NetworkInfo = apiModels.NewOptPoolNetworkInfo(*s.poolNetworkInfoSerializer.Serialize(ctx, blockchainPool.NetworkInfo))
+	}
+
+	return response
 }
 
 func NewBlockchainPoolSerializer(
 	poolInfoSerializer *PoolInfoSerializer,
 	poolStatsSerializer *PoolStatsSerializer,
+	poolNetworkInfoSerializer *PoolNetworkInfoSerialzier,
 ) *BlockchainPoolSerializer {
 	return &BlockchainPoolSerializer{
-		poolInfoSerializer:  poolInfoSerializer,
-		poolStatsSerializer: poolStatsSerializer,
+		poolInfoSerializer:        poolInfoSerializer,
+		poolStatsSerializer:       poolStatsSerializer,
+		poolNetworkInfoSerializer: poolNetworkInfoSerializer,
 	}
 }
