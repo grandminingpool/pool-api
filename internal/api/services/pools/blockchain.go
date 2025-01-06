@@ -19,9 +19,9 @@ type Pool struct {
 
 type BlockchainService struct{}
 
-func (s *BlockchainService) GetPool(ctx context.Context, blockchain *blockchains.Blockchain, solo bool) (*Pool, error) {
+func (s *BlockchainService) GetPool(ctx context.Context, blockchain *blockchains.Blockchain, solo bool) (Pool, error) {
 	client := poolProto.NewPoolServiceClient(blockchain.GetConnection())
-	pool := &Pool{
+	pool := Pool{
 		Info:   nil,
 		Stats:  nil,
 		Slaves: nil,

@@ -13,18 +13,17 @@ import (
 
 type BlockchainHandler struct {
 	blockchainService                   *chartsServices.BlockchainService
-	poolStatsPointSerializer            serializers.BaseSerializer[*chartsProto.PoolStatsPoint, *apiModels.PoolStatsPoint]
-	poolDifficultiesPointSerializer     serializers.BaseSerializer[*chartsProto.PoolDifficultiesPoint, *apiModels.PoolDifficultiesPoint]
-	roundsPointSerializer               serializers.BaseSerializer[*chartsProto.RoundsPoint, *apiModels.RoundsPoint]
-	minerHashratesPointSerializer       serializers.BaseSerializer[*chartsProto.MinerHashratesPoint, *apiModels.MinerHashratesPoint]
-	minerSharesPointSerializer          serializers.BaseSerializer[*chartsProto.MinerSharesPoint, *apiModels.MinerSharesPoint]
-	minerProfitabilitiesPointSerializer serializers.BaseSerializer[*chartsProto.MinerProfitabilityPoint, *apiModels.MinerProfitabilitiesPoint]
+	poolStatsPointSerializer            serializers.BaseSerializer[*chartsProto.PoolStatsPoint, apiModels.PoolStatsPoint]
+	roundsPointSerializer               serializers.BaseSerializer[*chartsProto.RoundsPoint, apiModels.RoundsPoint]
+	minerHashratesPointSerializer       serializers.BaseSerializer[*chartsProto.MinerHashratesPoint, apiModels.MinerHashratesPoint]
+	minerSharesPointSerializer          serializers.BaseSerializer[*chartsProto.MinerSharesPoint, apiModels.MinerSharesPoint]
+	minerProfitabilitiesPointSerializer serializers.BaseSerializer[*chartsProto.MinerProfitabilityPoint, apiModels.MinerProfitabilitiesPoint]
 }
 
 func (h *BlockchainHandler) minerHashratesResponse(ctx context.Context, hashratesPoints []*chartsProto.MinerHashratesPoint) *apiModels.MinerHashratesPoints {
 	points := make([]apiModels.MinerHashratesPoint, 0, len(hashratesPoints))
 	for _, p := range hashratesPoints {
-		points = append(points, *h.minerHashratesPointSerializer.Serialize(ctx, p))
+		points = append(points, h.minerHashratesPointSerializer.Serialize(ctx, p))
 	}
 
 	return &apiModels.MinerHashratesPoints{
@@ -35,7 +34,7 @@ func (h *BlockchainHandler) minerHashratesResponse(ctx context.Context, hashrate
 func (h *BlockchainHandler) minerSharesResponse(ctx context.Context, sharesPoints []*chartsProto.MinerSharesPoint) *apiModels.MinerSharesPoints {
 	points := make([]apiModels.MinerSharesPoint, 0, len(sharesPoints))
 	for _, p := range sharesPoints {
-		points = append(points, *h.minerSharesPointSerializer.Serialize(ctx, p))
+		points = append(points, h.minerSharesPointSerializer.Serialize(ctx, p))
 	}
 
 	return &apiModels.MinerSharesPoints{
@@ -56,31 +55,10 @@ func (h *BlockchainHandler) GetPoolStatsChart(
 
 	points := make([]apiModels.PoolStatsPoint, 0, len(poolStatsPoints))
 	for _, p := range poolStatsPoints {
-		points = append(points, *h.poolStatsPointSerializer.Serialize(ctx, p))
+		points = append(points, h.poolStatsPointSerializer.Serialize(ctx, p))
 	}
 
 	return &apiModels.PoolStatsPoints{
-		Points: points,
-	}
-}
-
-func (h *BlockchainHandler) GetPoolDifficultiesChart(
-	ctx context.Context,
-	blockchain *blockchains.Blockchain,
-	period *apiModels.ChartPeriod,
-	solo *apiModels.OptBool,
-) apiModels.GetBlockchainPoolDifficultiesChartRes {
-	poolDifficultiesPoints, err := h.blockchainService.GetPoolDifficultiesChartPoints(ctx, blockchain, period, solo)
-	if err != nil {
-		return chartsErrors.CreateGetPoolDifficultiesChartError(err)
-	}
-
-	points := make([]apiModels.PoolDifficultiesPoint, 0, len(poolDifficultiesPoints))
-	for _, p := range poolDifficultiesPoints {
-		points = append(points, *h.poolDifficultiesPointSerializer.Serialize(ctx, p))
-	}
-
-	return &apiModels.PoolDifficultiesPoints{
 		Points: points,
 	}
 }
@@ -97,7 +75,7 @@ func (h *BlockchainHandler) GetRoundsChart(
 
 	points := make([]apiModels.RoundsPoint, 0, len(roundsPoints))
 	for _, p := range roundsPoints {
-		points = append(points, *h.roundsPointSerializer.Serialize(ctx, p))
+		points = append(points, h.roundsPointSerializer.Serialize(ctx, p))
 	}
 
 	return &apiModels.RoundsPoints{
@@ -177,7 +155,7 @@ func (h *BlockchainHandler) GetMinerProfitabilitiesChart(
 
 	points := make([]apiModels.MinerProfitabilitiesPoint, 0, len(minerProfitabilitiesPoints))
 	for _, p := range minerProfitabilitiesPoints {
-		points = append(points, *h.minerProfitabilitiesPointSerializer.Serialize(ctx, p))
+		points = append(points, h.minerProfitabilitiesPointSerializer.Serialize(ctx, p))
 	}
 
 	return &apiModels.MinerProfitabilitiesPoints{
@@ -187,17 +165,15 @@ func (h *BlockchainHandler) GetMinerProfitabilitiesChart(
 
 func NewBlockchainHandler(
 	blockchainService *chartsServices.BlockchainService,
-	poolStatsPointSerializer serializers.BaseSerializer[*chartsProto.PoolStatsPoint, *apiModels.PoolStatsPoint],
-	poolDifficultiesPointSerializer serializers.BaseSerializer[*chartsProto.PoolDifficultiesPoint, *apiModels.PoolDifficultiesPoint],
-	roundsPointSerializer serializers.BaseSerializer[*chartsProto.RoundsPoint, *apiModels.RoundsPoint],
-	minerHashratesPointSerializer serializers.BaseSerializer[*chartsProto.MinerHashratesPoint, *apiModels.MinerHashratesPoint],
-	minerSharesPointSerializer serializers.BaseSerializer[*chartsProto.MinerSharesPoint, *apiModels.MinerSharesPoint],
-	minerProfitabilitiesPointSerializer serializers.BaseSerializer[*chartsProto.MinerProfitabilityPoint, *apiModels.MinerProfitabilitiesPoint],
+	poolStatsPointSerializer serializers.BaseSerializer[*chartsProto.PoolStatsPoint, apiModels.PoolStatsPoint],
+	roundsPointSerializer serializers.BaseSerializer[*chartsProto.RoundsPoint, apiModels.RoundsPoint],
+	minerHashratesPointSerializer serializers.BaseSerializer[*chartsProto.MinerHashratesPoint, apiModels.MinerHashratesPoint],
+	minerSharesPointSerializer serializers.BaseSerializer[*chartsProto.MinerSharesPoint, apiModels.MinerSharesPoint],
+	minerProfitabilitiesPointSerializer serializers.BaseSerializer[*chartsProto.MinerProfitabilityPoint, apiModels.MinerProfitabilitiesPoint],
 ) *BlockchainHandler {
 	return &BlockchainHandler{
 		blockchainService:                   blockchainService,
 		poolStatsPointSerializer:            poolStatsPointSerializer,
-		poolDifficultiesPointSerializer:     poolDifficultiesPointSerializer,
 		roundsPointSerializer:               roundsPointSerializer,
 		minerHashratesPointSerializer:       minerHashratesPointSerializer,
 		minerSharesPointSerializer:          minerSharesPointSerializer,

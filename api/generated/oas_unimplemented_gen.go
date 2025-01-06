@@ -130,15 +130,6 @@ func (UnimplementedHandler) GetBlockchainPool(ctx context.Context, params GetBlo
 	return r, ht.ErrNotImplemented
 }
 
-// GetBlockchainPoolDifficultiesChart implements getBlockchainPoolDifficultiesChart operation.
-//
-// Get pool difficulties chart points.
-//
-// GET /charts/{blockchain}/pool_difficulties
-func (UnimplementedHandler) GetBlockchainPoolDifficultiesChart(ctx context.Context, params GetBlockchainPoolDifficultiesChartParams) (r GetBlockchainPoolDifficultiesChartRes, _ error) {
-	return r, ht.ErrNotImplemented
-}
-
 // GetBlockchainPoolInfo implements getBlockchainPoolInfo operation.
 //
 // Get pool info on blockchain.

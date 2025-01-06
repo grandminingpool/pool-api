@@ -13,11 +13,11 @@ import (
 
 type BlockchainHandler struct {
 	blockchainService         *poolsServices.BlockchainService
-	poolSerializer            serializers.BaseSerializer[*poolsServices.Pool, *apiModels.Pool]
-	poolInfoSerializer        serializers.BaseSerializer[*poolProto.PoolInfo, *apiModels.PoolInfo]
-	poolStatsSerializer       serializers.BaseSerializer[*poolProto.PoolStats, *apiModels.PoolStats]
-	poolSlaveSerializer       serializers.BaseSerializer[*poolProto.PoolSlave, *apiModels.PoolSlave]
-	poolNetworkInfoSerializer serializers.BaseSerializer[*poolProto.NetworkInfo, *apiModels.PoolNetworkInfo]
+	poolSerializer            serializers.BaseSerializer[poolsServices.Pool, apiModels.Pool]
+	poolInfoSerializer        serializers.BaseSerializer[*poolProto.PoolInfo, apiModels.PoolInfo]
+	poolStatsSerializer       serializers.BaseSerializer[*poolProto.PoolStats, apiModels.PoolStats]
+	poolSlaveSerializer       serializers.BaseSerializer[*poolProto.PoolSlave, apiModels.PoolSlave]
+	poolNetworkInfoSerializer serializers.BaseSerializer[*poolProto.NetworkInfo, apiModels.PoolNetworkInfo]
 }
 
 func (h *BlockchainHandler) GetPool(ctx context.Context, blockchain *blockchains.Blockchain, solo bool) apiModels.GetBlockchainPoolRes {
@@ -26,7 +26,8 @@ func (h *BlockchainHandler) GetPool(ctx context.Context, blockchain *blockchains
 		return poolsErrors.CreateGetPoolDataError(err)
 	}
 
-	return h.poolSerializer.Serialize(ctx, pool)
+	response := h.poolSerializer.Serialize(ctx, pool)
+	return &response
 }
 
 func (h *BlockchainHandler) GetPoolInfo(ctx context.Context, blockchain *blockchains.Blockchain) apiModels.GetBlockchainPoolInfoRes {
@@ -35,7 +36,8 @@ func (h *BlockchainHandler) GetPoolInfo(ctx context.Context, blockchain *blockch
 		return poolsErrors.CreateGetPoolInfoError(err)
 	}
 
-	return h.poolInfoSerializer.Serialize(ctx, poolInfo)
+	response := h.poolInfoSerializer.Serialize(ctx, poolInfo)
+	return &response
 }
 
 func (h *BlockchainHandler) GetPoolStats(ctx context.Context, blockchain *blockchains.Blockchain, solo bool) apiModels.GetBlockchainPoolStatsRes {
@@ -44,7 +46,8 @@ func (h *BlockchainHandler) GetPoolStats(ctx context.Context, blockchain *blockc
 		return poolsErrors.CreateGetPoolStatsError(err)
 	}
 
-	return h.poolStatsSerializer.Serialize(ctx, poolStats)
+	response := h.poolStatsSerializer.Serialize(ctx, poolStats)
+	return &response
 }
 
 func (h *BlockchainHandler) GetPoolNetworkInfo(ctx context.Context, blockchain *blockchains.Blockchain) apiModels.GetBlockchainPoolNetworkInfoRes {
@@ -53,7 +56,8 @@ func (h *BlockchainHandler) GetPoolNetworkInfo(ctx context.Context, blockchain *
 		return poolsErrors.CreateGetPoolNetworkInfoError(err)
 	}
 
-	return h.poolNetworkInfoSerializer.Serialize(ctx, networkInfo)
+	response := h.poolNetworkInfoSerializer.Serialize(ctx, networkInfo)
+	return &response
 }
 
 func (h *BlockchainHandler) GetPoolSlaves(ctx context.Context, blockchain *blockchains.Blockchain, solo bool) apiModels.GetBlockchainPoolSlavesRes {
@@ -64,7 +68,7 @@ func (h *BlockchainHandler) GetPoolSlaves(ctx context.Context, blockchain *block
 
 	poolSlavesResponse := make([]apiModels.PoolSlave, 0, len(poolSlaves))
 	for _, poolSlave := range poolSlaves {
-		poolSlavesResponse = append(poolSlavesResponse, *h.poolSlaveSerializer.Serialize(ctx, poolSlave))
+		poolSlavesResponse = append(poolSlavesResponse, h.poolSlaveSerializer.Serialize(ctx, poolSlave))
 	}
 
 	return &apiModels.PoolSlavesList{
@@ -74,11 +78,11 @@ func (h *BlockchainHandler) GetPoolSlaves(ctx context.Context, blockchain *block
 
 func NewBlockchainHandler(
 	blockchainService *poolsServices.BlockchainService,
-	poolSerializer serializers.BaseSerializer[*poolsServices.Pool, *apiModels.Pool],
-	poolInfoSerializer serializers.BaseSerializer[*poolProto.PoolInfo, *apiModels.PoolInfo],
-	poolStatsSerializer serializers.BaseSerializer[*poolProto.PoolStats, *apiModels.PoolStats],
-	poolSlaveSerializer serializers.BaseSerializer[*poolProto.PoolSlave, *apiModels.PoolSlave],
-	poolNetworkInfoSerializer serializers.BaseSerializer[*poolProto.NetworkInfo, *apiModels.PoolNetworkInfo],
+	poolSerializer serializers.BaseSerializer[poolsServices.Pool, apiModels.Pool],
+	poolInfoSerializer serializers.BaseSerializer[*poolProto.PoolInfo, apiModels.PoolInfo],
+	poolStatsSerializer serializers.BaseSerializer[*poolProto.PoolStats, apiModels.PoolStats],
+	poolSlaveSerializer serializers.BaseSerializer[*poolProto.PoolSlave, apiModels.PoolSlave],
+	poolNetworkInfoSerializer serializers.BaseSerializer[*poolProto.NetworkInfo, apiModels.PoolNetworkInfo],
 ) *BlockchainHandler {
 	return &BlockchainHandler{
 		blockchainService:         blockchainService,

@@ -10,8 +10,8 @@ import (
 
 type MinerSharesPointSerializer struct{}
 
-func (s *MinerSharesPointSerializer) Serialize(ctx context.Context, point *chartsProto.MinerSharesPoint) *apiModels.MinerSharesPoint {
-	return &apiModels.MinerSharesPoint{
+func (s *MinerSharesPointSerializer) Serialize(ctx context.Context, point *chartsProto.MinerSharesPoint) apiModels.MinerSharesPoint {
+	return apiModels.MinerSharesPoint{
 		AcceptedSharesCount:   point.AcceptedSharesCount,
 		RejectedSharesCount:   point.RejectedSharesCount,
 		StaleSharesCount:      point.StaleSharesCount,

@@ -13,7 +13,7 @@ import (
 
 type BlockchainHandler struct {
 	blockchainService *payoutsServices.BlockchainService
-	payoutSerializer  serializers.BaseSerializer[*poolPayoutsProto.Payout, *apiModels.Payout]
+	payoutSerializer  serializers.BaseSerializer[*poolPayoutsProto.Payout, apiModels.Payout]
 }
 
 func (h *BlockchainHandler) GetPayouts(
@@ -37,7 +37,7 @@ func (h *BlockchainHandler) GetPayouts(
 
 	payoutsResponse := make([]apiModels.Payout, 0, len(payoutsList.Payouts.Payouts))
 	for _, p := range payoutsList.Payouts.Payouts {
-		payoutsResponse = append(payoutsResponse, *h.payoutSerializer.Serialize(ctx, p))
+		payoutsResponse = append(payoutsResponse, h.payoutSerializer.Serialize(ctx, p))
 	}
 
 	return &apiModels.PayoutsList{
@@ -67,7 +67,7 @@ func (h *BlockchainHandler) GetMinerBalance(
 
 func NewBlockchainHandler(
 	blockchainService *payoutsServices.BlockchainService,
-	payoutSerializer serializers.BaseSerializer[*poolPayoutsProto.Payout, *apiModels.Payout],
+	payoutSerializer serializers.BaseSerializer[*poolPayoutsProto.Payout, apiModels.Payout],
 ) *BlockchainHandler {
 	return &BlockchainHandler{
 		blockchainService: blockchainService,

@@ -21,10 +21,6 @@ func ParseBlocksFiltersInQueryParams(params *apiModels.GetBlockchainBlocksParams
 		filters.BlockHash = &params.BlockHash.Value
 	}
 
-	if params.ShareDifficulty.IsSet() {
-		filters.ShareDifficulty = poolAPIQueryUtils.ParseUInt64RangeFilter(params.ShareDifficulty.Value)
-	}
-
 	if params.RoundMinersCount.IsSet() {
 		filters.RoundMinersCount = poolAPIQueryUtils.ParseUInt32Filter(params.RoundMinersCount.Value)
 	}

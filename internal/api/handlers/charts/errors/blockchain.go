@@ -7,7 +7,6 @@ import (
 
 const (
 	GetPoolStatsChartError            serverErrors.ServerErrorCode = "get_pool_stats_chart_error"
-	GetPoolDifficultiesChartError     serverErrors.ServerErrorCode = "get_pool_difficulties_chart_error"
 	GetRoundsChartError               serverErrors.ServerErrorCode = "get_rounds_chart_error"
 	GetMinerHashratesChartError       serverErrors.ServerErrorCode = "get_miner_hashrates_chart_error"
 	GetMinerWorkerHashratesChartError serverErrors.ServerErrorCode = "get_miner_worker_hashrates_chart_error"
@@ -19,13 +18,6 @@ const (
 func CreateGetPoolStatsChartError(err error) *apiModels.GetBlockchainPoolStatsChartInternalServerError {
 	return &apiModels.GetBlockchainPoolStatsChartInternalServerError{
 		Code:    string(GetPoolStatsChartError),
-		Message: err.Error(),
-	}
-}
-
-func CreateGetPoolDifficultiesChartError(err error) *apiModels.GetBlockchainPoolDifficultiesChartInternalServerError {
-	return &apiModels.GetBlockchainPoolDifficultiesChartInternalServerError{
-		Code:    string(GetPoolDifficultiesChartError),
 		Message: err.Error(),
 	}
 }

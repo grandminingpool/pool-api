@@ -86,12 +86,6 @@ type Handler interface {
 	//
 	// GET /pools/{blockchain}
 	GetBlockchainPool(ctx context.Context, params GetBlockchainPoolParams) (GetBlockchainPoolRes, error)
-	// GetBlockchainPoolDifficultiesChart implements getBlockchainPoolDifficultiesChart operation.
-	//
-	// Get pool difficulties chart points.
-	//
-	// GET /charts/{blockchain}/pool_difficulties
-	GetBlockchainPoolDifficultiesChart(ctx context.Context, params GetBlockchainPoolDifficultiesChartParams) (GetBlockchainPoolDifficultiesChartRes, error)
 	// GetBlockchainPoolInfo implements getBlockchainPoolInfo operation.
 	//
 	// Get pool info on blockchain.

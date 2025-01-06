@@ -10,8 +10,8 @@ import (
 
 type MarkerPriceSerializer struct{}
 
-func (s *MarkerPriceSerializer) Serialize(ctx context.Context, marketPrice *pricesServices.MarketPriceDB) *apiModels.MarketPrice {
-	return &apiModels.MarketPrice{
+func (s *MarkerPriceSerializer) Serialize(ctx context.Context, marketPrice pricesServices.MarketPriceDB) apiModels.MarketPrice {
+	return apiModels.MarketPrice{
 		Price:                    marketPrice.Price,
 		PriceChange24hPercentage: numericUtils.ChangeFloatValueInPercentage(marketPrice.Price24hAgo, marketPrice.Price),
 		Ticker:                   marketPrice.MarketTicker,

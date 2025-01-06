@@ -11,8 +11,8 @@ import (
 
 type PoolStatsPointSerializer struct{}
 
-func (s *PoolStatsPointSerializer) Serialize(ctx context.Context, point *chartsProto.PoolStatsPoint) *apiModels.PoolStatsPoint {
-	return &apiModels.PoolStatsPoint{
+func (s *PoolStatsPointSerializer) Serialize(ctx context.Context, point *chartsProto.PoolStatsPoint) apiModels.PoolStatsPoint {
+	return apiModels.PoolStatsPoint{
 		Hashrate:    new(big.Int).SetBytes(point.Hashrate).String(),
 		AvgHashrate: new(big.Int).SetBytes(point.AvgHashrate).String(),
 		MinersCount: point.MinersCount,

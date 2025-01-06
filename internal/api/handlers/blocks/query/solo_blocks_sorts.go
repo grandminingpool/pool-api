@@ -37,10 +37,6 @@ func ParseSoloBlocksSortsInQuery(querySorts *apiModels.OptString) *poolPayoutsPr
 			sorts.TxHash = txHash
 		}
 
-		if shareDifficulty, ok := querySortsMap["share_difficulty"]; ok {
-			sorts.ShareDifficulty = shareDifficulty
-		}
-
 		if minedAt, ok := querySortsMap["mined_at"]; ok {
 			sorts.MinedAt = minedAt
 		}

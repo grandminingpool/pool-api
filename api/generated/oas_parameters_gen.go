@@ -31,8 +31,6 @@ type GetBlockchainBlocksParams struct {
 	MinerHashrate OptString
 	// Mined block hash filter.
 	BlockHash OptString
-	// Mined block share difficulty filter.
-	ShareDifficulty OptString
 	// Round miners count filter.
 	RoundMinersCount OptString
 	// Mined block time filter.
@@ -95,15 +93,6 @@ func unpackGetBlockchainBlocksParams(packed middleware.Parameters) (params GetBl
 		}
 		if v, ok := packed[key]; ok {
 			params.BlockHash = v.(OptString)
-		}
-	}
-	{
-		key := middleware.ParameterKey{
-			Name: "share_difficulty",
-			In:   "query",
-		}
-		if v, ok := packed[key]; ok {
-			params.ShareDifficulty = v.(OptString)
 		}
 	}
 	{
@@ -416,47 +405,6 @@ func decodeGetBlockchainBlocksParams(args [1]string, argsEscaped bool, r *http.R
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
 			Name: "block_hash",
-			In:   "query",
-			Err:  err,
-		}
-	}
-	// Decode query: share_difficulty.
-	if err := func() error {
-		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "share_difficulty",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.HasParam(cfg); err == nil {
-			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				var paramsDotShareDifficultyVal string
-				if err := func() error {
-					val, err := d.DecodeValue()
-					if err != nil {
-						return err
-					}
-
-					c, err := conv.ToString(val)
-					if err != nil {
-						return err
-					}
-
-					paramsDotShareDifficultyVal = c
-					return nil
-				}(); err != nil {
-					return err
-				}
-				params.ShareDifficulty.SetTo(paramsDotShareDifficultyVal)
-				return nil
-			}); err != nil {
-				return err
-			}
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "share_difficulty",
 			In:   "query",
 			Err:  err,
 		}
@@ -3183,178 +3131,6 @@ func decodeGetBlockchainPoolParams(args [1]string, argsEscaped bool, r *http.Req
 	return params, nil
 }
 
-// GetBlockchainPoolDifficultiesChartParams is parameters of getBlockchainPoolDifficultiesChart operation.
-type GetBlockchainPoolDifficultiesChartParams struct {
-	// Pool blockchain.
-	Blockchain string
-	// Chart period.
-	Period ChartPeriod
-	// Show pool solo difficulties points (if pool supports solo mining)?.
-	Solo OptBool
-}
-
-func unpackGetBlockchainPoolDifficultiesChartParams(packed middleware.Parameters) (params GetBlockchainPoolDifficultiesChartParams) {
-	{
-		key := middleware.ParameterKey{
-			Name: "blockchain",
-			In:   "path",
-		}
-		params.Blockchain = packed[key].(string)
-	}
-	{
-		key := middleware.ParameterKey{
-			Name: "period",
-			In:   "query",
-		}
-		params.Period = packed[key].(ChartPeriod)
-	}
-	{
-		key := middleware.ParameterKey{
-			Name: "solo",
-			In:   "query",
-		}
-		if v, ok := packed[key]; ok {
-			params.Solo = v.(OptBool)
-		}
-	}
-	return params
-}
-
-func decodeGetBlockchainPoolDifficultiesChartParams(args [1]string, argsEscaped bool, r *http.Request) (params GetBlockchainPoolDifficultiesChartParams, _ error) {
-	q := uri.NewQueryDecoder(r.URL.Query())
-	// Decode path: blockchain.
-	if err := func() error {
-		param := args[0]
-		if argsEscaped {
-			unescaped, err := url.PathUnescape(args[0])
-			if err != nil {
-				return errors.Wrap(err, "unescape path")
-			}
-			param = unescaped
-		}
-		if len(param) > 0 {
-			d := uri.NewPathDecoder(uri.PathDecoderConfig{
-				Param:   "blockchain",
-				Value:   param,
-				Style:   uri.PathStyleSimple,
-				Explode: false,
-			})
-
-			if err := func() error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToString(val)
-				if err != nil {
-					return err
-				}
-
-				params.Blockchain = c
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "blockchain",
-			In:   "path",
-			Err:  err,
-		}
-	}
-	// Decode query: period.
-	if err := func() error {
-		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "period",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.HasParam(cfg); err == nil {
-			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				val, err := d.DecodeValue()
-				if err != nil {
-					return err
-				}
-
-				c, err := conv.ToString(val)
-				if err != nil {
-					return err
-				}
-
-				params.Period = ChartPeriod(c)
-				return nil
-			}); err != nil {
-				return err
-			}
-			if err := func() error {
-				if err := params.Period.Validate(); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return err
-			}
-		} else {
-			return validate.ErrFieldRequired
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "period",
-			In:   "query",
-			Err:  err,
-		}
-	}
-	// Decode query: solo.
-	if err := func() error {
-		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "solo",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.HasParam(cfg); err == nil {
-			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				var paramsDotSoloVal bool
-				if err := func() error {
-					val, err := d.DecodeValue()
-					if err != nil {
-						return err
-					}
-
-					c, err := conv.ToBool(val)
-					if err != nil {
-						return err
-					}
-
-					paramsDotSoloVal = c
-					return nil
-				}(); err != nil {
-					return err
-				}
-				params.Solo.SetTo(paramsDotSoloVal)
-				return nil
-			}); err != nil {
-				return err
-			}
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "solo",
-			In:   "query",
-			Err:  err,
-		}
-	}
-	return params, nil
-}
-
 // GetBlockchainPoolInfoParams is parameters of getBlockchainPoolInfo operation.
 type GetBlockchainPoolInfoParams struct {
 	// Pool blockchain.
@@ -4037,8 +3813,6 @@ type GetBlockchainSoloBlocksParams struct {
 	Reward OptString
 	// Mined solo block transaction hash filter.
 	TxHash OptString
-	// Mined solo block share difficulty filter.
-	ShareDifficulty OptString
 	// Mined solo block time filter.
 	MinedAt OptString
 }
@@ -4117,15 +3891,6 @@ func unpackGetBlockchainSoloBlocksParams(packed middleware.Parameters) (params G
 		}
 		if v, ok := packed[key]; ok {
 			params.TxHash = v.(OptString)
-		}
-	}
-	{
-		key := middleware.ParameterKey{
-			Name: "share_difficulty",
-			In:   "query",
-		}
-		if v, ok := packed[key]; ok {
-			params.ShareDifficulty = v.(OptString)
 		}
 	}
 	{
@@ -4511,47 +4276,6 @@ func decodeGetBlockchainSoloBlocksParams(args [1]string, argsEscaped bool, r *ht
 	}(); err != nil {
 		return params, &ogenerrors.DecodeParamError{
 			Name: "tx_hash",
-			In:   "query",
-			Err:  err,
-		}
-	}
-	// Decode query: share_difficulty.
-	if err := func() error {
-		cfg := uri.QueryParameterDecodingConfig{
-			Name:    "share_difficulty",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-
-		if err := q.HasParam(cfg); err == nil {
-			if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-				var paramsDotShareDifficultyVal string
-				if err := func() error {
-					val, err := d.DecodeValue()
-					if err != nil {
-						return err
-					}
-
-					c, err := conv.ToString(val)
-					if err != nil {
-						return err
-					}
-
-					paramsDotShareDifficultyVal = c
-					return nil
-				}(); err != nil {
-					return err
-				}
-				params.ShareDifficulty.SetTo(paramsDotShareDifficultyVal)
-				return nil
-			}); err != nil {
-				return err
-			}
-		}
-		return nil
-	}(); err != nil {
-		return params, &ogenerrors.DecodeParamError{
-			Name: "share_difficulty",
 			In:   "query",
 			Err:  err,
 		}

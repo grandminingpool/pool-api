@@ -9,8 +9,8 @@ import (
 
 type BlockchainInfoSerializer struct{}
 
-func (s *BlockchainInfoSerializer) Serialize(ctx context.Context, blockchainInfo *blockchains.BlockchainInfo) *apiModels.BlockchainInfo {
-	return &apiModels.BlockchainInfo{
+func (s *BlockchainInfoSerializer) Serialize(ctx context.Context, blockchainInfo blockchains.BlockchainInfo) apiModels.BlockchainInfo {
+	return apiModels.BlockchainInfo{
 		Blockchain: blockchainInfo.Blockchain,
 		Name:       blockchainInfo.Name,
 		Ticker:     blockchainInfo.Ticker,

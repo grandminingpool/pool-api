@@ -531,7 +531,7 @@ paths:
           in: query
           name: sorts
           schema:
-            example: 'miner:desc,miner_hashrate:asc,block_hash:desc,share_difficulty:asc,round_miners_count:desc,mined_at:asc'
+            example: 'miner:desc,miner_hashrate:asc,block_hash:desc,round_miners_count:desc,mined_at:asc'
             type: string
         - description: Mined block miner address filter
           name: miner
@@ -548,12 +548,6 @@ paths:
           name: block_hash
           in: query
           schema:
-            type: string
-        - description: Mined block share difficulty filter
-          name: share_difficulty
-          in: query
-          schema:
-            example: '1000:40000000'
             type: string
         - description: Round miners count filter
           name: round_miners_count
@@ -601,7 +595,7 @@ paths:
           in: query
           name: sorts
           schema:
-            example: 'miner:desc,miner_hashrate:asc,block_hash:desc,reward:asc,tx_hash:desc,share_difficulty:asc,mined_at:desc'
+            example: 'miner:desc,miner_hashrate:asc,block_hash:desc,reward:asc,tx_hash:desc,mined_at:desc'
             type: string
         - description: Mined solo block miner address filter
           name: miner
@@ -629,12 +623,6 @@ paths:
           name: tx_hash
           in: query
           schema:
-            type: string
-        - description: Mined solo block share difficulty filter
-          name: share_difficulty
-          in: query
-          schema:
-            example: '1000:40000000'
             type: string
         - description: Mined solo block time filter
           name: 'mined_at'
@@ -707,40 +695,6 @@ paths:
                   properties:
                     code:
                       example: 'get_pool_stats_chart_error'
-  /charts/{blockchain}/pool_difficulties:
-    get:
-      tags:
-        - charts
-      summary: Get pool difficulties chart points
-      operationId: getBlockchainPoolDifficultiesChart
-      parameters:
-        - $ref: "#/components/parameters/Blockchain"
-        - $ref: "#/components/parameters/ChartPeriod"
-        - description: Show pool solo difficulties points (if pool supports solo mining)?
-          in: query
-          name: solo
-          schema:
-            type: boolean
-      responses:
-        '200':
-          description: 'Pool difficulties chart response'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PoolDifficultiesPoints'
-        '404':
-          $ref: '#/components/responses/BlockchainNotFound'
-        '500':
-          description: 'Get pool difficulties chart error'
-          content:
-            application/json:
-              schema:
-                allOf:
-                - $ref: '#/components/schemas/Error'
-                - type: object
-                  properties:
-                    code:
-                      example: 'get_pool_difficulties_chart_error'
   /charts/{blockchain}/rounds:
     get:
       tags:
@@ -1057,6 +1011,11 @@ components:
         - 'day'
         - 'week'
         - 'month'
+    AddressFormat:
+      type: string
+      enum:
+        - 'normal'
+        - 'memo'
     Price:
       type: object
       required:
@@ -1144,6 +1103,7 @@ components:
         - blockchain
         - host
         - payout_mode
+        - address_format
         - solo
         - fee
         - payouts_info
@@ -1158,6 +1118,8 @@ components:
             type: string
         payout_mode:
           $ref: '#/components/schemas/PayoutMode'
+        address_format:
+          $ref: '#/components/schemas/AddressFormat'
         solo:
           type: boolean
         fee: 
@@ -1175,7 +1137,6 @@ components:
         - workers_count
         - hashrate
         - avg_hashrate
-        - share_difficulty
       properties:
         miners_count:
           format: uint32
@@ -1187,9 +1148,6 @@ components:
           type: string
         avg_hashrate:
           type: string
-        share_difficulty:
-          format: uint64
-          type: integer
     PoolSlave:
       type: object
       required:
@@ -1387,7 +1345,6 @@ components:
         - miner
         - miner_hashrate
         - block_hash
-        - share_difficulty
         - round_miners_count
         - mined_at 
       properties:
@@ -1397,9 +1354,6 @@ components:
           type: string
         block_hash:
           type: string
-        share_difficulty:
-          format: uint64
-          type: integer
         round_miners_count:
           format: uint32
           type: integer
@@ -1424,7 +1378,6 @@ components:
         - block_hash
         - reward
         - tx_hash
-        - share_difficulty
         - mined_at 
       properties:
         miner:
@@ -1438,9 +1391,6 @@ components:
           type: integer
         tx_hash:
           type: string
-        share_difficulty:
-          format: uint64
-          type: integer
         mined_at:
           type: string
     MinedSoloBlocksList:
@@ -1480,26 +1430,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PoolStatsPoint'
-    PoolDifficultiesPoint:
-      type: object
-      required:
-        - share_difficulty
-        - date
-      properties:
-        share_difficulty:
-          format: uint64
-          type: integer
-        date:
-          type: string
-    PoolDifficultiesPoints:
-      type: object
-      required:
-        - points
-      properties:
-        points:
-          type: array
-          items:
-            $ref: '#/components/schemas/PoolDifficultiesPoint'
     RoundsPoint:
       type: object
       required:

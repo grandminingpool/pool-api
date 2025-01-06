@@ -10,8 +10,8 @@ import (
 
 type PayoutSerializer struct{}
 
-func (s *PayoutSerializer) Serialize(ctx context.Context, payout *poolPayoutsProto.Payout) *apiModels.Payout {
-	return &apiModels.Payout{
+func (s *PayoutSerializer) Serialize(ctx context.Context, payout *poolPayoutsProto.Payout) apiModels.Payout {
+	return apiModels.Payout{
 		Miner:  payout.Miner,
 		TxHash: payout.TxHash,
 		Amount: payout.Amount,

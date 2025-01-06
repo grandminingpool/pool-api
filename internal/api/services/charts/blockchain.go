@@ -46,24 +46,6 @@ func (s *BlockchainService) GetPoolStatsChartPoints(
 	return poolStatsPoints.Points, nil
 }
 
-func (s *BlockchainService) GetPoolDifficultiesChartPoints(
-	ctx context.Context,
-	blockchain *blockchains.Blockchain,
-	period *apiModels.ChartPeriod,
-	solo *apiModels.OptBool,
-) ([]*chartsProto.PoolDifficultiesPoint, error) {
-	client := s.getProtoClient(blockchain)
-	poolDifficultiesPoints, err := client.GetPoolDifficulties(ctx, &chartsProto.GetPoolDifficultiesRequest{
-		Period: *s.getChartPeriodProto(period),
-		Solo:   solo.Value,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to get pool difficulties chart (blockchain: %s), error: %w", blockchain.GetInfo().Blockchain, err)
-	}
-
-	return poolDifficultiesPoints.Points, nil
-}
-
 func (s *BlockchainService) GetRoundsChartPoints(
 	ctx context.Context,
 	blockchain *blockchains.Blockchain,

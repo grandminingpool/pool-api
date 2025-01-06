@@ -13,8 +13,8 @@ import (
 
 type BlockchainHandler struct {
 	blockchainService     *minersServices.BlockchainService
-	minerSerializer       serializers.BaseSerializer[*poolMinersProto.Miner, *apiModels.Miner]
-	minerWorkerSerializer serializers.BaseSerializer[*poolMinersProto.MinerWorker, *apiModels.MinerWorker]
+	minerSerializer       serializers.BaseSerializer[*poolMinersProto.Miner, apiModels.Miner]
+	minerWorkerSerializer serializers.BaseSerializer[*poolMinersProto.MinerWorker, apiModels.MinerWorker]
 }
 
 func (h *BlockchainHandler) GetMiners(
@@ -38,7 +38,7 @@ func (h *BlockchainHandler) GetMiners(
 
 	minersResponse := make([]apiModels.Miner, 0, len(minersList.Miners))
 	for _, m := range minersList.Miners {
-		minersResponse = append(minersResponse, *h.minerSerializer.Serialize(ctx, m))
+		minersResponse = append(minersResponse, h.minerSerializer.Serialize(ctx, m))
 	}
 
 	return &apiModels.MinersList{
@@ -61,7 +61,8 @@ func (h *BlockchainHandler) GetMiner(
 		return minersErrors.CreateMinerNotFoundError(miner)
 	}
 
-	return h.minerSerializer.Serialize(ctx, minerInfo)
+	response := h.minerSerializer.Serialize(ctx, minerInfo)
+	return &response
 }
 
 func (h *BlockchainHandler) GetMinerWorkers(
@@ -76,7 +77,7 @@ func (h *BlockchainHandler) GetMinerWorkers(
 
 	minerWorkersResponse := make([]apiModels.MinerWorker, 0, len(minerWorkers))
 	for _, mw := range minerWorkers {
-		minerWorkersResponse = append(minerWorkersResponse, *h.minerWorkerSerializer.Serialize(ctx, mw))
+		minerWorkersResponse = append(minerWorkersResponse, h.minerWorkerSerializer.Serialize(ctx, mw))
 	}
 
 	return &apiModels.MinerWorkersList{
@@ -86,8 +87,8 @@ func (h *BlockchainHandler) GetMinerWorkers(
 
 func NewBlockchainHandler(
 	blockchainService *minersServices.BlockchainService,
-	minerSerializer serializers.BaseSerializer[*poolMinersProto.Miner, *apiModels.Miner],
-	minerWorkerSerializer serializers.BaseSerializer[*poolMinersProto.MinerWorker, *apiModels.MinerWorker],
+	minerSerializer serializers.BaseSerializer[*poolMinersProto.Miner, apiModels.Miner],
+	minerWorkerSerializer serializers.BaseSerializer[*poolMinersProto.MinerWorker, apiModels.MinerWorker],
 ) *BlockchainHandler {
 	return &BlockchainHandler{
 		blockchainService:     blockchainService,

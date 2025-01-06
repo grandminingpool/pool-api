@@ -11,8 +11,8 @@ import (
 
 type MinerWorkerSerializer struct{}
 
-func (s *MinerWorkerSerializer) Serialize(ctx context.Context, minerWorker *poolMinersProto.MinerWorker) *apiModels.MinerWorker {
-	return &apiModels.MinerWorker{
+func (s *MinerWorkerSerializer) Serialize(ctx context.Context, minerWorker *poolMinersProto.MinerWorker) apiModels.MinerWorker {
+	return apiModels.MinerWorker{
 		Worker:      minerWorker.Worker,
 		Region:      minerWorker.Region,
 		Agent:       minerWorker.Agent,

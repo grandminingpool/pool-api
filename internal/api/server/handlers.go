@@ -85,7 +85,6 @@ func CreateHandler(
 
 	//	Init charts handlers
 	poolStatsPointSerializer := &chartsSerializers.PoolStatsPointSerializer{}
-	poolDifficultiesPointSerializer := &chartsSerializers.PoolDifficultiesPointSerializer{}
 	roundsPointSerializer := &chartsSerializers.RoundsPointSerializer{}
 	minerHashratesPointSerializer := &chartsSerializers.MinerHashratesPointSerializer{}
 	minerSharesPointSerializer := &chartsSerializers.MinerSharesPointSerializer{}
@@ -93,7 +92,6 @@ func CreateHandler(
 	chartsBlockchainHandler := chartsHandlers.NewBlockchainHandler(
 		chartsBlockchainService,
 		poolStatsPointSerializer,
-		poolDifficultiesPointSerializer,
 		roundsPointSerializer,
 		minerHashratesPointSerializer,
 		minerSharesPointSerializer,

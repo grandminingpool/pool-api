@@ -6,6 +6,48 @@ import (
 	"github.com/go-faster/errors"
 )
 
+// Ref: #/components/schemas/AddressFormat
+type AddressFormat string
+
+const (
+	AddressFormatNormal AddressFormat = "normal"
+	AddressFormatMemo   AddressFormat = "memo"
+)
+
+// AllValues returns all AddressFormat values.
+func (AddressFormat) AllValues() []AddressFormat {
+	return []AddressFormat{
+		AddressFormatNormal,
+		AddressFormatMemo,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s AddressFormat) MarshalText() ([]byte, error) {
+	switch s {
+	case AddressFormatNormal:
+		return []byte(s), nil
+	case AddressFormatMemo:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *AddressFormat) UnmarshalText(data []byte) error {
+	switch AddressFormat(data) {
+	case AddressFormatNormal:
+		*s = AddressFormatNormal
+		return nil
+	case AddressFormatMemo:
+		*s = AddressFormatMemo
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
 // Ref: #/components/schemas/BlockchainInfo
 type BlockchainInfo struct {
 	Blockchain string `json:"blockchain"`
@@ -132,7 +174,6 @@ func (*BlockchainNotFound) getBlockchainMinerWorkerSharesChartRes()    {}
 func (*BlockchainNotFound) getBlockchainMinerWorkersRes()              {}
 func (*BlockchainNotFound) getBlockchainMinersRes()                    {}
 func (*BlockchainNotFound) getBlockchainPayoutsRes()                   {}
-func (*BlockchainNotFound) getBlockchainPoolDifficultiesChartRes()     {}
 func (*BlockchainNotFound) getBlockchainPoolInfoRes()                  {}
 func (*BlockchainNotFound) getBlockchainPoolNetworkInfoRes()           {}
 func (*BlockchainNotFound) getBlockchainPoolRes()                      {}
@@ -767,36 +808,6 @@ func (s *GetBlockchainPayoutsInternalServerError) SetMessage(val string) {
 func (*GetBlockchainPayoutsInternalServerError) getBlockchainPayoutsRes() {}
 
 // Merged schema.
-type GetBlockchainPoolDifficultiesChartInternalServerError struct {
-	// Merged property.
-	Code    string `json:"code"`
-	Message string `json:"message"`
-}
-
-// GetCode returns the value of Code.
-func (s *GetBlockchainPoolDifficultiesChartInternalServerError) GetCode() string {
-	return s.Code
-}
-
-// GetMessage returns the value of Message.
-func (s *GetBlockchainPoolDifficultiesChartInternalServerError) GetMessage() string {
-	return s.Message
-}
-
-// SetCode sets the value of Code.
-func (s *GetBlockchainPoolDifficultiesChartInternalServerError) SetCode(val string) {
-	s.Code = val
-}
-
-// SetMessage sets the value of Message.
-func (s *GetBlockchainPoolDifficultiesChartInternalServerError) SetMessage(val string) {
-	s.Message = val
-}
-
-func (*GetBlockchainPoolDifficultiesChartInternalServerError) getBlockchainPoolDifficultiesChartRes() {
-}
-
-// Merged schema.
 type GetBlockchainPoolInfoInternalServerError struct {
 	// Merged property.
 	Code    string `json:"code"`
@@ -1158,7 +1169,6 @@ type MinedBlock struct {
 	Miner            string `json:"miner"`
 	MinerHashrate    string `json:"miner_hashrate"`
 	BlockHash        string `json:"block_hash"`
-	ShareDifficulty  uint64 `json:"share_difficulty"`
 	RoundMinersCount uint32 `json:"round_miners_count"`
 	MinedAt          string `json:"mined_at"`
 }
@@ -1176,11 +1186,6 @@ func (s *MinedBlock) GetMinerHashrate() string {
 // GetBlockHash returns the value of BlockHash.
 func (s *MinedBlock) GetBlockHash() string {
 	return s.BlockHash
-}
-
-// GetShareDifficulty returns the value of ShareDifficulty.
-func (s *MinedBlock) GetShareDifficulty() uint64 {
-	return s.ShareDifficulty
 }
 
 // GetRoundMinersCount returns the value of RoundMinersCount.
@@ -1206,11 +1211,6 @@ func (s *MinedBlock) SetMinerHashrate(val string) {
 // SetBlockHash sets the value of BlockHash.
 func (s *MinedBlock) SetBlockHash(val string) {
 	s.BlockHash = val
-}
-
-// SetShareDifficulty sets the value of ShareDifficulty.
-func (s *MinedBlock) SetShareDifficulty(val uint64) {
-	s.ShareDifficulty = val
 }
 
 // SetRoundMinersCount sets the value of RoundMinersCount.
@@ -1276,13 +1276,12 @@ func (*MinedBlocksList) getBlockchainBlocksRes() {}
 
 // Ref: #/components/schemas/MinedSoloBlock
 type MinedSoloBlock struct {
-	Miner           string `json:"miner"`
-	MinerHashrate   string `json:"miner_hashrate"`
-	BlockHash       string `json:"block_hash"`
-	Reward          uint64 `json:"reward"`
-	TxHash          string `json:"tx_hash"`
-	ShareDifficulty uint64 `json:"share_difficulty"`
-	MinedAt         string `json:"mined_at"`
+	Miner         string `json:"miner"`
+	MinerHashrate string `json:"miner_hashrate"`
+	BlockHash     string `json:"block_hash"`
+	Reward        uint64 `json:"reward"`
+	TxHash        string `json:"tx_hash"`
+	MinedAt       string `json:"mined_at"`
 }
 
 // GetMiner returns the value of Miner.
@@ -1308,11 +1307,6 @@ func (s *MinedSoloBlock) GetReward() uint64 {
 // GetTxHash returns the value of TxHash.
 func (s *MinedSoloBlock) GetTxHash() string {
 	return s.TxHash
-}
-
-// GetShareDifficulty returns the value of ShareDifficulty.
-func (s *MinedSoloBlock) GetShareDifficulty() uint64 {
-	return s.ShareDifficulty
 }
 
 // GetMinedAt returns the value of MinedAt.
@@ -1343,11 +1337,6 @@ func (s *MinedSoloBlock) SetReward(val uint64) {
 // SetTxHash sets the value of TxHash.
 func (s *MinedSoloBlock) SetTxHash(val string) {
 	s.TxHash = val
-}
-
-// SetShareDifficulty sets the value of ShareDifficulty.
-func (s *MinedSoloBlock) SetShareDifficulty(val uint64) {
-	s.ShareDifficulty = val
 }
 
 // SetMinedAt sets the value of MinedAt.
@@ -2312,49 +2301,6 @@ func (s *Pool) SetSlaves(val []PoolSlave) {
 
 func (*Pool) getBlockchainPoolRes() {}
 
-// Ref: #/components/schemas/PoolDifficultiesPoint
-type PoolDifficultiesPoint struct {
-	ShareDifficulty uint64 `json:"share_difficulty"`
-	Date            string `json:"date"`
-}
-
-// GetShareDifficulty returns the value of ShareDifficulty.
-func (s *PoolDifficultiesPoint) GetShareDifficulty() uint64 {
-	return s.ShareDifficulty
-}
-
-// GetDate returns the value of Date.
-func (s *PoolDifficultiesPoint) GetDate() string {
-	return s.Date
-}
-
-// SetShareDifficulty sets the value of ShareDifficulty.
-func (s *PoolDifficultiesPoint) SetShareDifficulty(val uint64) {
-	s.ShareDifficulty = val
-}
-
-// SetDate sets the value of Date.
-func (s *PoolDifficultiesPoint) SetDate(val string) {
-	s.Date = val
-}
-
-// Ref: #/components/schemas/PoolDifficultiesPoints
-type PoolDifficultiesPoints struct {
-	Points []PoolDifficultiesPoint `json:"points"`
-}
-
-// GetPoints returns the value of Points.
-func (s *PoolDifficultiesPoints) GetPoints() []PoolDifficultiesPoint {
-	return s.Points
-}
-
-// SetPoints sets the value of Points.
-func (s *PoolDifficultiesPoints) SetPoints(val []PoolDifficultiesPoint) {
-	s.Points = val
-}
-
-func (*PoolDifficultiesPoints) getBlockchainPoolDifficultiesChartRes() {}
-
 // Ref: #/components/schemas/PoolFee
 type PoolFee struct {
 	Fee     float64    `json:"fee"`
@@ -2383,14 +2329,15 @@ func (s *PoolFee) SetSoloFee(val OptFloat64) {
 
 // Ref: #/components/schemas/PoolInfo
 type PoolInfo struct {
-	Blockchain  string      `json:"blockchain"`
-	Host        string      `json:"host"`
-	Algos       []string    `json:"algos"`
-	PayoutMode  PayoutMode  `json:"payout_mode"`
-	Solo        bool        `json:"solo"`
-	Fee         PoolFee     `json:"fee"`
-	PayoutsInfo PayoutsInfo `json:"payouts_info"`
-	Agents      []string    `json:"agents"`
+	Blockchain    string        `json:"blockchain"`
+	Host          string        `json:"host"`
+	Algos         []string      `json:"algos"`
+	PayoutMode    PayoutMode    `json:"payout_mode"`
+	AddressFormat AddressFormat `json:"address_format"`
+	Solo          bool          `json:"solo"`
+	Fee           PoolFee       `json:"fee"`
+	PayoutsInfo   PayoutsInfo   `json:"payouts_info"`
+	Agents        []string      `json:"agents"`
 }
 
 // GetBlockchain returns the value of Blockchain.
@@ -2411,6 +2358,11 @@ func (s *PoolInfo) GetAlgos() []string {
 // GetPayoutMode returns the value of PayoutMode.
 func (s *PoolInfo) GetPayoutMode() PayoutMode {
 	return s.PayoutMode
+}
+
+// GetAddressFormat returns the value of AddressFormat.
+func (s *PoolInfo) GetAddressFormat() AddressFormat {
+	return s.AddressFormat
 }
 
 // GetSolo returns the value of Solo.
@@ -2451,6 +2403,11 @@ func (s *PoolInfo) SetAlgos(val []string) {
 // SetPayoutMode sets the value of PayoutMode.
 func (s *PoolInfo) SetPayoutMode(val PayoutMode) {
 	s.PayoutMode = val
+}
+
+// SetAddressFormat sets the value of AddressFormat.
+func (s *PoolInfo) SetAddressFormat(val AddressFormat) {
+	s.AddressFormat = val
 }
 
 // SetSolo sets the value of Solo.
@@ -2592,11 +2549,10 @@ func (*PoolSlavesList) getBlockchainPoolSlavesRes() {}
 
 // Ref: #/components/schemas/PoolStats
 type PoolStats struct {
-	MinersCount     uint32 `json:"miners_count"`
-	WorkersCount    uint32 `json:"workers_count"`
-	Hashrate        string `json:"hashrate"`
-	AvgHashrate     string `json:"avg_hashrate"`
-	ShareDifficulty uint64 `json:"share_difficulty"`
+	MinersCount  uint32 `json:"miners_count"`
+	WorkersCount uint32 `json:"workers_count"`
+	Hashrate     string `json:"hashrate"`
+	AvgHashrate  string `json:"avg_hashrate"`
 }
 
 // GetMinersCount returns the value of MinersCount.
@@ -2619,11 +2575,6 @@ func (s *PoolStats) GetAvgHashrate() string {
 	return s.AvgHashrate
 }
 
-// GetShareDifficulty returns the value of ShareDifficulty.
-func (s *PoolStats) GetShareDifficulty() uint64 {
-	return s.ShareDifficulty
-}
-
 // SetMinersCount sets the value of MinersCount.
 func (s *PoolStats) SetMinersCount(val uint32) {
 	s.MinersCount = val
@@ -2642,11 +2593,6 @@ func (s *PoolStats) SetHashrate(val string) {
 // SetAvgHashrate sets the value of AvgHashrate.
 func (s *PoolStats) SetAvgHashrate(val string) {
 	s.AvgHashrate = val
-}
-
-// SetShareDifficulty sets the value of ShareDifficulty.
-func (s *PoolStats) SetShareDifficulty(val uint64) {
-	s.ShareDifficulty = val
 }
 
 func (*PoolStats) getBlockchainPoolStatsRes() {}

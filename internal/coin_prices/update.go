@@ -64,7 +64,7 @@ func (s *UpdateService) parseCoinPriceFromTickerResponse(ticker string, response
 func (s *UpdateService) getTickerPrice(
 	ctx context.Context,
 	ticker string,
-	coinPricesCh chan<- *CoinPrice,
+	coinPricesCh chan<- CoinPrice,
 	errCh chan<- error,
 ) {
 	select {
@@ -99,11 +99,11 @@ func (s *UpdateService) getTickerPrice(
 			return
 		}
 
-		coinPricesCh <- coinPrice
+		coinPricesCh <- *coinPrice
 	}
 }
 
-func (s *UpdateService) updateRowsInDB(ctx context.Context, tx *sqlx.Tx, newPrices []*CoinPrice) error {
+func (s *UpdateService) updateRowsInDB(ctx context.Context, tx *sqlx.Tx, newPrices []CoinPrice) error {
 	for _, coinPrice := range newPrices {
 		if _, err := tx.ExecContext(ctx, `UPDATE prices SET price = $1, price_24h_ago = $2 WHERE market_ticker = $3`,
 			coinPrice.Price,
@@ -127,7 +127,7 @@ func (s *UpdateService) Update(ctx context.Context) error {
 	}
 
 	errCh := make(chan error, len(marketTickers))
-	coinPricesCh := make(chan *CoinPrice, len(marketTickers))
+	coinPricesCh := make(chan CoinPrice, len(marketTickers))
 	defer close(errCh)
 	defer close(coinPricesCh)
 
@@ -137,7 +137,7 @@ func (s *UpdateService) Update(ctx context.Context) error {
 		go s.getTickerPrice(newCtx, mt, coinPricesCh, errCh)
 	}
 
-	newPrices := make([]*CoinPrice, 0, len(marketTickers))
+	newPrices := make([]CoinPrice, 0, len(marketTickers))
 	for i := 0; i < len(marketTickers); i++ {
 		select {
 		case err := <-errCh:

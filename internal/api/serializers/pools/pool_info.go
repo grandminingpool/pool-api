@@ -9,14 +9,21 @@ import (
 
 type PoolInfoSerializer struct{}
 
-func (s *PoolInfoSerializer) Serialize(ctx context.Context, poolInfo *poolProto.PoolInfo) *apiModels.PoolInfo {
+func (s *PoolInfoSerializer) Serialize(ctx context.Context, poolInfo *poolProto.PoolInfo) apiModels.PoolInfo {
 	var payoutMode apiModels.PayoutMode
 	switch poolInfo.PayoutMode {
 	case poolProto.PayoutMode_PROP:
 		payoutMode = apiModels.PayoutModeProp
-		break
 	default:
 		payoutMode = apiModels.PayoutModePplns
+	}
+
+	var addressFormat apiModels.AddressFormat
+	switch poolInfo.AddressFormat {
+	case poolProto.AddressFormat_Memo:
+		addressFormat = apiModels.AddressFormatMemo
+	default:
+		addressFormat = apiModels.AddressFormatNormal
 	}
 
 	poolFee := apiModels.PoolFee{
@@ -38,14 +45,15 @@ func (s *PoolInfoSerializer) Serialize(ctx context.Context, poolInfo *poolProto.
 		payoutsInfo.MaxPayout.SetTo(*poolInfo.PayoutsInfo.MaxPayout)
 	}
 
-	return &apiModels.PoolInfo{
-		Blockchain:  poolInfo.Blockchain,
-		Host:        poolInfo.Host,
-		Algos:       poolInfo.Algos,
-		PayoutMode:  payoutMode,
-		Solo:        poolInfo.Solo,
-		Fee:         poolFee,
-		PayoutsInfo: payoutsInfo,
-		Agents:      poolInfo.Agents,
+	return apiModels.PoolInfo{
+		Blockchain:    poolInfo.Blockchain,
+		Host:          poolInfo.Host,
+		Algos:         poolInfo.Algos,
+		PayoutMode:    payoutMode,
+		AddressFormat: addressFormat,
+		Solo:          poolInfo.Solo,
+		Fee:           poolFee,
+		PayoutsInfo:   payoutsInfo,
+		Agents:        poolInfo.Agents,
 	}
 }

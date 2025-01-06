@@ -29,10 +29,6 @@ func ParseSoloBlocksFiltersInQueryParams(params *apiModels.GetBlockchainSoloBloc
 		filters.TxHash = &params.TxHash.Value
 	}
 
-	if params.ShareDifficulty.IsSet() {
-		filters.ShareDifficulty = poolAPIQueryUtils.ParseUInt64RangeFilter(params.ShareDifficulty.Value)
-	}
-
 	if params.MinedAt.IsSet() {
 		filters.MinedAt = poolAPIQueryUtils.ParseDateTimeRangeFilter(params.MinedAt.Value)
 	}

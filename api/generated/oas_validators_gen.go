@@ -10,6 +10,17 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
+func (s AddressFormat) Validate() error {
+	switch s {
+	case "normal":
+		return nil
+	case "memo":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
+
 func (s *BlockchainMarkets) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer
@@ -361,29 +372,6 @@ func (s *Pool) Validate() error {
 	return nil
 }
 
-func (s *PoolDifficultiesPoints) Validate() error {
-	if s == nil {
-		return validate.ErrNilPointer
-	}
-
-	var failures []validate.FieldError
-	if err := func() error {
-		if s.Points == nil {
-			return errors.New("nil is invalid value")
-		}
-		return nil
-	}(); err != nil {
-		failures = append(failures, validate.FieldError{
-			Name:  "points",
-			Error: err,
-		})
-	}
-	if len(failures) > 0 {
-		return &validate.Error{Fields: failures}
-	}
-	return nil
-}
-
 func (s *PoolFee) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer
@@ -439,6 +427,17 @@ func (s *PoolInfo) Validate() error {
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
 			Name:  "payout_mode",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if err := s.AddressFormat.Validate(); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "address_format",
 			Error: err,
 		})
 	}

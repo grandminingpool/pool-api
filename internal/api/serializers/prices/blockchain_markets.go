@@ -12,13 +12,13 @@ type BlockchainMarketsSerializer struct {
 	marketPriceSerializer *MarkerPriceSerializer
 }
 
-func (s *BlockchainMarketsSerializer) Serialize(ctx context.Context, blockchainMarkets *pricesServices.BlockchainMarkets) *apiModels.BlockchainMarkets {
+func (s *BlockchainMarketsSerializer) Serialize(ctx context.Context, blockchainMarkets *pricesServices.BlockchainMarkets) apiModels.BlockchainMarkets {
 	marketsResponse := make([]apiModels.MarketPrice, 0, len(blockchainMarkets.Markets))
 	for _, m := range blockchainMarkets.Markets {
-		marketsResponse = append(marketsResponse, *s.marketPriceSerializer.Serialize(ctx, &m))
+		marketsResponse = append(marketsResponse, s.marketPriceSerializer.Serialize(ctx, m))
 	}
 
-	return &apiModels.BlockchainMarkets{
+	return apiModels.BlockchainMarkets{
 		Price:                    blockchainMarkets.Price,
 		PriceChange24hPercentage: numericUtils.ChangeFloatValueInPercentage(blockchainMarkets.Price24hAgo, blockchainMarkets.Price),
 		Markets:                  marketsResponse,

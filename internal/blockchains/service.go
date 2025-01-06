@@ -34,11 +34,11 @@ type BlockchainInfo struct {
 }
 
 type Blockchain struct {
-	info *BlockchainInfo
+	info BlockchainInfo
 	conn *grpc.ClientConn
 }
 
-func (b *Blockchain) GetInfo() *BlockchainInfo {
+func (b *Blockchain) GetInfo() BlockchainInfo {
 	return b.info
 }
 
@@ -113,7 +113,7 @@ func (s *Service) Start(ctx context.Context, certsPath string) error {
 			AtomicUnit: b.AtomicUnit,
 		}
 		s.blockchainsMap[b.Blockchain] = Blockchain{
-			info: &blockchainInfo,
+			info: blockchainInfo,
 			conn: conn,
 		}
 		s.blockchains = append(s.blockchains, blockchainInfo)

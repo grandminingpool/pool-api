@@ -11,8 +11,8 @@ import (
 
 type MinerHashratesPointSerializer struct{}
 
-func (s *MinerHashratesPointSerializer) Serialize(ctx context.Context, point *chartsProto.MinerHashratesPoint) *apiModels.MinerHashratesPoint {
-	return &apiModels.MinerHashratesPoint{
+func (s *MinerHashratesPointSerializer) Serialize(ctx context.Context, point *chartsProto.MinerHashratesPoint) apiModels.MinerHashratesPoint {
+	return apiModels.MinerHashratesPoint{
 		Hashrate: new(big.Int).SetBytes(point.Hashrate).String(),
 		Date:     point.Date.AsTime().Format(time.RFC3339),
 	}

@@ -188,14 +188,6 @@ func (h *ServerHandler) GetBlockchainPoolStatsChart(ctx context.Context, params 
 	return h.chartsBlockchainHandler.GetPoolStatsChart(ctx, blockchain, &params.Period, &params.Solo), nil
 }
 
-func (h *ServerHandler) GetBlockchainPoolDifficultiesChart(ctx context.Context, params apiModels.GetBlockchainPoolDifficultiesChartParams) (apiModels.GetBlockchainPoolDifficultiesChartRes, error) {
-	blockchain, notFound := h.getBlockchain(params.Blockchain)
-	if notFound != nil {
-		return notFound, nil
-	}
-
-	return h.chartsBlockchainHandler.GetPoolDifficultiesChart(ctx, blockchain, &params.Period, &params.Solo), nil
-}
 
 func (h *ServerHandler) GetBlockchainRoundsChart(ctx context.Context, params apiModels.GetBlockchainRoundsChartParams) (apiModels.GetBlockchainRoundsChartRes, error) {
 	blockchain, notFound := h.getBlockchain(params.Blockchain)

@@ -29,10 +29,6 @@ func ParseBlocksSortsInQuery(querySorts *apiModels.OptString) *poolPayoutsProto.
 			sorts.BlockHash = blockHash
 		}
 
-		if shareDifficulty, ok := querySortsMap["share_difficulty"]; ok {
-			sorts.ShareDifficulty = shareDifficulty
-		}
-
 		if roundMinersCount, ok := querySortsMap["round_miners_count"]; ok {
 			sorts.RoundMinersCount = roundMinersCount
 		}

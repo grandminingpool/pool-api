@@ -16,7 +16,6 @@ func (s *MinedBlockSerializer) Serialize(ctx context.Context, minedBlock *poolPa
 		Miner:            minedBlock.Miner,
 		MinerHashrate:    new(big.Int).SetBytes(minedBlock.MinerHashrate).String(),
 		BlockHash:        minedBlock.BlockHash,
-		ShareDifficulty:  minedBlock.ShareDifficulty,
 		RoundMinersCount: minedBlock.RoundMinersCount,
 		MinedAt:          minedBlock.MinedAt.AsTime().Format(time.RFC3339),
 	}

@@ -30,14 +30,14 @@ func (s *PoolsService) getBlockchainPool(
 	blockchain string,
 	blockchainConn *grpc.ClientConn,
 	includeSoloStats, includeNetworkInfo bool,
-	poolsCh chan<- *BlockchainPool,
+	poolsCh chan<- BlockchainPool,
 	errCh chan<- error,
 ) {
 	select {
 	case <-ctx.Done():
 		return
 	default:
-		pool := &BlockchainPool{}
+		pool := BlockchainPool{}
 		client := poolProto.NewPoolServiceClient(blockchainConn)
 		g, gCtx := errgroup.WithContext(ctx)
 		g.Go(func() error {
@@ -107,11 +107,11 @@ func (s *PoolsService) getBlockchainPool(
 	}
 }
 
-func (s *PoolsService) GetPools(ctx context.Context, includeSoloStats, includeNetworkInfo bool) ([]*BlockchainPool, error) {
+func (s *PoolsService) GetPools(ctx context.Context, includeSoloStats, includeNetworkInfo bool) ([]BlockchainPool, error) {
 	blockchains := s.blockchainsService.GetBlockchains()
 
 	callsNum := len(blockchains)
-	poolsCh := make(chan *BlockchainPool, callsNum)
+	poolsCh := make(chan BlockchainPool, callsNum)
 	errCh := make(chan error, callsNum)
 	defer close(poolsCh)
 	defer close(errCh)
@@ -131,7 +131,7 @@ func (s *PoolsService) GetPools(ctx context.Context, includeSoloStats, includeNe
 		)
 	}
 
-	blockchainsPoolsMap := make(map[string]*BlockchainPool)
+	blockchainsPoolsMap := make(map[string]BlockchainPool)
 	defer clear(blockchainsPoolsMap)
 
 	for i := 0; i < callsNum; i++ {
@@ -143,7 +143,7 @@ func (s *PoolsService) GetPools(ctx context.Context, includeSoloStats, includeNe
 		}
 	}
 
-	blockchainsPools := make([]*BlockchainPool, 0, callsNum)
+	blockchainsPools := make([]BlockchainPool, 0, callsNum)
 	for _, blockchain := range blockchains {
 		blockchainPool, ok := blockchainsPoolsMap[blockchain.GetInfo().Blockchain]
 		if ok {

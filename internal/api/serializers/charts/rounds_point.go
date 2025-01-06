@@ -10,8 +10,8 @@ import (
 
 type RoundsPointSerializer struct{}
 
-func (s *RoundsPointSerializer) Serialize(ctx context.Context, point *chartsProto.RoundsPoint) *apiModels.RoundsPoint {
-	return &apiModels.RoundsPoint{
+func (s *RoundsPointSerializer) Serialize(ctx context.Context, point *chartsProto.RoundsPoint) apiModels.RoundsPoint {
+	return apiModels.RoundsPoint{
 		RoundsCount:      point.RoundsCount,
 		MinersCount:      point.MinersCount,
 		AvgRoundInterval: point.AvgRoundInterval,

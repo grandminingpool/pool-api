@@ -10,8 +10,8 @@ import (
 
 type BlockchainPriceSerializer struct{}
 
-func (s *BlockchainPriceSerializer) Serialize(ctx context.Context, blockchainPrice *pricesServices.BlockchainPriceDB) *apiModels.BlockchainPrice {
-	return &apiModels.BlockchainPrice{
+func (s *BlockchainPriceSerializer) Serialize(ctx context.Context, blockchainPrice pricesServices.BlockchainPriceDB) apiModels.BlockchainPrice {
+	return apiModels.BlockchainPrice{
 		Price:                    blockchainPrice.Price,
 		PriceChange24hPercentage: numericUtils.ChangeFloatValueInPercentage(blockchainPrice.Price24hAgo, blockchainPrice.Price),
 		Blockchain:               blockchainPrice.Blockchain,

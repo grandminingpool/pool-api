@@ -10,14 +10,14 @@ import (
 
 type Handler struct {
 	blockchainsService       *blockchains.Service
-	blockchainInfoSerializer serializers.BaseSerializer[*blockchains.BlockchainInfo, *apiModels.BlockchainInfo]
+	blockchainInfoSerializer serializers.BaseSerializer[blockchains.BlockchainInfo, apiModels.BlockchainInfo]
 }
 
 func (h *Handler) Get(ctx context.Context) *apiModels.BlockchainsList {
 	blockchainsInfos := h.blockchainsService.GetBlockchainsInfos()
 	blockchainsResponse := make([]apiModels.BlockchainInfo, 0, len(blockchainsInfos))
 	for _, blockchainInfo := range blockchainsInfos {
-		blockchainsResponse = append(blockchainsResponse, *h.blockchainInfoSerializer.Serialize(ctx, &blockchainInfo))
+		blockchainsResponse = append(blockchainsResponse, h.blockchainInfoSerializer.Serialize(ctx, blockchainInfo))
 	}
 
 	return &apiModels.BlockchainsList{
@@ -27,7 +27,7 @@ func (h *Handler) Get(ctx context.Context) *apiModels.BlockchainsList {
 
 func NewHandler(
 	blockchainsService *blockchains.Service,
-	blockchainInfoSerializer serializers.BaseSerializer[*blockchains.BlockchainInfo, *apiModels.BlockchainInfo],
+	blockchainInfoSerializer serializers.BaseSerializer[blockchains.BlockchainInfo, apiModels.BlockchainInfo],
 ) *Handler {
 	return &Handler{
 		blockchainsService:       blockchainsService,

@@ -10,8 +10,8 @@ import (
 
 type PoolSlaveSerialzier struct{}
 
-func (s *PoolSlaveSerialzier) Serialize(ctx context.Context, poolSlave *poolProto.PoolSlave) *apiModels.PoolSlave {
-	return &apiModels.PoolSlave{
+func (s *PoolSlaveSerialzier) Serialize(ctx context.Context, poolSlave *poolProto.PoolSlave) apiModels.PoolSlave {
+	return apiModels.PoolSlave{
 		Region:      poolSlave.Region,
 		Host:        poolSlave.Host,
 		TCPPort:     poolSlave.TcpPort,

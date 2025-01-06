@@ -49,10 +49,6 @@ type GetBlockchainPayoutsRes interface {
 	getBlockchainPayoutsRes()
 }
 
-type GetBlockchainPoolDifficultiesChartRes interface {
-	getBlockchainPoolDifficultiesChartRes()
-}
-
 type GetBlockchainPoolInfoRes interface {
 	getBlockchainPoolInfoRes()
 }

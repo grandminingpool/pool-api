@@ -13,6 +13,16 @@ import (
 	"github.com/ogen-go/ogen/ogenerrors"
 )
 
+type codeRecorder struct {
+	http.ResponseWriter
+	status int
+}
+
+func (c *codeRecorder) WriteHeader(status int) {
+	c.status = status
+	c.ResponseWriter.WriteHeader(status)
+}
+
 func recordError(string, error) {}
 
 // handleGetBlockchainBlocksRequest handles getBlockchainBlocks operation.
@@ -21,12 +31,14 @@ func recordError(string, error) {}
 //
 // GET /blocks/{blockchain}
 func (s *Server) handleGetBlockchainBlocksRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainBlocks",
+			Name: GetBlockchainBlocksOperation,
 			ID:   "getBlockchainBlocks",
 		}
 	)
@@ -45,7 +57,7 @@ func (s *Server) handleGetBlockchainBlocksRequest(args [1]string, argsEscaped bo
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainBlocks",
+			OperationName:    GetBlockchainBlocksOperation,
 			OperationSummary: "Get blocks list on blockchain",
 			OperationID:      "getBlockchainBlocks",
 			Body:             nil,
@@ -78,10 +90,6 @@ func (s *Server) handleGetBlockchainBlocksRequest(args [1]string, argsEscaped bo
 					Name: "block_hash",
 					In:   "query",
 				}: params.BlockHash,
-				{
-					Name: "share_difficulty",
-					In:   "query",
-				}: params.ShareDifficulty,
 				{
 					Name: "round_miners_count",
 					In:   "query",
@@ -136,12 +144,14 @@ func (s *Server) handleGetBlockchainBlocksRequest(args [1]string, argsEscaped bo
 //
 // GET /prices/{blockchain}
 func (s *Server) handleGetBlockchainMarketsRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainMarkets",
+			Name: GetBlockchainMarketsOperation,
 			ID:   "getBlockchainMarkets",
 		}
 	)
@@ -160,7 +170,7 @@ func (s *Server) handleGetBlockchainMarketsRequest(args [1]string, argsEscaped b
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainMarkets",
+			OperationName:    GetBlockchainMarketsOperation,
 			OperationSummary: "Get blockchain markets",
 			OperationID:      "getBlockchainMarkets",
 			Body:             nil,
@@ -215,12 +225,14 @@ func (s *Server) handleGetBlockchainMarketsRequest(args [1]string, argsEscaped b
 //
 // GET /miners/{blockchain}/miner/{miner}
 func (s *Server) handleGetBlockchainMinerRequest(args [2]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainMiner",
+			Name: GetBlockchainMinerOperation,
 			ID:   "getBlockchainMiner",
 		}
 	)
@@ -239,7 +251,7 @@ func (s *Server) handleGetBlockchainMinerRequest(args [2]string, argsEscaped boo
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainMiner",
+			OperationName:    GetBlockchainMinerOperation,
 			OperationSummary: "Get miner info on blockchain",
 			OperationID:      "getBlockchainMiner",
 			Body:             nil,
@@ -298,12 +310,14 @@ func (s *Server) handleGetBlockchainMinerRequest(args [2]string, argsEscaped boo
 //
 // GET /payouts/{blockchain}/balance/{miner}
 func (s *Server) handleGetBlockchainMinerBalanceRequest(args [2]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainMinerBalance",
+			Name: GetBlockchainMinerBalanceOperation,
 			ID:   "getBlockchainMinerBalance",
 		}
 	)
@@ -322,7 +336,7 @@ func (s *Server) handleGetBlockchainMinerBalanceRequest(args [2]string, argsEsca
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainMinerBalance",
+			OperationName:    GetBlockchainMinerBalanceOperation,
 			OperationSummary: "Get miner balance on blockchain",
 			OperationID:      "getBlockchainMinerBalance",
 			Body:             nil,
@@ -381,12 +395,14 @@ func (s *Server) handleGetBlockchainMinerBalanceRequest(args [2]string, argsEsca
 //
 // GET /charts/{blockchain}/miner/{miner}/hashrates
 func (s *Server) handleGetBlockchainMinerHashratesChartRequest(args [2]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainMinerHashratesChart",
+			Name: GetBlockchainMinerHashratesChartOperation,
 			ID:   "getBlockchainMinerHashratesChart",
 		}
 	)
@@ -405,7 +421,7 @@ func (s *Server) handleGetBlockchainMinerHashratesChartRequest(args [2]string, a
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainMinerHashratesChart",
+			OperationName:    GetBlockchainMinerHashratesChartOperation,
 			OperationSummary: "Get miner hashrates chart points",
 			OperationID:      "getBlockchainMinerHashratesChart",
 			Body:             nil,
@@ -472,12 +488,14 @@ func (s *Server) handleGetBlockchainMinerHashratesChartRequest(args [2]string, a
 //
 // GET /charts/{blockchain}/miner/{miner}/profitabilities
 func (s *Server) handleGetBlockchainMinerProfitabilitiesChartRequest(args [2]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainMinerProfitabilitiesChart",
+			Name: GetBlockchainMinerProfitabilitiesChartOperation,
 			ID:   "getBlockchainMinerProfitabilitiesChart",
 		}
 	)
@@ -496,7 +514,7 @@ func (s *Server) handleGetBlockchainMinerProfitabilitiesChartRequest(args [2]str
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainMinerProfitabilitiesChart",
+			OperationName:    GetBlockchainMinerProfitabilitiesChartOperation,
 			OperationSummary: "Get miner profitabilities chart points",
 			OperationID:      "getBlockchainMinerProfitabilitiesChart",
 			Body:             nil,
@@ -563,12 +581,14 @@ func (s *Server) handleGetBlockchainMinerProfitabilitiesChartRequest(args [2]str
 //
 // GET /charts/{blockchain}/miner/{miner}/shares
 func (s *Server) handleGetBlockchainMinerSharesChartRequest(args [2]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainMinerSharesChart",
+			Name: GetBlockchainMinerSharesChartOperation,
 			ID:   "getBlockchainMinerSharesChart",
 		}
 	)
@@ -587,7 +607,7 @@ func (s *Server) handleGetBlockchainMinerSharesChartRequest(args [2]string, args
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainMinerSharesChart",
+			OperationName:    GetBlockchainMinerSharesChartOperation,
 			OperationSummary: "Get miner shares chart points",
 			OperationID:      "getBlockchainMinerSharesChart",
 			Body:             nil,
@@ -654,12 +674,14 @@ func (s *Server) handleGetBlockchainMinerSharesChartRequest(args [2]string, args
 //
 // GET /charts/{blockchain}/miner/{miner}/worker/{worker}/hashrates
 func (s *Server) handleGetBlockchainMinerWorkerHashratesChartRequest(args [3]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainMinerWorkerHashratesChart",
+			Name: GetBlockchainMinerWorkerHashratesChartOperation,
 			ID:   "getBlockchainMinerWorkerHashratesChart",
 		}
 	)
@@ -678,7 +700,7 @@ func (s *Server) handleGetBlockchainMinerWorkerHashratesChartRequest(args [3]str
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainMinerWorkerHashratesChart",
+			OperationName:    GetBlockchainMinerWorkerHashratesChartOperation,
 			OperationSummary: "Get miner worker hashrates chart points",
 			OperationID:      "getBlockchainMinerWorkerHashratesChart",
 			Body:             nil,
@@ -745,12 +767,14 @@ func (s *Server) handleGetBlockchainMinerWorkerHashratesChartRequest(args [3]str
 //
 // GET /charts/{blockchain}/miner/{miner}/worker/{worker}/shares
 func (s *Server) handleGetBlockchainMinerWorkerSharesChartRequest(args [3]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainMinerWorkerSharesChart",
+			Name: GetBlockchainMinerWorkerSharesChartOperation,
 			ID:   "getBlockchainMinerWorkerSharesChart",
 		}
 	)
@@ -769,7 +793,7 @@ func (s *Server) handleGetBlockchainMinerWorkerSharesChartRequest(args [3]string
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainMinerWorkerSharesChart",
+			OperationName:    GetBlockchainMinerWorkerSharesChartOperation,
 			OperationSummary: "Get miner worker shares chart points",
 			OperationID:      "getBlockchainMinerWorkerSharesChart",
 			Body:             nil,
@@ -836,12 +860,14 @@ func (s *Server) handleGetBlockchainMinerWorkerSharesChartRequest(args [3]string
 //
 // GET /miners/{blockchain}/workers/{miner}
 func (s *Server) handleGetBlockchainMinerWorkersRequest(args [2]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainMinerWorkers",
+			Name: GetBlockchainMinerWorkersOperation,
 			ID:   "getBlockchainMinerWorkers",
 		}
 	)
@@ -860,7 +886,7 @@ func (s *Server) handleGetBlockchainMinerWorkersRequest(args [2]string, argsEsca
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainMinerWorkers",
+			OperationName:    GetBlockchainMinerWorkersOperation,
 			OperationSummary: "Get miner workers list on blockchain",
 			OperationID:      "getBlockchainMinerWorkers",
 			Body:             nil,
@@ -919,12 +945,14 @@ func (s *Server) handleGetBlockchainMinerWorkersRequest(args [2]string, argsEsca
 //
 // GET /miners/{blockchain}
 func (s *Server) handleGetBlockchainMinersRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainMiners",
+			Name: GetBlockchainMinersOperation,
 			ID:   "getBlockchainMiners",
 		}
 	)
@@ -943,7 +971,7 @@ func (s *Server) handleGetBlockchainMinersRequest(args [1]string, argsEscaped bo
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainMiners",
+			OperationName:    GetBlockchainMinersOperation,
 			OperationSummary: "Get miners list on blockchain",
 			OperationID:      "getBlockchainMiners",
 			Body:             nil,
@@ -1034,12 +1062,14 @@ func (s *Server) handleGetBlockchainMinersRequest(args [1]string, argsEscaped bo
 //
 // GET /payouts/{blockchain}
 func (s *Server) handleGetBlockchainPayoutsRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainPayouts",
+			Name: GetBlockchainPayoutsOperation,
 			ID:   "getBlockchainPayouts",
 		}
 	)
@@ -1058,7 +1088,7 @@ func (s *Server) handleGetBlockchainPayoutsRequest(args [1]string, argsEscaped b
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainPayouts",
+			OperationName:    GetBlockchainPayoutsOperation,
 			OperationSummary: "Get payouts list on blockchain",
 			OperationID:      "getBlockchainPayouts",
 			Body:             nil,
@@ -1141,12 +1171,14 @@ func (s *Server) handleGetBlockchainPayoutsRequest(args [1]string, argsEscaped b
 //
 // GET /pools/{blockchain}
 func (s *Server) handleGetBlockchainPoolRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainPool",
+			Name: GetBlockchainPoolOperation,
 			ID:   "getBlockchainPool",
 		}
 	)
@@ -1165,7 +1197,7 @@ func (s *Server) handleGetBlockchainPoolRequest(args [1]string, argsEscaped bool
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainPool",
+			OperationName:    GetBlockchainPoolOperation,
 			OperationSummary: "Get full pool data on blockchain",
 			OperationID:      "getBlockchainPool",
 			Body:             nil,
@@ -1218,105 +1250,20 @@ func (s *Server) handleGetBlockchainPoolRequest(args [1]string, argsEscaped bool
 	}
 }
 
-// handleGetBlockchainPoolDifficultiesChartRequest handles getBlockchainPoolDifficultiesChart operation.
-//
-// Get pool difficulties chart points.
-//
-// GET /charts/{blockchain}/pool_difficulties
-func (s *Server) handleGetBlockchainPoolDifficultiesChartRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-
-	var (
-		err          error
-		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainPoolDifficultiesChart",
-			ID:   "getBlockchainPoolDifficultiesChart",
-		}
-	)
-	params, err := decodeGetBlockchainPoolDifficultiesChartParams(args, argsEscaped, r)
-	if err != nil {
-		err = &ogenerrors.DecodeParamsError{
-			OperationContext: opErrContext,
-			Err:              err,
-		}
-		defer recordError("DecodeParams", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
-		return
-	}
-
-	var response GetBlockchainPoolDifficultiesChartRes
-	if m := s.cfg.Middleware; m != nil {
-		mreq := middleware.Request{
-			Context:          ctx,
-			OperationName:    "GetBlockchainPoolDifficultiesChart",
-			OperationSummary: "Get pool difficulties chart points",
-			OperationID:      "getBlockchainPoolDifficultiesChart",
-			Body:             nil,
-			Params: middleware.Parameters{
-				{
-					Name: "blockchain",
-					In:   "path",
-				}: params.Blockchain,
-				{
-					Name: "period",
-					In:   "query",
-				}: params.Period,
-				{
-					Name: "solo",
-					In:   "query",
-				}: params.Solo,
-			},
-			Raw: r,
-		}
-
-		type (
-			Request  = struct{}
-			Params   = GetBlockchainPoolDifficultiesChartParams
-			Response = GetBlockchainPoolDifficultiesChartRes
-		)
-		response, err = middleware.HookMiddleware[
-			Request,
-			Params,
-			Response,
-		](
-			m,
-			mreq,
-			unpackGetBlockchainPoolDifficultiesChartParams,
-			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.GetBlockchainPoolDifficultiesChart(ctx, params)
-				return response, err
-			},
-		)
-	} else {
-		response, err = s.h.GetBlockchainPoolDifficultiesChart(ctx, params)
-	}
-	if err != nil {
-		defer recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
-		return
-	}
-
-	if err := encodeGetBlockchainPoolDifficultiesChartResponse(response, w); err != nil {
-		defer recordError("EncodeResponse", err)
-		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
-			s.cfg.ErrorHandler(ctx, w, r, err)
-		}
-		return
-	}
-}
-
 // handleGetBlockchainPoolInfoRequest handles getBlockchainPoolInfo operation.
 //
 // Get pool info on blockchain.
 //
 // GET /pools/{blockchain}/info
 func (s *Server) handleGetBlockchainPoolInfoRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainPoolInfo",
+			Name: GetBlockchainPoolInfoOperation,
 			ID:   "getBlockchainPoolInfo",
 		}
 	)
@@ -1335,7 +1282,7 @@ func (s *Server) handleGetBlockchainPoolInfoRequest(args [1]string, argsEscaped 
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainPoolInfo",
+			OperationName:    GetBlockchainPoolInfoOperation,
 			OperationSummary: "Get pool info on blockchain",
 			OperationID:      "getBlockchainPoolInfo",
 			Body:             nil,
@@ -1390,12 +1337,14 @@ func (s *Server) handleGetBlockchainPoolInfoRequest(args [1]string, argsEscaped 
 //
 // GET /pools/{blockchain}/network_info
 func (s *Server) handleGetBlockchainPoolNetworkInfoRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainPoolNetworkInfo",
+			Name: GetBlockchainPoolNetworkInfoOperation,
 			ID:   "getBlockchainPoolNetworkInfo",
 		}
 	)
@@ -1414,7 +1363,7 @@ func (s *Server) handleGetBlockchainPoolNetworkInfoRequest(args [1]string, argsE
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainPoolNetworkInfo",
+			OperationName:    GetBlockchainPoolNetworkInfoOperation,
 			OperationSummary: "Get pool blockchain network info",
 			OperationID:      "getBlockchainPoolNetworkInfo",
 			Body:             nil,
@@ -1469,12 +1418,14 @@ func (s *Server) handleGetBlockchainPoolNetworkInfoRequest(args [1]string, argsE
 //
 // GET /pools/{blockchain}/slaves
 func (s *Server) handleGetBlockchainPoolSlavesRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainPoolSlaves",
+			Name: GetBlockchainPoolSlavesOperation,
 			ID:   "getBlockchainPoolSlaves",
 		}
 	)
@@ -1493,7 +1444,7 @@ func (s *Server) handleGetBlockchainPoolSlavesRequest(args [1]string, argsEscape
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainPoolSlaves",
+			OperationName:    GetBlockchainPoolSlavesOperation,
 			OperationSummary: "Get pool locations on blockchain",
 			OperationID:      "getBlockchainPoolSlaves",
 			Body:             nil,
@@ -1552,12 +1503,14 @@ func (s *Server) handleGetBlockchainPoolSlavesRequest(args [1]string, argsEscape
 //
 // GET /pools/{blockchain}/stats
 func (s *Server) handleGetBlockchainPoolStatsRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainPoolStats",
+			Name: GetBlockchainPoolStatsOperation,
 			ID:   "getBlockchainPoolStats",
 		}
 	)
@@ -1576,7 +1529,7 @@ func (s *Server) handleGetBlockchainPoolStatsRequest(args [1]string, argsEscaped
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainPoolStats",
+			OperationName:    GetBlockchainPoolStatsOperation,
 			OperationSummary: "Get pool statistics on blockchain",
 			OperationID:      "getBlockchainPoolStats",
 			Body:             nil,
@@ -1635,12 +1588,14 @@ func (s *Server) handleGetBlockchainPoolStatsRequest(args [1]string, argsEscaped
 //
 // GET /charts/{blockchain}/pool_stats
 func (s *Server) handleGetBlockchainPoolStatsChartRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainPoolStatsChart",
+			Name: GetBlockchainPoolStatsChartOperation,
 			ID:   "getBlockchainPoolStatsChart",
 		}
 	)
@@ -1659,7 +1614,7 @@ func (s *Server) handleGetBlockchainPoolStatsChartRequest(args [1]string, argsEs
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainPoolStatsChart",
+			OperationName:    GetBlockchainPoolStatsChartOperation,
 			OperationSummary: "Get pool stats chart points",
 			OperationID:      "getBlockchainPoolStatsChart",
 			Body:             nil,
@@ -1722,12 +1677,14 @@ func (s *Server) handleGetBlockchainPoolStatsChartRequest(args [1]string, argsEs
 //
 // GET /charts/{blockchain}/rounds
 func (s *Server) handleGetBlockchainRoundsChartRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainRoundsChart",
+			Name: GetBlockchainRoundsChartOperation,
 			ID:   "getBlockchainRoundsChart",
 		}
 	)
@@ -1746,7 +1703,7 @@ func (s *Server) handleGetBlockchainRoundsChartRequest(args [1]string, argsEscap
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainRoundsChart",
+			OperationName:    GetBlockchainRoundsChartOperation,
 			OperationSummary: "Get rounds chart points",
 			OperationID:      "getBlockchainRoundsChart",
 			Body:             nil,
@@ -1805,12 +1762,14 @@ func (s *Server) handleGetBlockchainRoundsChartRequest(args [1]string, argsEscap
 //
 // GET /blocks/{blockchain}/solo
 func (s *Server) handleGetBlockchainSoloBlocksRequest(args [1]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetBlockchainSoloBlocks",
+			Name: GetBlockchainSoloBlocksOperation,
 			ID:   "getBlockchainSoloBlocks",
 		}
 	)
@@ -1829,7 +1788,7 @@ func (s *Server) handleGetBlockchainSoloBlocksRequest(args [1]string, argsEscape
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchainSoloBlocks",
+			OperationName:    GetBlockchainSoloBlocksOperation,
 			OperationSummary: "Get solo blocks list on blockchain",
 			OperationID:      "getBlockchainSoloBlocks",
 			Body:             nil,
@@ -1870,10 +1829,6 @@ func (s *Server) handleGetBlockchainSoloBlocksRequest(args [1]string, argsEscape
 					Name: "tx_hash",
 					In:   "query",
 				}: params.TxHash,
-				{
-					Name: "share_difficulty",
-					In:   "query",
-				}: params.ShareDifficulty,
 				{
 					Name: "mined_at",
 					In:   "query",
@@ -1924,6 +1879,8 @@ func (s *Server) handleGetBlockchainSoloBlocksRequest(args [1]string, argsEscape
 //
 // GET /blockchains
 func (s *Server) handleGetBlockchainsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
@@ -1934,7 +1891,7 @@ func (s *Server) handleGetBlockchainsRequest(args [0]string, argsEscaped bool, w
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetBlockchains",
+			OperationName:    GetBlockchainsOperation,
 			OperationSummary: "Get available blockchains list",
 			OperationID:      "getBlockchains",
 			Body:             nil,
@@ -1984,12 +1941,14 @@ func (s *Server) handleGetBlockchainsRequest(args [0]string, argsEscaped bool, w
 //
 // GET /pools
 func (s *Server) handleGetPoolsRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
 		err          error
 		opErrContext = ogenerrors.OperationContext{
-			Name: "GetPools",
+			Name: GetPoolsOperation,
 			ID:   "getPools",
 		}
 	)
@@ -2008,7 +1967,7 @@ func (s *Server) handleGetPoolsRequest(args [0]string, argsEscaped bool, w http.
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetPools",
+			OperationName:    GetPoolsOperation,
 			OperationSummary: "Get pool info and statistics for all blockchains",
 			OperationID:      "getPools",
 			Body:             nil,
@@ -2067,6 +2026,8 @@ func (s *Server) handleGetPoolsRequest(args [0]string, argsEscaped bool, w http.
 //
 // GET /prices
 func (s *Server) handleGetPricesRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
+	statusWriter := &codeRecorder{ResponseWriter: w}
+	w = statusWriter
 	ctx := r.Context()
 
 	var (
@@ -2077,7 +2038,7 @@ func (s *Server) handleGetPricesRequest(args [0]string, argsEscaped bool, w http
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
-			OperationName:    "GetPrices",
+			OperationName:    GetPricesOperation,
 			OperationSummary: "Get blockchains prices list",
 			OperationID:      "getPrices",
 			Body:             nil,

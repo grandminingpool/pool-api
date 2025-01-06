@@ -11,7 +11,7 @@ import (
 
 type BlockchainHandler struct {
 	pricesService               *pricesServices.PricesService
-	blockchainMarketsSerializer serializers.BaseSerializer[*pricesServices.BlockchainMarkets, *apiModels.BlockchainMarkets]
+	blockchainMarketsSerializer serializers.BaseSerializer[*pricesServices.BlockchainMarkets, apiModels.BlockchainMarkets]
 }
 
 func (h *BlockchainHandler) GetMarkets(ctx context.Context, blockchainCoin string) apiModels.GetBlockchainMarketsRes {
@@ -22,12 +22,13 @@ func (h *BlockchainHandler) GetMarkets(ctx context.Context, blockchainCoin strin
 		return pricesErrors.CreateBlockchainMarketsNotFoundError(blockchainCoin)
 	}
 
-	return h.blockchainMarketsSerializer.Serialize(ctx, blockchainMarkets)
+	response := h.blockchainMarketsSerializer.Serialize(ctx, blockchainMarkets)
+	return &response
 }
 
 func NewBlockchainHandler(
 	pricesService *pricesServices.PricesService,
-	blockchainMarketsSerializer serializers.BaseSerializer[*pricesServices.BlockchainMarkets, *apiModels.BlockchainMarkets],
+	blockchainMarketsSerializer serializers.BaseSerializer[*pricesServices.BlockchainMarkets, apiModels.BlockchainMarkets],
 ) *BlockchainHandler {
 	return &BlockchainHandler{
 		pricesService:               pricesService,

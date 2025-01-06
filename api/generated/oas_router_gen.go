@@ -386,64 +386,26 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 						}
 
 						elem = origElem
-					case 'p': // Prefix: "pool_"
+					case 'p': // Prefix: "pool_stats"
 						origElem := elem
-						if l := len("pool_"); len(elem) >= l && elem[0:l] == "pool_" {
+						if l := len("pool_stats"); len(elem) >= l && elem[0:l] == "pool_stats" {
 							elem = elem[l:]
 						} else {
 							break
 						}
 
 						if len(elem) == 0 {
-							break
-						}
-						switch elem[0] {
-						case 'd': // Prefix: "difficulties"
-							origElem := elem
-							if l := len("difficulties"); len(elem) >= l && elem[0:l] == "difficulties" {
-								elem = elem[l:]
-							} else {
-								break
+							// Leaf node.
+							switch r.Method {
+							case "GET":
+								s.handleGetBlockchainPoolStatsChartRequest([1]string{
+									args[0],
+								}, elemIsEscaped, w, r)
+							default:
+								s.notAllowed(w, r, "GET")
 							}
 
-							if len(elem) == 0 {
-								// Leaf node.
-								switch r.Method {
-								case "GET":
-									s.handleGetBlockchainPoolDifficultiesChartRequest([1]string{
-										args[0],
-									}, elemIsEscaped, w, r)
-								default:
-									s.notAllowed(w, r, "GET")
-								}
-
-								return
-							}
-
-							elem = origElem
-						case 's': // Prefix: "stats"
-							origElem := elem
-							if l := len("stats"); len(elem) >= l && elem[0:l] == "stats" {
-								elem = elem[l:]
-							} else {
-								break
-							}
-
-							if len(elem) == 0 {
-								// Leaf node.
-								switch r.Method {
-								case "GET":
-									s.handleGetBlockchainPoolStatsChartRequest([1]string{
-										args[0],
-									}, elemIsEscaped, w, r)
-								default:
-									s.notAllowed(w, r, "GET")
-								}
-
-								return
-							}
-
-							elem = origElem
+							return
 						}
 
 						elem = origElem
@@ -1005,7 +967,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						// Leaf node.
 						switch method {
 						case "GET":
-							r.name = "GetBlockchains"
+							r.name = GetBlockchainsOperation
 							r.summary = "Get available blockchains list"
 							r.operationID = "getBlockchains"
 							r.pathPattern = "/blockchains"
@@ -1038,7 +1000,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					if len(elem) == 0 {
 						switch method {
 						case "GET":
-							r.name = "GetBlockchainBlocks"
+							r.name = GetBlockchainBlocksOperation
 							r.summary = "Get blocks list on blockchain"
 							r.operationID = "getBlockchainBlocks"
 							r.pathPattern = "/blocks/{blockchain}"
@@ -1062,7 +1024,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf node.
 							switch method {
 							case "GET":
-								r.name = "GetBlockchainSoloBlocks"
+								r.name = GetBlockchainSoloBlocksOperation
 								r.summary = "Get solo blocks list on blockchain"
 								r.operationID = "getBlockchainSoloBlocks"
 								r.pathPattern = "/blocks/{blockchain}/solo"
@@ -1159,7 +1121,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf node.
 									switch method {
 									case "GET":
-										r.name = "GetBlockchainMinerHashratesChart"
+										r.name = GetBlockchainMinerHashratesChartOperation
 										r.summary = "Get miner hashrates chart points"
 										r.operationID = "getBlockchainMinerHashratesChart"
 										r.pathPattern = "/charts/{blockchain}/miner/{miner}/hashrates"
@@ -1184,7 +1146,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf node.
 									switch method {
 									case "GET":
-										r.name = "GetBlockchainMinerProfitabilitiesChart"
+										r.name = GetBlockchainMinerProfitabilitiesChartOperation
 										r.summary = "Get miner profitabilities chart points"
 										r.operationID = "getBlockchainMinerProfitabilitiesChart"
 										r.pathPattern = "/charts/{blockchain}/miner/{miner}/profitabilities"
@@ -1209,7 +1171,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf node.
 									switch method {
 									case "GET":
-										r.name = "GetBlockchainMinerSharesChart"
+										r.name = GetBlockchainMinerSharesChartOperation
 										r.summary = "Get miner shares chart points"
 										r.operationID = "getBlockchainMinerSharesChart"
 										r.pathPattern = "/charts/{blockchain}/miner/{miner}/shares"
@@ -1267,7 +1229,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											// Leaf node.
 											switch method {
 											case "GET":
-												r.name = "GetBlockchainMinerWorkerHashratesChart"
+												r.name = GetBlockchainMinerWorkerHashratesChartOperation
 												r.summary = "Get miner worker hashrates chart points"
 												r.operationID = "getBlockchainMinerWorkerHashratesChart"
 												r.pathPattern = "/charts/{blockchain}/miner/{miner}/worker/{worker}/hashrates"
@@ -1292,7 +1254,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 											// Leaf node.
 											switch method {
 											case "GET":
-												r.name = "GetBlockchainMinerWorkerSharesChart"
+												r.name = GetBlockchainMinerWorkerSharesChartOperation
 												r.summary = "Get miner worker shares chart points"
 												r.operationID = "getBlockchainMinerWorkerSharesChart"
 												r.pathPattern = "/charts/{blockchain}/miner/{miner}/worker/{worker}/shares"
@@ -1317,68 +1279,28 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						}
 
 						elem = origElem
-					case 'p': // Prefix: "pool_"
+					case 'p': // Prefix: "pool_stats"
 						origElem := elem
-						if l := len("pool_"); len(elem) >= l && elem[0:l] == "pool_" {
+						if l := len("pool_stats"); len(elem) >= l && elem[0:l] == "pool_stats" {
 							elem = elem[l:]
 						} else {
 							break
 						}
 
 						if len(elem) == 0 {
-							break
-						}
-						switch elem[0] {
-						case 'd': // Prefix: "difficulties"
-							origElem := elem
-							if l := len("difficulties"); len(elem) >= l && elem[0:l] == "difficulties" {
-								elem = elem[l:]
-							} else {
-								break
+							// Leaf node.
+							switch method {
+							case "GET":
+								r.name = GetBlockchainPoolStatsChartOperation
+								r.summary = "Get pool stats chart points"
+								r.operationID = "getBlockchainPoolStatsChart"
+								r.pathPattern = "/charts/{blockchain}/pool_stats"
+								r.args = args
+								r.count = 1
+								return r, true
+							default:
+								return
 							}
-
-							if len(elem) == 0 {
-								// Leaf node.
-								switch method {
-								case "GET":
-									r.name = "GetBlockchainPoolDifficultiesChart"
-									r.summary = "Get pool difficulties chart points"
-									r.operationID = "getBlockchainPoolDifficultiesChart"
-									r.pathPattern = "/charts/{blockchain}/pool_difficulties"
-									r.args = args
-									r.count = 1
-									return r, true
-								default:
-									return
-								}
-							}
-
-							elem = origElem
-						case 's': // Prefix: "stats"
-							origElem := elem
-							if l := len("stats"); len(elem) >= l && elem[0:l] == "stats" {
-								elem = elem[l:]
-							} else {
-								break
-							}
-
-							if len(elem) == 0 {
-								// Leaf node.
-								switch method {
-								case "GET":
-									r.name = "GetBlockchainPoolStatsChart"
-									r.summary = "Get pool stats chart points"
-									r.operationID = "getBlockchainPoolStatsChart"
-									r.pathPattern = "/charts/{blockchain}/pool_stats"
-									r.args = args
-									r.count = 1
-									return r, true
-								default:
-									return
-								}
-							}
-
-							elem = origElem
 						}
 
 						elem = origElem
@@ -1394,7 +1316,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf node.
 							switch method {
 							case "GET":
-								r.name = "GetBlockchainRoundsChart"
+								r.name = GetBlockchainRoundsChartOperation
 								r.summary = "Get rounds chart points"
 								r.operationID = "getBlockchainRoundsChart"
 								r.pathPattern = "/charts/{blockchain}/rounds"
@@ -1433,7 +1355,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 				if len(elem) == 0 {
 					switch method {
 					case "GET":
-						r.name = "GetBlockchainMiners"
+						r.name = GetBlockchainMinersOperation
 						r.summary = "Get miners list on blockchain"
 						r.operationID = "getBlockchainMiners"
 						r.pathPattern = "/miners/{blockchain}"
@@ -1474,7 +1396,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf node.
 							switch method {
 							case "GET":
-								r.name = "GetBlockchainMiner"
+								r.name = GetBlockchainMinerOperation
 								r.summary = "Get miner info on blockchain"
 								r.operationID = "getBlockchainMiner"
 								r.pathPattern = "/miners/{blockchain}/miner/{miner}"
@@ -1504,7 +1426,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf node.
 							switch method {
 							case "GET":
-								r.name = "GetBlockchainMinerWorkers"
+								r.name = GetBlockchainMinerWorkersOperation
 								r.summary = "Get miner workers list on blockchain"
 								r.operationID = "getBlockchainMinerWorkers"
 								r.pathPattern = "/miners/{blockchain}/workers/{miner}"
@@ -1555,7 +1477,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					if len(elem) == 0 {
 						switch method {
 						case "GET":
-							r.name = "GetBlockchainPayouts"
+							r.name = GetBlockchainPayoutsOperation
 							r.summary = "Get payouts list on blockchain"
 							r.operationID = "getBlockchainPayouts"
 							r.pathPattern = "/payouts/{blockchain}"
@@ -1584,7 +1506,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf node.
 							switch method {
 							case "GET":
-								r.name = "GetBlockchainMinerBalance"
+								r.name = GetBlockchainMinerBalanceOperation
 								r.summary = "Get miner balance on blockchain"
 								r.operationID = "getBlockchainMinerBalance"
 								r.pathPattern = "/payouts/{blockchain}/balance/{miner}"
@@ -1611,7 +1533,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					if len(elem) == 0 {
 						switch method {
 						case "GET":
-							r.name = "GetPools"
+							r.name = GetPoolsOperation
 							r.summary = "Get pool info and statistics for all blockchains"
 							r.operationID = "getPools"
 							r.pathPattern = "/pools"
@@ -1643,7 +1565,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						if len(elem) == 0 {
 							switch method {
 							case "GET":
-								r.name = "GetBlockchainPool"
+								r.name = GetBlockchainPoolOperation
 								r.summary = "Get full pool data on blockchain"
 								r.operationID = "getBlockchainPool"
 								r.pathPattern = "/pools/{blockchain}"
@@ -1679,7 +1601,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf node.
 									switch method {
 									case "GET":
-										r.name = "GetBlockchainPoolInfo"
+										r.name = GetBlockchainPoolInfoOperation
 										r.summary = "Get pool info on blockchain"
 										r.operationID = "getBlockchainPoolInfo"
 										r.pathPattern = "/pools/{blockchain}/info"
@@ -1704,7 +1626,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 									// Leaf node.
 									switch method {
 									case "GET":
-										r.name = "GetBlockchainPoolNetworkInfo"
+										r.name = GetBlockchainPoolNetworkInfoOperation
 										r.summary = "Get pool blockchain network info"
 										r.operationID = "getBlockchainPoolNetworkInfo"
 										r.pathPattern = "/pools/{blockchain}/network_info"
@@ -1741,7 +1663,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf node.
 										switch method {
 										case "GET":
-											r.name = "GetBlockchainPoolSlaves"
+											r.name = GetBlockchainPoolSlavesOperation
 											r.summary = "Get pool locations on blockchain"
 											r.operationID = "getBlockchainPoolSlaves"
 											r.pathPattern = "/pools/{blockchain}/slaves"
@@ -1766,7 +1688,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 										// Leaf node.
 										switch method {
 										case "GET":
-											r.name = "GetBlockchainPoolStats"
+											r.name = GetBlockchainPoolStatsOperation
 											r.summary = "Get pool statistics on blockchain"
 											r.operationID = "getBlockchainPoolStats"
 											r.pathPattern = "/pools/{blockchain}/stats"
@@ -1802,7 +1724,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 					if len(elem) == 0 {
 						switch method {
 						case "GET":
-							r.name = "GetPrices"
+							r.name = GetPricesOperation
 							r.summary = "Get blockchains prices list"
 							r.operationID = "getPrices"
 							r.pathPattern = "/prices"
@@ -1831,7 +1753,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							// Leaf node.
 							switch method {
 							case "GET":
-								r.name = "GetBlockchainMarkets"
+								r.name = GetBlockchainMarketsOperation
 								r.summary = "Get blockchain markets"
 								r.operationID = "getBlockchainMarkets"
 								r.pathPattern = "/prices/{blockchain}"

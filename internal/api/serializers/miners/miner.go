@@ -11,8 +11,8 @@ import (
 
 type MinerSerializer struct{}
 
-func (s *MinerSerializer) Serialize(ctx context.Context, miner *poolMinersProto.Miner) *apiModels.Miner {
-	return &apiModels.Miner{
+func (s *MinerSerializer) Serialize(ctx context.Context, miner *poolMinersProto.Miner) apiModels.Miner {
+	return apiModels.Miner{
 		Address:         miner.Address,
 		Hashrate:        new(big.Int).SetBytes(miner.Hashrate).String(),
 		WorkersCount:    miner.WorkersCount,
