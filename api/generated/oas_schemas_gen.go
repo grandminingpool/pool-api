@@ -2549,10 +2549,11 @@ func (*PoolSlavesList) getBlockchainPoolSlavesRes() {}
 
 // Ref: #/components/schemas/PoolStats
 type PoolStats struct {
-	MinersCount  uint32 `json:"miners_count"`
-	WorkersCount uint32 `json:"workers_count"`
-	Hashrate     string `json:"hashrate"`
-	AvgHashrate  string `json:"avg_hashrate"`
+	MinersCount    uint32 `json:"miners_count"`
+	WorkersCount   uint32 `json:"workers_count"`
+	Hashrate       string `json:"hashrate"`
+	AvgHashrate    string `json:"avg_hashrate"`
+	BlocksCount24h uint32 `json:"blocks_count_24h"`
 }
 
 // GetMinersCount returns the value of MinersCount.
@@ -2575,6 +2576,11 @@ func (s *PoolStats) GetAvgHashrate() string {
 	return s.AvgHashrate
 }
 
+// GetBlocksCount24h returns the value of BlocksCount24h.
+func (s *PoolStats) GetBlocksCount24h() uint32 {
+	return s.BlocksCount24h
+}
+
 // SetMinersCount sets the value of MinersCount.
 func (s *PoolStats) SetMinersCount(val uint32) {
 	s.MinersCount = val
@@ -2593,6 +2599,11 @@ func (s *PoolStats) SetHashrate(val string) {
 // SetAvgHashrate sets the value of AvgHashrate.
 func (s *PoolStats) SetAvgHashrate(val string) {
 	s.AvgHashrate = val
+}
+
+// SetBlocksCount24h sets the value of BlocksCount24h.
+func (s *PoolStats) SetBlocksCount24h(val uint32) {
+	s.BlocksCount24h = val
 }
 
 func (*PoolStats) getBlockchainPoolStatsRes() {}

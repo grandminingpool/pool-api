@@ -7670,13 +7670,18 @@ func (s *PoolStats) encodeFields(e *jx.Encoder) {
 		e.FieldStart("avg_hashrate")
 		e.Str(s.AvgHashrate)
 	}
+	{
+		e.FieldStart("blocks_count_24h")
+		e.UInt32(s.BlocksCount24h)
+	}
 }
 
-var jsonFieldsNameOfPoolStats = [4]string{
+var jsonFieldsNameOfPoolStats = [5]string{
 	0: "miners_count",
 	1: "workers_count",
 	2: "hashrate",
 	3: "avg_hashrate",
+	4: "blocks_count_24h",
 }
 
 // Decode decodes PoolStats from json.
@@ -7736,6 +7741,18 @@ func (s *PoolStats) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"avg_hashrate\"")
 			}
+		case "blocks_count_24h":
+			requiredBitSet[0] |= 1 << 4
+			if err := func() error {
+				v, err := d.UInt32()
+				s.BlocksCount24h = uint32(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"blocks_count_24h\"")
+			}
 		default:
 			return d.Skip()
 		}
@@ -7746,7 +7763,7 @@ func (s *PoolStats) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00001111,
+		0b00011111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.

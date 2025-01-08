@@ -12,9 +12,10 @@ type PoolStatsSerializer struct{}
 
 func (s *PoolStatsSerializer) Serialize(ctx context.Context, poolStats *poolProto.PoolStats) apiModels.PoolStats {
 	return apiModels.PoolStats{
-		MinersCount:  poolStats.MinersCount,
-		WorkersCount: poolStats.WorkersCount,
-		Hashrate:     new(big.Int).SetBytes(poolStats.Hashrate).String(),
-		AvgHashrate:  new(big.Int).SetBytes(poolStats.AvgHashrate).String(),
+		MinersCount:    poolStats.MinersCount,
+		WorkersCount:   poolStats.WorkersCount,
+		Hashrate:       new(big.Int).SetBytes(poolStats.Hashrate).String(),
+		AvgHashrate:    new(big.Int).SetBytes(poolStats.AvgHashrate).String(),
+		BlocksCount24h: poolStats.BlocksCount_24H,
 	}
 }
